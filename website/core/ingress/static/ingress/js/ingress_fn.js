@@ -224,6 +224,24 @@ $(function () {
     /*SELECCIÓN DE LOS PROVEEDORES
     =============================================================================================*/
 
+    $('#id_prov').on('change', function () {
+        $.ajax({
+            dataType: 'JSON',
+            type: 'POST',
+            url: pathname,
+            data: {
+                id: $(this).val(), action: 'get_provider'
+            },
+            success: function (data) {
+                $('#pruc').val(data.ruc);
+                $('#pphone').val(data.phone);
+                $('#pemail').val(data.email);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                error_message(errorThrown + ' ' + textStatus);
+            }
+        })
+    });
 
     /*BÚSQUEDA DE PRODUCTOS
    =============================================================================================*/
