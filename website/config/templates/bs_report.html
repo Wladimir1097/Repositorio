@@ -1,0 +1,61 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
+    <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-datepicker-1.7.0/css/bootstrap-datepicker.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/js/bootstrap-datepicker.min.js" %}"></script>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/locales/bootstrap-datepicker.es.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-select-1.12.2/css/bootstrap-select.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-select-1.12.2/js/bootstrap-select.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/datatables-1.10.16/buttons-1.5.1/css/buttons.bootstrap.min.css" %}"/>
+    <script src="{% static "plugins/datatables-1.10.16/buttons-1.5.1/js/dataTables.buttons.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/jszip-2.5.0/jszip.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/pdfmake-0.1.32/pdfmake.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/pdfmake-0.1.32/vfs_fonts.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/buttons-1.5.1/js/buttons.html5.min.js" %}" type="text/javascript"></script>
+    {% block pnlreportdata %}
+    {% endblock %}
+{% endblock %}
+{% load widget_tweaks %}
+{% block content %}
+    <section class="content">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h2 class="page-header">
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i> {{ title }}
+                        </h2>
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <small><i class="fa fa-info-circle" aria-hidden="true"></i> Puede filtrar por año, mes, o rangos de fechas</small>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="container-fluid">
+                    {% block pnlreport %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% block jquery %}
+       <script type="application/javascript">
+        $(function () {
+            table = $('#data').DataTable({
+                responsive: true,
+                autoWidth: false,
+                destroy: true,
+            });
+
+            $('#btnReset').on('click',function () {
+                location.reload();
+            });
+
+        });
+    </script>
+    {% endblock %}
+{% endblock %}

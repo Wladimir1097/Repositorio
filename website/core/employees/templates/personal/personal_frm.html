@@ -1,0 +1,19 @@
+{% extends 'bs_form.html' %}
+{% load static from staticfiles %}
+{% block pnlformhead %}
+    <link rel="stylesheet" href="{% static "plugins/intl-tel-input-11.1.2/css/intlTelInput.css" %}"/>
+    <script src="{% static "plugins/intl-tel-input-11.1.2/js/intlTelInput.min.js" %}"></script>
+    <script src="{% static 'personal/js/personal_fn.js' %}"></script>
+    <script type="application/javascript">
+        $(function () {
+            $('[name="mobile"]').intlTelInput({
+                utilsScript: '{% static "plugins/intl-tel-input-11.1.2/js/utils.js" %}',
+                autoPlaceholder: true,
+                initialCountry: 'ec',
+                onlyCountries: ["ec"],
+                formatOnDisplay: false,
+                allowDropdown: false
+            });
+        });
+    </script>
+{% endblock %}

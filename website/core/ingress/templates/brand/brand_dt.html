@@ -1,0 +1,10 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+   <script src="{% static "brand/js/brand_dt.js" %}"></script>
+{% endblock %}
+{% block columns %}
+    <th style="width: 10%;" class="text-center">Nro</th>
+    <th style="width: 75%;">Nombre</th>
+    <th style="width: 15%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+{% endblock %}

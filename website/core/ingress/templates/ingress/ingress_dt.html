@@ -1,0 +1,51 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+    <script src="{% static "ingress/js/ingress_dt.js" %}"></script>
+{% endblock %}
+{% block columns %}
+    <th style="width: 5%;">Nro</th>
+    <th style="width: 20px%;">Usuario Recibio</th>
+    <th style="width: 15px%;">Proveedor</th>
+    <th style="width: 10%;">Ruc</th>
+    <th style="width: 15%;">F.Registro</th>
+    <th style="width: 10%;">Subtotal</th>
+    <th style="width: 10%;">Iva</th>
+    <th style="width: 10%;">Total</th>
+    <th style="width: 15%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+{% endblock %}
+
+{% block additional %}
+    <div class="modal fade" id="MyModalInventory" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Detalle de la Compra <i class="fa fa-search" aria-hidden="true"></i></b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table width="100%"
+                                       class="table table-bordered table-hover"
+                                       id="tblCompDetails">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10%;">Nro</th>
+                                        <th style="width: 60%;">Producto</th>
+                                        <th style="width: 10%;">Costo</th>
+                                        <th style="width: 10%;">Cantidad</th>
+                                        <th style="width: 10%;">Subtotal</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

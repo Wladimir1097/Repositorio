@@ -1,0 +1,67 @@
+{% extends 'login/login_bs.html' %}
+{% load static from staticfiles %}
+{% block loginhead %}
+    <script src="{% static "login/js/login_fn.js" %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="login-box">
+        <div class="login-box">
+            <div class="login-logo">
+                <a>
+                     <i class="fa fa-cogs" aria-hidden="true"></i>
+                    <br><h3>ColchaSystem</h3>
+                </a>
+            </div>
+            <div class="login-box-body">
+                <p class="login-box-msg">Inicio de Sesión</p>
+                <form action="{% url 'login' %}" method="post" id="frmLogin">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" class="form-control" placeholder="Username" name="username" id="username" autocomplete="off" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i> Ingresar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="login-details">
+                    Si has olvidado tu contraseña<a id="reset_password"> da click aqui <i class="fa fa-key" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalResetPassword" class="modal fade" role="dialog">
+        <form class="form" method="post" id="frmResetPassword" action="{% url 'login' %}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><b>Reseteo de contraseña <i class="fa fa-lock"
+                                                                            aria-hidden="true"></i></b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="form-group">
+                                <input type="email" id="email" name="email" class="form-control" required
+                                       autocomplete="off" placeholder="Ingrese su email" autofocus>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnResetEmail" class="btn btn-primary btn-sm btn-flat" type="submit">
+                            <i class="fa fa-send" aria-hidden="true"></i> Enviar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+{% endblock %}

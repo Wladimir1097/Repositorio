@@ -1,0 +1,46 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ title }}</title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="{% static 'img/logo/logo.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.3.7/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plugins/font-awesome-4.7.0/css/font-awesome.min.css' %}"/>
+    <link rel="stylesheet" href="{% static "plugins/jquery-ui-1.12.1/jquery-ui.css" %}"/>
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static "plugins/jquery-ui-1.12.1/jquery-ui.min.js" %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admin_template/ionicons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'admin_template/adminLTE.css' %}"/>
+    <link rel="stylesheet" href="{% static 'admin_template/_all-skins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}"/>
+    <script src="{% static 'plugins/jquery-confirm-v3.3.0/jquery-confirm.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'plugins/jquery-confirm-v3.3.0/jquery-confirm.min.css' %}"/>
+    <script src="{% static "plugins/jquery-loading-overlay-1.5.3/loadingoverlay.min.js" %}"></script>
+    <script src="{% static "js/sweetalert.min.js" %}"></script>
+    <script src="{% static 'js/functions.js' %}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet">
+    {% block head %}{% endblock %}
+</head>
+{% block body %}
+
+{% endblock %}
+{% block modals %}
+
+{% endblock %}
+<script type="application/javascript">
+    //system variables
+    var pathname = window.location.pathname,
+    iva = 0.12,
+    icon_base64 = "{{ icon_base64 }}",
+    date_joined = moment().format("YYYY-MM-DD");
+    $(function () {
+        $('.img-profile').on('click',function () {
+            //location.href = "?action=personal_information";
+        });
+    });
+</script>
+</html>

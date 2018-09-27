@@ -1,0 +1,45 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+   <script src="{% static "groups/js/groups_dt.js" %}"></script>
+{% endblock %}
+{% block columns %}
+    <th style="width: 10%;" class="text-center">Nro</th>
+    <th style="width: 50%;">Descripción</th>
+    <th style="width: 20%;">Cant. Módulos</th>
+    <th style="width: 20%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+{% endblock %}
+
+{% block additional %}
+    <div class="modal fade" id="MyModalModules" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Módulos <i class="fa fa-search" aria-hidden="true"></i></b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <table width="100%"
+                               class="table table-bordered table-hover"
+                               id="tblModules">
+                            <thead>
+                            <tr>
+                                <th style="width: 25%;">Módulo</th>
+                                <th style="width: 10%;">Icono</th>
+                                <th style="width: 5%;">Imagen</th>
+                                <th style="width: 15%;">Tipo</th>
+                                <th style="width: 15%;">¿Es vertical?</th>
+                                <th style="width: 15%;">¿Es visible?</th>
+                                <th style="width: 15%;">¿Esta activo?</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

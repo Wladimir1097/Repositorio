@@ -1,0 +1,13 @@
+{% extends 'users/users_frm.html' %}
+{% load static from staticfiles %}
+{% block pathmodel %}
+    <li><a href="{% url 'change_profile' %}?action=personal_information"><i class="fa fa-user"></i> Edición de Perfil</a></li>
+{% endblock %}
+{% block extra %}
+    <script type="application/javascript">
+        $('#directory').val('{% url 'dashboard' %}');
+    </script>
+{% endblock %}
+{% block js_users %}
+   <script src="{% static "change_profile/change_profile_fn.js" %}"></script>
+{% endblock %}

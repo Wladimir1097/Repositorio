@@ -1,0 +1,214 @@
+/*===========================================================================================================================================
+ * Dashboard CSS THEME - williamjair94@hotmail.com
+ * Copyright 2018
+ ============================================================================================================================================*/
+
+/*TABLES
+=============================================================================================================================================*/
+table.dataTable {
+    border-collapse: inherit !important;
+}
+
+.table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    padding-top: 3px;
+}
+
+.table thead tr {
+    background-color: #e4e4e4;
+    color: #080808;
+}
+
+.table tbody tr td {
+    font-size: 13px;
+    margin: 0 auto;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.table-bordered {
+    border: 1px solid #d4d0d0;
+}
+
+.table tbody tr td, .table thead tr th {
+    border: 1px solid #e0dbdb
+}
+
+.table tbody tr td .badge.label {
+    border-radius: 0px;
+    vertical-align: middle;
+}
+
+.table tbody tr td a {
+   cursor: pointer;
+}
+
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+    z-index: 3;
+    color: #ffffff;
+    cursor: default;
+    background-color: #00a65a;
+    border-color: #008d4c;
+}
+
+.table > tbody > tr > td > input[type=text] {
+    width: 100%;
+}
+
+td.details-control {
+    background: url('http://next.datatables.net/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('http://next.datatables.net/examples/resources/details_close.png') no-repeat center center;
+}
+
+.tr-text{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.tr-underline{
+    text-decoration:line-through;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/*BODY
+=============================================================================================================================================*/
+.main-header .logo .logo-lg {
+   font-family: 'Fjalla One', sans-serif;
+}
+
+.border-raidus-label{
+    border-radius: 50px;
+}
+
+.content-wrapper {
+    background: #e7e8d4;
+}
+
+.form-control {
+    border-radius: 3px;
+}
+
+.skin-blue .sidebar-menu>li.header {
+    color: #9E9E9E;
+}
+
+.box {
+    border-top: 7px solid #d2d6de;
+}
+
+.box-header.with-border {
+    border-bottom: 1px solid #e4e4e4;
+}
+
+/*.box-footer {
+    border-top: 1px solid #e4e4e4;
+    padding: 15px 10px 0px 10px;
+}*/
+
+.page-header {
+    margin: 2px 0px 0px 0px;
+    border-bottom-width: 0px;
+    padding-bottom: 0px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #00a65a;
+    border-color: #4CAF50;
+    padding: 1px 10px;
+    color: #fff;
+    font-size: 10px;
+}
+
+.kv-file-upload {
+    display: none;
+}
+
+.list-group-unbordered li a {
+    color: #1d6a01;
+}
+
+.password-progress {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.nav-tabs-custom > .nav-tabs > li.active > a, .nav-tabs-custom > .nav-tabs > li.active:hover > a {
+    font-weight: bold;
+}
+
+.img-profile{
+    cursor: pointer;
+}
+
+.user-panel > .image > img {
+    height: 45px;
+}
+
+.check {
+    width:25px;
+    height:25px;
+}
+
+@media (min-width: 768px) {
+  .modal-ml {
+    width: 80%;
+    max-width:1100px;
+  }
+
+  .modal-xl {
+    width: 90%;
+    max-width:1400px;
+  }
+}
+
+#myModalDetailsProducts .tab-pane .form-group h5{
+    border-bottom: 1px solid #999;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.img-details-prod:hover{
+    cursor: pointer;
+}
+
+.btn.btn-flat{
+    border-radius: 15px;
+}
+
+.color-check{
+    background-color: #fff4e4 !important;
+}
+
+.check {
+    width:25px;
+    height:25px;
+}
+
+
+@media (min-width: 768px) {
+  .modal-ml {
+    width: 80%;
+    max-width:1100px;
+  }
+
+  .modal-xl {
+    width: 90%;
+    max-width:1400px;
+  }
+}
+
+.border-report-title{
+    border-bottom:1px solid #EEEEEE;
+    padding-bottom: 5px;
+    margin-top: 0px;
+}

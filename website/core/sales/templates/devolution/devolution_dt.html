@@ -1,0 +1,14 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+   <script src="{% static "devolution/js/devolution_dt.js" %}"></script>
+{% endblock %}
+{% block columns %}
+    <th style="width: 10%;">Nro</th>
+    <th style="width: 10%;">Factura</th>
+    <th style="width: 10%;">Cod-Detalle</th>
+    <th style="width: 30%;">Producto</th>
+    <th style="width: 15%;">F.Registro</th>
+    <th style="width: 10%;">Cantidad</th>
+    <th style="width: 15%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+{% endblock %}

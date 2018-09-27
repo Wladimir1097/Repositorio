@@ -1,0 +1,13 @@
+{% extends 'bs_form.html' %}
+{% load static from staticfiles %}
+{% block pnlformhead %}
+     <link rel="stylesheet" href="{% static 'login/css/login.css' %}"/>
+     {% block loginhead %}
+     
+     {% endblock %}
+{% endblock %}
+{% block body %}
+    <body class="hold-transition login-page">
+    {% block content %}{% endblock %}
+    </body>
+{% endblock %}

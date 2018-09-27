@@ -1,0 +1,9 @@
+{% extends 'bs_form.html' %}
+{% load static from staticfiles %}
+{% block pnlformhead %}
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
+    <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-select-1.12.2/css/bootstrap-select.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-select-1.12.2/js/bootstrap-select.js" %}"></script>
+    <script src="{% static 'product/js/product_fn.js' %}"></script>
+{% endblock %}

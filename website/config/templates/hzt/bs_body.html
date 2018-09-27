@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% block head %}
+   <script src="{% static "js/app.min.js" %}"></script>
+    <script src="{% static "js/moment.js" %}"></script>
+    <script src="{% static "plugins/fastclick/fastclick.js" %}"></script>
+    <script src="{% static "plugins/slimScroll/jquery.slimscroll.min.js" %}"></script>
+    {% block pnlbodyhead %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
+    <script src="{% static "js/dashboard/dashboard_fn.js" %}"></script>
+{% endblock %}
+{% block body %}
+    <body class="hold-transition skin-green layout-top-nav">
+    <div class="wrapper">
+        {% include 'hzt/bs_header.html' %}
+        <div class="content-wrapper">
+            <div class="container-fluid" style="width: 90%;">
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <ol class="breadcrumb">
+                                <li><a href="{% url 'dashboard' %}"><i class="fa fa-home"></i> Panel</a></li>
+                                {% block pathmodel %}
+                                    <li>
+                                        <a href="{{ model.url }}"><i class="{{ model.icon }}"></i> {{ model.name }}</a>
+                                    </li>
+                                {% endblock %}
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        {% include 'bs_footer.html' %}
+    </div>
+    </body>
+{% endblock %}

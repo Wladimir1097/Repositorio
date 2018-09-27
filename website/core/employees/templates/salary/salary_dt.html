@@ -1,0 +1,40 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-select-1.12.2/css/bootstrap-select.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-select-1.12.2/js/bootstrap-select.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-datepicker-1.7.0/css/bootstrap-datepicker.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/js/bootstrap-datepicker.min.js" %}"></script>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/locales/bootstrap-datepicker.es.min.js" %}"></script>
+    <script src="{% static "salary/js/salary_dt.js" %}"></script>
+{% endblock %}
+{% block columns %}
+    <th style="width: 10%;" class="text-center">Nro</th>
+    <th style="width: 15%;">Empleado</th>
+    <th style="width: 10%;">Año</th>
+    <th style="width: 10%;">Mes</th>
+    <th style="width: 10%;">Sueldo</th>
+    <th style="width: 10%;">S.Diario</th>
+    <th style="width: 10%;">Faltas</th>
+    <th style="width: 15%;">Descuento</th>
+    <th style="width: 10%;">Sueldo Neto</th>
+{% endblock %}
+{% block additional %}
+    <div class="row">
+        <div class="col-lg-3 col-lg-offset-2">
+            <label style="font-size: 13px;">Seleccionar el Año:</label>
+            {{ form.year }}
+        </div>
+        <div class="col-lg-3 selectContainer">
+            <label style="font-size: 13px;">Seleccionar el Mes:</label>
+            {{ form.month }}
+        </div>
+        <div class="col-lg-3">
+            <label style="font-size: 13px;">Opción:</label><br>
+            <button type="button" disabled id="btnRemoveSalary" class="btn btn-sm btn-danger"><i
+                    class="fa fa-times" aria-hidden="true"></i> Eliminar Sueldos
+            </button>
+        </div>
+    </div>
+    <hr>
+{% endblock %}

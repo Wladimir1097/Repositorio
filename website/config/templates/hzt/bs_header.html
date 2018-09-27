@@ -1,0 +1,48 @@
+{% load static from staticfiles %}
+<header class="main-header">
+    <nav class="navbar navbar-static-top">
+        <div class="container-fluid" style="width: 90%;">
+            <div class="navbar-header">
+                <a href="{% url 'dashboard' %}" class="navbar-brand">
+                    <img src="{{ request.session.comp.get_icon }}" height="30px" style="margin-top: -5px;">
+                </a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#navbar-collapse">
+                    <i class="fa fa-truck"></i>
+                </button>
+            </div>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    {% if request.session.modulesreports %}
+                       <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i> Reportes
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            {% for m in request.session.modulesreports %}
+                                <li>
+                                    <a href="{{ m.url }}">
+                                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>{{ forloop.counter }}. {{ m.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    <li class="dropdown user user-menu">
+                        <a>
+                            <img src="{{ user.get_image }}" class="user-image" alt="User Image">
+                            <span class="hidden-xs">Bienvenido <b>{{ user.username }}</b></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'log' %}">
+                            <i class="fa fa-power-off" aria-hidden="true"></i> Cerrar sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

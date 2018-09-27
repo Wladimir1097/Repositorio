@@ -1,0 +1,25 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+    <script src="{% static "database/database_dt.js" %}"></script>
+{% endblock %}
+{% block buttons %}
+    <div class="btn-group">
+        <a class="btn btn-primary btn-sm btn-flat" id="btn-new">
+            <i class="fa fa-plus" aria-hidden="true"></i> {{ button }}
+        </a>
+        <a href="{{ directory }}" class="btn btn-sm btn-primary btn-flat">
+            <i class="fa fa-refresh" aria-hidden="true"></i> Actualizar
+        </a>
+    </div>
+{% endblock %}
+{% block columns %}
+    <th style="width: 10%;">Nro</th>
+    <th style="width: 20%">Usuario</th>
+    <th style="width: 15%">Localhost</th>
+    <th style="width: 15%">HostName</th>
+    <th style="width: 10%;">Fecha</th>
+    <th style="width: 10%">Hora</th>
+    <th style="width: 10%">Archivo</th>
+    <th style="width: 10%;" class="text-center"><em class="fa fa-cog"></em></th>
+{% endblock %}

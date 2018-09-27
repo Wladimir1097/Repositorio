@@ -1,0 +1,295 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% load widget_tweaks %}
+{% load dashboard_tags %}
+{% block pnldatahead %}
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
+    <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-datepicker-1.7.0/css/bootstrap-datepicker.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/js/bootstrap-datepicker.min.js" %}"></script>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/locales/bootstrap-datepicker.es.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-select-1.12.2/css/bootstrap-select.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-select-1.12.2/js/bootstrap-select.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/formvalidation-0.6.0/css/formValidation.css" %}"/>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/jquery.validate.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/formValidation.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/framework/bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/language/es_ES.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/jquery.form.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "sales/js/sales_fn.js" %}" type="text/javascript"></script>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <form class="form" id="frmSales" method="POST" action="{{ model.url }}" enctype="multipart/form-data">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="col-lg-8">
+                                <h2 class="page-header">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> {{ title }}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-right">
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-sm btn-primary btn-flat">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Venta
+                                </button>
+                                <a id="reset" class="btn btn-sm btn-primary btn-flat">
+                                    <i class="fa fa-clipboard" aria-hidden="true"></i> Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="action" name="action" value="new">
+                        <input type="hidden" id="directory" name="directory" value="{{ model.url }}">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab_1" data-toggle="tab">Datos de la factura <i class="fa"></i></a></li>
+                                <li><a href="#tab_2" data-toggle="tab">Datos del cliente <i class="fa"></i></a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Tipo de Factura:</label>
+                                                {{ form.type|add_class:"form-control input-sm selectpicker" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Fecha de Registro:</label>
+                                                {{ form.date_joined|add_class:"form-control input-sm" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group"  id="pnlDelivery" style="display: none;">
+                                                <label class="control-label">Fecha de Entrega:</label>
+                                                {{ form.date_delivery|add_class:"form-control input-sm" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_2">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Seleccion un cliente:</label>
+                                                {{ form.cli|add_class:"input-sm" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Dni:</label>
+                                                <input type="text" id="pdni" class="form-control input-sm" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Teléfono:</label>
+                                                <input type="text" id="pphone" class="form-control input-sm" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Email:</label>
+                                                <input type="text" id="pemail" class="form-control input-sm" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label class="control-label">Dirección:</label>
+                                                <input type="text" id="paddress" class="form-control input-sm" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#tab1" data-toggle="tab">Detalle de Productos
+                                        <button type="button" class="btn btn-primary btn-xs btn-flat"
+                                                id="btnSearchProducts">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-xs btn-flat"
+                                                id="btnRemoveProducts">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+                                </li>
+                                <li><a href="#tab2" data-toggle="tab">Detalle de Servicios <i class="fa"></i>
+                                    <button type="button" class="btn btn-primary btn-xs btn-flat"
+                                            id="btnSearchServices">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs btn-flat"
+                                            id="btnRemoveServices">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button>
+                                </a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <table width="100%" class="table table-bordered" id="tblProducts">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">Posición</th>
+                                            <th style="width: 5%;">Código</th>
+                                            <th style="width: 40%;">Producto</th>
+                                            <th style="width: 10%;">Stock</th>
+                                            <th style="width: 15%;">Cantidad</th>
+                                            <th style="width: 10%;">Costo</th>
+                                            <th style="width: 10%;">Subtotal</th>
+                                            <th style="width: 5%;">Opción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <table width="100%" class="table table-bordered" id="tblServices">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">Posición</th>
+                                            <th style="width: 10%;">Código</th>
+                                            <th style="width: 65%;">Servicio</th>
+                                            <th style="width: 15%;">Costo</th>
+                                            <th style="width: 5%;">Opción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row text-center">
+                                <div class="col-lg-4">
+                                    <label>[+] Subtotal:</label><br>
+                                    <span id="subtotal">$0.00</span>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>[+] Iva [{{ iva }}%]:</label><br>
+                                    <span id="iva">$0.00</span>
+                                </div>
+                                <div class="col-lg-4 ">
+                                    <label>Total:</label><br>
+                                    <span id="total">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div id="myModalProducts" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><b>Búsqueda de productos <i class="fa fa-search" aria-hidden="true"></i></b>
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <table width="100%" class="table table-bordered table-hover"
+                                   id="tblSearchProducts">
+                                <thead>
+                                <tr>
+                                    <th style="width: 10%;" class="text-center">Nro</th>
+                                    <th style="width: 50%;">Nombre</th>
+                                    <th style="width: 15%;">Stock</th>
+                                    <th style="width: 15%;">Costo</th>
+                                    <th style="width: 10%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="myModalServices" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><b>Búsqueda de servicios <i class="fa fa-search" aria-hidden="true"></i></b>
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <table width="100%" class="table table-bordered table-hover"
+                                   id="tblSearchServices">
+                                <thead>
+                                <tr>
+                                    <th style="width: 10%;" class="text-center">Nro</th>
+                                    <th style="width: 55%;">Nombre</th>
+                                    <th style="width: 20%;">Costo</th>
+                                    <th style="width: 15%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="application/javascript">
+        billing.details.products = [];
+        billing.details.services = [];
+        $(function () {
+
+            $('#reset').on('click', function () {
+                $('#frmSales').formValidation('resetForm', true);
+                $('#frmSales :input:enabled:visible:first').focus();
+
+                $('#pdni').val("");
+                $('#pphone').val("");
+                $('#pemail').val("");
+                $('#paddress').val("");
+
+                $('#id_cli').selectpicker('refresh');
+            });
+
+            $('#tblProducts').DataTable({
+                responsive: true,
+                autoWidth: false,
+                destroy: true,
+                ordering: false,
+                columnDefs: [
+                    {orderable: false, targets: [-1]},
+                    {visible: false, targets: [0]},
+                ]
+            });
+
+            $('#tblServices').DataTable({
+                responsive: true,
+                autoWidth: false,
+                destroy: true,
+                columnDefs: [
+                    {orderable: false, targets: [-1]}
+                ]
+            });
+
+            billing.load_products();
+        });
+    </script>
+    {% block extra %}
+    {% endblock %}
+{% endblock %}

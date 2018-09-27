@@ -1,0 +1,173 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% block pnldatahead %}
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
+    <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
+    <script src="{% static "sales/js/sales_dt.js" %}"></script>
+    <script src="{% static "devolution/js/devolution_fn.js" %}"></script>
+{% endblock %}
+{% block columns %}
+    <th style="width: 5%;">Nro</th>
+    <th style="width: 10%;">Nro.Factura</th>
+    <th style="width: 15%;">Cliente</th>
+    <th style="width: 10%;">F.Registro</th>
+    <th style="width: 10%;">T.Venta</th>
+    <th style="width: 10%;">Subtotal</th>
+    <th style="width: 10%;">Iva</th>
+    <th style="width: 10%;">Total</th>
+    <th style="width: 20%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+{% endblock %}
+
+{% block additional %}
+    <div class="modal fade" id="MyModalVent" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Detalle de Venta <i class="fa fa-search" aria-hidden="true"></i></b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="nav-tabs-custom" id="tabs">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#tab_1" data-toggle="tab" aria-expanded="true">
+                                        <b>Productos</b>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab_2" data-toggle="tab" aria-expanded="false">
+                                        <b>Servicios</b>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1">
+                                    <table width="100%"
+                                           class="table table-bordered table-hover"
+                                           id="tblProducts">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">Nro</th>
+                                            <th style="width: 55%;">Nombre</th>
+                                            <th style="width: 10%;">Precio</th>
+                                            <th style="width: 10%;">Cant</th>
+                                            <th style="width: 10%;">Subtotal</th>
+                                            <th style="width: 10%;">Entregado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="tab_2">
+                                    <table width="100%"
+                                           class="table table-bordered table-hover"
+                                           id="tblServices">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%;">Nro</th>
+                                            <th style="width: 70%;">Nombre</th>
+                                            <th style="width: 20%;">Costo</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModalDispatch" role="dialog">
+        <div class="modal-dialog modal-ml">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Productos para entregar <i class="fa fa-search" aria-hidden="true"></i></b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="sales">
+                        <table width="100%"
+                               class="table table-bordered table-hover"
+                               id="tblDispatch">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%;">Nro</th>
+                                <th style="width: 50%;">Nombre</th>
+                                <th style="width: 10%;">Cantidad</th>
+                                <th style="width: 10%;">Cant.Ent</th>
+                                <th style="width: 10%;">Stock</th>
+                                <th style="width: 15%;">Cant.Desp</th>
+                                <th style="width: 10%;">Entregado</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group text-left">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button id="btnDispatch" class="btn btn-sm btn-primary btn-flat" disabled>
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Entregar Pedido
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModalDevolution" role="dialog">
+        <div class="modal-dialog modal-ml">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Productos a devolver <i class="fa fa-search" aria-hidden="true"></i></b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="sales">
+                        <table width="100%"
+                               class="table table-bordered table-hover"
+                               id="tblDevolution">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%;">Nro</th>
+                                <th style="width: 50%;">Nombre</th>
+                                <th style="width: 10%;">Cantidad</th>
+                                <th style="width: 15%;">Cant.Devolver</th>
+                                <th style="width: 10%;">Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group text-left">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button id="btnDevolution" class="btn btn-sm btn-primary btn-flat" disabled>
+                                    <i class="fa fa-refresh" aria-hidden="true"></i> Devolver Productos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,81 @@
+{% load static from staticfiles %}
+<header class="main-header">
+    <a href="{% url 'dashboard' %}" class="logo">
+        <span class="logo-mini">
+            <i class="fa fa-truck" aria-hidden="true"></i>
+        </span>
+        <span class="logo-lg">BodegaSystem <i class="fa fa-truck" aria-hidden="true"></i></span>
+    </a>
+    <nav class="navbar navbar-static-top">
+        <a class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                {% if not request.session.groups is None %}
+                    <li class="dropdown">
+                        <a rel="group" data-id="{{ request.session.group.id }}" class="dropdown-toggle" data-toggle="dropdown">
+                            {{ request.session.group.name }}
+                            {% if request.session.groups|length > 1 %}
+                                <span class="caret"></span>
+                            {% endif %}
+                        </a>
+                        {% if request.session.groups|length > 1 %}
+                            <ul class="dropdown-menu" role="menu">
+                                {% for c in request.session.groups %}
+                                    <li>
+                                        <a href="{% url 'change_groups' %}?id={{ c.id }}&url={{ link }}">
+                                            {{ c.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{ user.get_image }}" class="user-image" alt="User Image">
+                        <span class="hidden-xs">Bienvenido <b>{{ user.get_short_name }}</b></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="user-header">
+                            <img src="{{ user.get_image }}" class="img-circle img-profile" alt="User Image">
+                            <p>
+                                {{ user.get_full_name }}
+                                <small>
+                                    Último Acceso: {{ user.last_login|date }}<br>
+                                    {{ user.email }}
+                                </small>
+                            </p>
+
+                        </li>
+                        {% if not request.session.groups is None %}
+                            <li class="user-body">
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <p>
+                                            <b>Bienvenido al sistema, su perfil es {{ request.session.group.name }}</b><br>
+                                            <small>Este sistema te permitira realizar diferentes actividades</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+                        <li class="user-footer">
+                            <div class="text-center">
+                                <div class="btn-group">
+                                    <a href="{% url 'change_profile' %}?action=personal_information" class="btn btn-default btn-sm btn-flat">Editar perfil <i class="fa fa-edit"></i></a>
+                                    <a href="{% url 'change_profile' %}?action=change_password" class="btn btn-default btn-sm btn-flat">Editar password <i class="fa fa-edit"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}"><i class="fa fa-power-off" aria-hidden="true"></i> Cerrar sesión</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

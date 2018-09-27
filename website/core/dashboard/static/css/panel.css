@@ -1,0 +1,43 @@
+.title-second {
+    font-size: 22px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3c8dbc
+}
+
+.title-panel {
+    font-size: 35px;
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.text-modules{
+    text-align: justify;
+}
+
+.icon-module{
+    font-size: 7em;
+    margin: 20px auto;
+}
+
+.img-module{
+    margin-top: 120px;
+}
+
+.border-footer{
+    padding-top: 18px;
+    border-top: 2px solid #00a65a;
+}
+
+.box-title-sales{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#container {
+    margin: 0 auto;
+    height: 25%;
+}
+
+.img-panel{
+    width: 100px;
+}

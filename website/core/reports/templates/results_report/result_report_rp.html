@@ -1,0 +1,97 @@
+{% extends 'bs_report.html' %}
+{% load widget_tweaks %}
+{% load static from staticfiles %}
+{% block pnlreportdata %}
+    <script src="{% static "plugins/highcharts-6.1.0/code/highcharts.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/highcharts-6.1.0/code/highcharts-3d.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/highcharts-6.1.0/code/modules/exporting.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/highcharts-6.1.0/code/modules/data.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/highcharts-6.1.0/code/modules/drilldown.js" %}" type="text/javascript"></script>
+{% endblock %}
+{% block pnlreport %}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-2 selectContainer">
+                <label>Buscar por:</label>
+                <div class="input-group my-group">
+                    <select class="form-control input-sm selectpicker" id="filter" name="filter">
+                        <option value="">--------------------</option>
+                        <option value="1">Rango de fechas</option>
+                        <option value="2">Solo año</option>
+                        <option value="3">Año y mes</option>
+                    </select>
+                    <span class="input-group-btn">
+                            <button class="btn btn-primary my-group-button btn-sm btn-flat" type="button" id="btnReset">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                </div>
+            </div>
+            <div class="col-lg-2" id="f_start_date" style="display: none;">
+                <label>Fecha de inicio:</label>
+                {{ form.start_date|add_class:'form-control input-sm' }}
+            </div>
+            <div class="col-lg-2" id="f_end_date" style="display: none;">
+                <label>Fecha de fin:</label>
+                {{ form.end_date|add_class:'form-control input-sm' }}
+            </div>
+            <div class="col-lg-2" id="f_year" style="display: none;">
+                <label>Año:</label>
+                {{ form.year|add_class:'form-control input-sm' }}
+            </div>
+            <div class="col-lg-2" id="f_month" style="display: none;">
+                <label>Mes:</label>
+                {{ form.month|add_class:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <hr>
+        <div class="row">
+            <div class="col-lg-7">
+                <h3 class="border-report-title">Resultados</h3>
+                <table class="table table-bordered table-hover" id="data" width="100%">
+                    <thead>
+                    <tr>
+                        <th style="width: 15%;">Compras</th>
+                        <th style="width: 15%;">Gastos</th>
+                        <th style="width: 15%;">Sueldos</th>
+                        <th style="width: 15%;">Ventas</th>
+                        <th style="width: 15%;">Pedidos</th>
+                        <th style="width: 15%;">Utilidad</th>
+                        <th style="width: 10%;">Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <br>
+            </div>
+            <div class="col-lg-5">
+                <h3 class="border-report-title">Gráfica</h3>
+                <div id="graphic" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static "results_report/js/result_report_fn.js" %}" type="text/javascript"></script>
+{% endblock %}
+{% block jquery %}
+    <script type="application/javascript">
+        $(function () {
+            table = $('#data').DataTable({
+                responsive: true,
+                destroy: true,
+                autoWidth: false,
+                searching: false,
+                lengthChange: false,
+                paging:   false,
+                ordering: false,
+                info:     false,
+                buttons: ['excel', 'pdf']
+            });
+
+            $('#btnReset').on('click', function () {
+                location.reload();
+            });
+        });
+    </script>
+{% endblock %}
