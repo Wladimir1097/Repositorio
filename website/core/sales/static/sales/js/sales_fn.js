@@ -474,14 +474,14 @@ $(function () {
             billing.details.type = parseInt($('#id_type').val());
 
             if (!billing.exists_products()) {
-                error_message('Debe agregar un item al menos al detalle de la venta');
+                error_message('Debe agregar un item al menos al detalle de la distribucion');
                 return false;
             }
 
             var msg = billing.details.type === 1 ?  'Venta registrada correctamente':'Pedido registrado correctamente';
 
             action_by_ajax_with_alert('Notificación',
-                '¿Estas seguro de guardar la siguiente venta?',
+                '¿Estas seguro de guardar la siguiente Distribucion?',
                 pathname,
                 {
                     'action': $('#action').val(),

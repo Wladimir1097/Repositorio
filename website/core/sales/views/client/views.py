@@ -18,23 +18,23 @@ def client(request):
             template = 'client/client_frm.html'
             if action == 'new':
                 data['form'] = ClientForm()
-                data['title'] = 'Nuevo Registro de un Cliente'
-                data['button'] = 'Guardar Cliente'
+                data['title'] = 'Nuevo Registro de un Trabajador'
+                data['button'] = 'Guardar Trabajador'
             elif action == 'edit' and 'id' in request.GET:
                 id = request.GET['id']
                 if Client.objects.filter(pk=id).exists():
                     model = Client.objects.get(pk=id)
                     data['form'] = ClientForm(instance=model, initial={'id': model.id})
-                    data['title'] = 'Edición de un Cliente'
-                    data['button'] = 'Editar Cliente'
+                    data['title'] = 'Edición de un Trabajador'
+                    data['button'] = 'Editar Trabajador'
                 else:
                     return HttpResponseRedirect(src)
             else:
                 return HttpResponseRedirect(src)
         else:
             data['items'] = Client.objects.all().order_by('name')
-            data['title'] = 'Listado de Clientes'
-            data['button'] = 'Nuevo Cliente'
+            data['title'] = 'Listado de Trabajadores'
+            data['button'] = 'Nuevo Trabajador'
             template = 'client/client_dt.html'
         return render(request, template, data)
     elif request.method == 'POST' and 'action' in request.POST:

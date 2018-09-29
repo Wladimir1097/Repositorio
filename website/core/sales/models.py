@@ -36,6 +36,7 @@ class Client(models.Model):
 
 
 class Sales(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     cli = models.ForeignKey(Client, on_delete=models.PROTECT)
     date_joined = models.DateField(default=datetime.now)
     date_delivery = models.DateField(default=datetime.now)
@@ -103,8 +104,8 @@ class Sales(models.Model):
 
     class Meta:
         db_table = 'sales'
-        verbose_name = 'Venta'
-        verbose_name_plural = 'Ventas'
+        verbose_name = 'Despacho'
+        verbose_name_plural = 'Despachos'
         ordering = ['-id']
 
 
@@ -152,8 +153,8 @@ class SalesServices(models.Model):
         return format(self.total, '.2f')
 
     class Meta:
-        verbose_name = 'Detalle de la Venta'
-        verbose_name_plural = 'Detalle de las Ventas'
+        verbose_name = 'Detalle de la Despacho'
+        verbose_name_plural = 'Detalle de las Despachos'
         ordering = ['-id']
 
 

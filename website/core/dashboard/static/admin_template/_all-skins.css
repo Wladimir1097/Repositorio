@@ -3,7 +3,8 @@
  * ----------
  */
 .skin-blue .main-header .navbar {
-  background-color: #3c8dbc;
+  /*background-color: #3c8dbc;*/
+  background-color: #19b39e;
 }
 .skin-blue .main-header .navbar .nav > li > a {
   color: #ffffff;
@@ -43,7 +44,8 @@
   }
 }
 .skin-blue .main-header .logo {
-  background-color: #367fa9;
+  /*background-color: #367fa9;*/
+  background-color: #19b39eba;
   color: #ffffff;
   border-bottom: 0 solid transparent;
 }
@@ -67,7 +69,10 @@
 }
 .skin-blue .sidebar-menu > li.header {
   color: #4b646f;
+  /*
   background: #1a2226;
+  */
+  background: #005688;
 }
 .skin-blue .sidebar-menu > li > a {
   border-left: 3px solid transparent;

@@ -7,11 +7,11 @@
     <script src="{% static "devolution/js/devolution_fn.js" %}"></script>
 {% endblock %}
 {% block columns %}
-    <th style="width: 5%;">Nro</th>
-    <th style="width: 10%;">Nro.Factura</th>
-    <th style="width: 15%;">Cliente</th>
+    <th style="width: 1%;">Nro</th>
+    <th style="width: 1%;">Nro.Factura</th>
+    <th style="width: 10%;">Trabajador</th>
     <th style="width: 10%;">F.Registro</th>
-    <th style="width: 10%;">T.Venta</th>
+    <th style="width: 5%;">T.Registro</th>
     <th style="width: 10%;">Subtotal</th>
     <th style="width: 10%;">Iva</th>
     <th style="width: 10%;">Total</th>
@@ -24,7 +24,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title"><b>Detalle de Venta <i class="fa fa-search" aria-hidden="true"></i></b>
+                    <h5 class="modal-title"><b>Detalle del Despacho <i class="fa fa-search" aria-hidden="true"></i></b>
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -36,11 +36,11 @@
                                         <b>Productos</b>
                                     </a>
                                 </li>
-                                <li class="">
+                               <!-- <li class="">
                                     <a href="#tab_2" data-toggle="tab" aria-expanded="false">
                                         <b>Servicios</b>
                                     </a>
-                                </li>
+                                </li>-->
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab_1">

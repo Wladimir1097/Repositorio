@@ -18,23 +18,23 @@ def brand(request):
             template = 'brand/brand_frm.html'
             if action == 'new':
                 data['form'] = BrandForm()
-                data['title'] = 'Nueva Marca de Producto'
-                data['button'] = 'Guardar Marca'
+                data['title'] = 'Nueva Tipo de Producto'
+                data['button'] = 'Guardar Tipo'
             elif action == 'edit' and 'id' in request.GET:
                 id = request.GET['id']
                 if Brand.objects.filter(pk=id).exists():
                     model = Brand.objects.get(pk=id)
                     data['form'] = BrandForm(instance=model, initial={'id': model.id})
-                    data['title'] = 'Edición de una Marca de Producto'
-                    data['button'] = 'Editar Marca'
+                    data['title'] = 'Edición de una Tipo de Producto'
+                    data['button'] = 'Editar Tipo'
                 else:
                     return HttpResponseRedirect(src)
             else:
                 return HttpResponseRedirect(src)
         else:
             data['items'] = Brand.objects.all().order_by('name')
-            data['title'] = 'Listado de Marcas de Productos'
-            data['button'] = 'Nueva Marca'
+            data['title'] = 'Listado de Tipos de Productos'
+            data['button'] = 'Nueva Tipo'
             template = 'brand/brand_dt.html'
         return render(request, template, data)
     elif request.method == 'POST' and 'action' in request.POST:

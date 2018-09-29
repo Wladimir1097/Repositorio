@@ -69,7 +69,10 @@
 </style>
 <body>
 <img src="{{ company.get_icon }}" style="width: 150px;text-align: center;">
-<p id="header">FACTURA N°{{ sales.id|upper }}-/{% random_int 10 100 %}/-{{ sales.date_joined|date:'Y-m-d ' }}</p>
+
+{% for e in Ingress %}
+    <p id="header">SOLICITUD N°{{ e.id|upper }}-/{% random_int 10 100 %}/-{{ e.date_joined|date:'Y-m-d ' }}</p>
+{% endfor %}
 <table id="items-cabecera" width="100%">
     <thead style="font-weight: normal">
     <tr>
@@ -99,14 +102,18 @@
     </tr>
     <tr>
         <th style="padding-bottom: 0px;">
-            <strong>FECHA DE VENTA :</strong> {{ sales.date_joined }}
+
+            {% for e in Ingress %}
+                <strong>FECHA DE COMPRA :</strong> {{ e.date_joined }}
+            {% endfor %}
         </th>
     </tr>
     <tr id="sinborde">
         <th style="padding-bottom: -5px; font-weight: normal;">
-            <strong>TRABAJADOR :</strong> {{ sales.cli|upper }}
-            <br>
-            <strong>USUARIO APROBADOR :</strong> {{ sales.usuario.username|upper }}
+
+            {% for e in Ingress %}
+                <strong>Usuario Aprobador :</strong> {{ e.usuario.first_name|upper }} {{ e.usuario.last_name|upper }}
+            {% endfor %}
         </th>
     </tr>
     </thead>
@@ -148,37 +155,42 @@
                     </tr>
                 {% endif %}
             {% endfor %}
-            <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>SUBTOTAL</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.subtotal|floatformat:"2" }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>DSCTO</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.dscto|floatformat:"2" }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>IVA
-                    ({{ sales.get_iva|floatformat:"2" }})</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.iva|floatformat:"2" }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>TOTAL</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.total|floatformat:"2" }}</div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <br>
+            <br>
+            {% for e in Ingress %}
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;">
+                        <strong>SUBTOTAL</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.subtotal|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>DSCTO</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.dscto|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>IVA
+                        ({{ e.get_iva|floatformat:"2" }})</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.iva|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>TOTAL</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.total|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+            {% endfor %}
     {% endif %}
     <table style="margin-top: 50px;">
         <thead>
@@ -206,13 +218,18 @@
     <table style="margin-top: 50px;">
         <thead style="font-weight: normal;">
         <tr>
-            <th>****Gracias****</th>
+            <th>****OBSERVACIONES****</th>
         </tr>
         <tr>
-            <th>NOSE ACEPTAN CAMBIOS NI DEVOLUCIONES</th>
+            <th>
+                RETIRO DE MATERIALES PARA TRABAJO DEL CONSORCIO MEDIDORES MILAGRO - LOS RIOS CONTRATO 050-2018
+                SOLICITUD QUE LO REALIZA EL ADMINISTRADOR DEL CONTRATO EL ING. HECTOR MAURICIO FLORES NICOLALDE
+                <br>
+                <br>
+            </th>
         </tr>
         <tr>
-            <th>{{ company.address }}</th>
+            <th>{{ company.address }}-Ecuador</th>
         </tr>
         </thead>
     </table>

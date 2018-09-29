@@ -14,7 +14,8 @@ from io import BytesIO
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 import os
-from config.settings.base import MEDIA_URL,MEDIA_ROOT
+from config.settings.base import MEDIA_URL, MEDIA_ROOT
+
 
 @csrf_exempt
 @access_module
@@ -28,7 +29,7 @@ def sales(request):
             template = 'sales/sales_frm.html'
             if action == 'new':
                 data['form'] = SalesForm()
-                data['title'] = 'Nuevo Registro de Venta y Pedidos'
+                data['title'] = 'Nuevo Registro de Despacho y Pedidos'
                 data['button'] = 'Guardar Transacción'
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
@@ -42,15 +43,15 @@ def sales(request):
                     result = BytesIO()
                     links = lambda uri, rel: os.path.join(MEDIA_ROOT, uri.replace(MEDIA_URL, ''))
                     pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), result, encoding='UTF-8',
-                                                      link_callback=links)
+                                            link_callback=links)
                     return HttpResponse(result.getvalue(), content_type='application/pdf')
                 return HttpResponseRedirect(src)
             else:
                 return HttpResponseRedirect(HOME)
         else:
             data['items'] = Sales.objects.all().order_by('id')
-            data['title'] = 'Listado de Ventas y Pedidos de Productos'
-            data['button'] = 'Nueva Venta o Pedido'
+            data['title'] = 'Listado de Despachos y Pedidos de Productos'
+            data['button'] = 'Nueva Despacho o Pedido'
             template = 'sales/sales_dt.html'
         return render(request, template, data)
     elif request.method == 'POST' and 'action' in request.POST:
@@ -80,7 +81,7 @@ def sales(request):
                 data['resp'] = True
             elif action == 'details':
                 data = []
-                type =  request.POST['type']
+                type = request.POST['type']
                 if type == 'products':
                     for s in SalesProducts.objects.filter(sales_id=request.POST['id']):
                         data.append([s.id, s.prod.name, s.price_format(), s.cant, s.subtotal_format(), s.is_dispatched])
@@ -90,12 +91,13 @@ def sales(request):
                 elif type == 'dispatch':
                     for s in SalesProducts.objects.filter(sales_id=request.POST['id']):
                         data.append({
-                            'id':s.id, 'name':s.prod.name, 'cant':s.cant, 'cant_ent': s.cant_ent, 'stock':s.prod.stock, 'cant_dis': 1, 'state':s.is_dispatched
+                            'id': s.id, 'name': s.prod.name, 'cant': s.cant, 'cant_ent': s.cant_ent,
+                            'stock': s.prod.stock, 'cant_dis': 1, 'state': s.is_dispatched
                         })
                 elif type == 'devolution':
                     for s in SalesProducts.objects.filter(sales_id=request.POST['id']):
                         data.append({
-                            'id':s.id, 'name':s.prod.name, 'cant':s.cant, 'cant_dev': 1, 'state': s.cant == 0
+                            'id': s.id, 'name': s.prod.name, 'cant': s.cant, 'cant_dev': 1, 'state': s.cant == 0
                         })
             elif action == 'search_products':
                 data = []
@@ -103,11 +105,13 @@ def sales(request):
                     if p.stock > 0:
                         data.append([p.id, p.name, p.stock, p.price_format(), 1])
             elif action == 'search_services':
-                data = [[i.id, i.name, i.cost_format(), True] for i in Services.objects.filter().exclude(id__in=json.loads(request.POST['items']))]
+                data = [[i.id, i.name, i.cost_format(), True] for i in
+                        Services.objects.filter().exclude(id__in=json.loads(request.POST['items']))]
             elif action == 'new':
                 with transaction.atomic():
                     items = json.loads(request.POST['items'])
                     vent = Sales()
+                    vent.usuario_id = request.user.id
                     vent.cli_id = items['cli']
                     vent.date_joined = items['date_joined']
                     vent.date_delivery = items['date_delivery']
@@ -151,7 +155,7 @@ def sales(request):
                         det.is_dispatched = det.cant_ent == det.cant
                         det.save()
                         prod = Product.objects.get(pk=det.prod_id)
-                        prod.stock-=int(i['cant_dis'])
+                        prod.stock -= int(i['cant_dis'])
                         prod.save()
                 data['resp'] = True
             elif action == 'devolution_products':
@@ -161,11 +165,11 @@ def sales(request):
                     if i['state'] and cant_dev > 0:
                         cant = int(i['cant_dev'])
                         det = SalesProducts.objects.get(pk=i['id'])
-                        det.cant-=cant
+                        det.cant -= cant
                         det.save()
                         det.sales.get_totals()
                         prod = Product.objects.get(pk=det.prod_id)
-                        prod.stock+=cant
+                        prod.stock += cant
                         prod.save()
                         dev = DevolutionSales()
                         dev.det = det
@@ -173,7 +177,10 @@ def sales(request):
                         dev.save()
                 data['resp'] = True
             elif action == 'load':
-                data = [[i.id, i.get_nro(), i.cli.name, i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.iva_format(), i.total_format(), i.type] for i in Sales.objects.filter()]
+                #[[e.username] for e in User.objects.filter(pk=i.usuario_id)],
+                data = [[i.id, i.get_nro(), i.cli.name,
+                         i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.iva_format(),
+                         i.total_format(), i.type] for i in Sales.objects.filter()]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False
@@ -184,4 +191,3 @@ def sales(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return HttpResponseRedirect(HOME)
-

@@ -54,6 +54,7 @@ LOCAL_APPS = [
     'core.login',
     'core.dashboard',
     'core.reports',
+    'core.templatetags',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -96,7 +97,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'autopartsbd',
+        'NAME': 'bodegabd',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
@@ -137,11 +138,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
@@ -157,6 +155,11 @@ LOGIN_URL = '/'
 HOME = '/dashboard/'
 
 # Configurations
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 

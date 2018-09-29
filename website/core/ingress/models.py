@@ -5,6 +5,8 @@ from django.db.models import Sum
 from config.settings.base import STATIC_URL, MEDIA_URL
 from datetime import datetime
 
+from core.users.models import User
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="Nombre")
@@ -26,8 +28,8 @@ class Brand(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Marca'
-        verbose_name_plural = 'Marcas'
+        verbose_name = 'Tipo'
+        verbose_name_plural = 'Tipos'
         ordering = ['-name']
 
 
@@ -62,7 +64,8 @@ class Product(models.Model):
 
     def get_pedids(self):
         from core.sales.models import SalesProducts
-        return SalesProducts.objects.filter(prod=self,sales__type=2).aggregate(resp=Coalesce(Sum('cant_ent'), 0))['resp']
+        return SalesProducts.objects.filter(prod=self, sales__type=2).aggregate(resp=Coalesce(Sum('cant_ent'), 0))[
+            'resp']
 
     def cost_format(self):
         return format(self.cost, '.2f')
@@ -96,7 +99,7 @@ class Provider(models.Model):
 
 
 class Ingress(models.Model):
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     prov = models.ForeignKey(Provider, on_delete=models.PROTECT)
     date_joined = models.DateField(default=datetime.now)
     subtotal = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)

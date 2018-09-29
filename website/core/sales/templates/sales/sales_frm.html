@@ -34,7 +34,7 @@
                         <div class="col-lg-4 text-right">
                             <div class="btn-group">
                                 <button type="submit" class="btn btn-sm btn-primary btn-flat">
-                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Venta
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Registro
                                 </button>
                                 <a id="reset" class="btn btn-sm btn-primary btn-flat">
                                     <i class="fa fa-clipboard" aria-hidden="true"></i> Limpiar
@@ -50,7 +50,7 @@
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#tab_1" data-toggle="tab">Datos de la factura <i class="fa"></i></a></li>
-                                <li><a href="#tab_2" data-toggle="tab">Datos del cliente <i class="fa"></i></a></li>
+                                <li><a href="#tab_2" data-toggle="tab">Datos del trabajador <i class="fa"></i></a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab_1">
@@ -77,9 +77,9 @@
                                 </div>
                                 <div class="tab-pane" id="tab_2">
                                     <div class="row">
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label class="control-label">Seleccion un cliente:</label>
+                                                <label class="control-label">Seleccion un trabajador:</label>
                                                 {{ form.cli|add_class:"input-sm" }}
                                             </div>
                                         </div>
@@ -101,7 +101,7 @@
                                                 <input type="text" id="pemail" class="form-control input-sm" disabled>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label class="control-label">Dirección:</label>
                                                 <input type="text" id="paddress" class="form-control input-sm" disabled>
@@ -125,7 +125,7 @@
                                         </button>
                                     </a>
                                 </li>
-                                <li><a href="#tab2" data-toggle="tab">Detalle de Servicios <i class="fa"></i>
+                                <!--<li><a href="#tab2" data-toggle="tab">Detalle de Servicios <i class="fa"></i>
                                     <button type="button" class="btn btn-primary btn-xs btn-flat"
                                             id="btnSearchServices">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
@@ -134,7 +134,7 @@
                                             id="btnRemoveServices">
                                         <i class="fa fa-times" aria-hidden="true"></i>
                                     </button>
-                                </a></li>
+                                </a></li>-->
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab1">
