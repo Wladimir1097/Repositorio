@@ -478,7 +478,7 @@ $(function () {
                 return false;
             }
 
-            var msg = billing.details.type === 1 ?  'Venta registrada correctamente':'Pedido registrado correctamente';
+            var msg = billing.details.type === 1 ?  'Registro ingresado correctamente':'Pedido registrado correctamente';
 
             action_by_ajax_with_alert('Notificación',
                 '¿Estas seguro de guardar la siguiente Distribucion?',
