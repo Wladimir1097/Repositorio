@@ -1,7 +1,7 @@
 Django==2.1.1
 Pillow==5.2.0
 PyPDF2==1.26.0
-django-widget-tweaks==1.4.2
+django-widget-tweaks==1.4.3
 freeze==1.0.10
 html5lib==1.0.1
 pip==18.0
