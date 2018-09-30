@@ -1,5 +1,13 @@
 $(function () {
 
+    $('#id_ruc,#id_phone').keypress(function (e) {
+        return validate_form_text('numbers',e,null);
+    });
+
+    $('#id_name').keypress(function (e) {
+        return validate_form_text('letters',e,null);
+    });
+
     $('#frmForm').formValidation({
         message: 'This value is not valid',
         icon: {
@@ -34,7 +42,7 @@ $(function () {
                 validators: {
                     notEmpty: {},
                     stringLength: {
-                        min: 10,
+                        min: 13,
                     },
                     digits: {},
                     remote: {
@@ -51,7 +59,7 @@ $(function () {
                         type: 'POST'
                     },
                     callback: {
-                        message: 'Ruc o Cedula invalida',
+                        message: 'Ruc invalido',
                         callback: function (value, validator, $field) {
                             return validate_dni_ruc(value);
                         }
@@ -84,24 +92,25 @@ $(function () {
             },
             mobile: {
                 validators: {
+                    notEmpty: {},
                     stringLength: {
                         min: 10,
                     },
                     digits: {},
                     callback: {
-                        message: 'El teléfono no es válido',
+                        message: 'El número de celular no es válido',
                         callback: function (value, validator, $field) {
                             return value === '' || $field.intlTelInput('isValidNumber');
                         }
                     },
                     remote: {
-                        message: 'El teléfono celular ya se encuentra registrado',
+                        message: 'El teléfono celular ya se encuentra registrado.',
                         url: pathname,
                         data: function (validator, $field, value) {
                             return {
-                                obj: validator.getFieldElements('phone').val(),
+                                obj: validator.getFieldElements('mobile').val(),
                                 id: validator.getFieldElements('id').val(),
-                                type: 'phone',
+                                type: 'mobile',
                                 action: 'repeated'
                             };
                         },
@@ -129,8 +138,8 @@ $(function () {
         })
         .on('success.form.fv', function (e) {
             e.preventDefault();
-            var message = get_message_action_by_id(parseInt($('#id').val()));
-            save_registry_by_submit(e, message, function () {
+           var message = get_message_action_by_id(parseInt($('#id').val()));
+            save_registry_by_submit(e,message,function () {
                 location.href = pathname;
             });
         });

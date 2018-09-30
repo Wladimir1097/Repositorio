@@ -97,6 +97,7 @@ def ingress(request):
                         det.price = float(p['cost'])
                         det.subtotal = float(det.price) * int(det.cant)
                         det.save()
+                        det.prod.price=det.price
                         det.prod.stock += det.cant
                         det.prod.save()
                     ing.get_totals()

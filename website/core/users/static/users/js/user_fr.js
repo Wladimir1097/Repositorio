@@ -162,7 +162,20 @@ $(function () {
                         callback: function (value, validator, $field) {
                             return value === '' || $field.intlTelInput('isValidNumber');
                         }
-                    }
+                    },remote: {
+                        message: 'El teléfono celular ya se encuentra registrado.',
+                        url: pathname,
+                        data: function (validator, $field, value) {
+                            return {
+                                obj: validator.getFieldElements('mobile').val(),
+                                id: validator.getFieldElements('id').val(),
+                                type: 'phone',
+                                action: 'repeated'
+                            };
+                        },
+                        type: 'POST'
+                    },
+
                 }
             },
             gender: {

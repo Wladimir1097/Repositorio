@@ -89,6 +89,13 @@ def users(request):
                     else:
                         if User.objects.filter(username__iexact=obj).exclude(id=id):
                             return JsonResponse({'valid': 'false'})
+                elif type == 'phone':
+                    if id == 0:
+                        if User.objects.filter(mobile__iexact=obj):
+                            return JsonResponse({'valid': 'false'})
+                    else:
+                        if User.objects.filter(mobile__iexact=obj).exclude(id=id):
+                            return JsonResponse({'valid': 'false'})
                 return JsonResponse({'valid': 'true'})
             elif action == 'reset_password':
                 user = User.objects.get(id=request.POST['id'])
