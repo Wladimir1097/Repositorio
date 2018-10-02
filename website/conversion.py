@@ -1,17 +1,4 @@
-import random
-from django import template
-
-register = template.Library()
-
-@register.simple_tag
-def random_int(a, b=None):
-    if b is None:
-        a, b = 0, a
-    return random.randint(a, b)
-
-@register.simple_tag
 def wahio(n):
-    n = int(n)
     lista=list(str(n))
     inverse,new,con,=lista[::-1],['','','','','','','','',''],0
     for i in inverse:
@@ -64,8 +51,8 @@ def wahio(n):
         else:
             i,h=unidadi[i],decena[h]+len(str(h))*' y'
     orden=[a,b,c,d,e,f,g,h,i]
-    return ' '.join(orden).upper()
-'''
+    return ' '.join(christian)
+
 seguir='SI'
 while seguir=='SI':
     n=int(input('Numero entre 1 y 999.999.999: '))
@@ -74,4 +61,3 @@ while seguir=='SI':
     christian=wahio(n)
     print(' '.join(christian),'\n')
     seguir=input('Continuar < si - no >: ').upper()
-'''

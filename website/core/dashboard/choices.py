@@ -20,7 +20,7 @@ months_choices = (
 
 sales_choices = (
     (1,'Despacho'),
-    (2,'Pedido')
+    #(2,'Pedido')
 )
 
 

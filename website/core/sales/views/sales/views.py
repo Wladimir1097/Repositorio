@@ -29,7 +29,7 @@ def sales(request):
             template = 'sales/sales_frm.html'
             if action == 'new':
                 data['form'] = SalesForm()
-                data['title'] = 'Nuevo Registro de Despacho y Pedidos'
+                data['title'] = 'Nuevo Registro de Despacho'
                 data['button'] = 'Guardar Transacción'
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
@@ -50,8 +50,8 @@ def sales(request):
                 return HttpResponseRedirect(HOME)
         else:
             data['items'] = Sales.objects.all().order_by('id')
-            data['title'] = 'Listado de Despachos y Pedidos de Productos'
-            data['button'] = 'Nueva Despacho o Pedido'
+            data['title'] = 'Listado de Despachos de Materiales'
+            data['button'] = 'Nueva Despacho'
             template = 'sales/sales_dt.html'
         return render(request, template, data)
     elif request.method == 'POST' and 'action' in request.POST:

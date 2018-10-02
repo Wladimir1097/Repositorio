@@ -207,7 +207,7 @@ $(function () {
     });
     $('#tblProducts tbody').on('click', 'a[rel="remove"]', function () {
         var row = tblProducts.row($(this).parents('tr')).data();
-        action_alert('Notificación', '¿Estas seguro de eliminar la siguiente fila de productos?', function () {
+        action_alert('Notificación', '¿Estas seguro de eliminar la siguiente fila de materiales?', function () {
             billing.details.products.splice(row.pos, 1);
             billing.load_products();
         });
@@ -227,7 +227,7 @@ $(function () {
         if (billing.details.products.length === 0) {
             return false;
         }
-        action_alert('Notificación', '¿Estas seguro de eliminar todo el detalle de productos?', function () {
+        action_alert('Notificación', '¿Estas seguro de eliminar todo el detalle de materiales?', function () {
             billing.details.products = [];
             billing.load_products();
         });
@@ -388,14 +388,14 @@ $(function () {
             }
 
             if (billing.details.products.length === 0) {
-                error_message('Debe al menos agregar un producto para realizar una compra !!');
+                error_message('Debe al menos agregar un material para realizar una orden !!');
                 return false;
             }
 
             billing.save_data();
 
             action_by_ajax_with_alert('Notificación',
-                '¿Estas seguro de guardar la siguiente compra?',
+                '¿Estas seguro de guardar la siguiente orden?',
                 pathname,
                 {
                     'action': 'new',
@@ -405,7 +405,7 @@ $(function () {
                 function () {
                     location.href = pathname;
                 },
-                'Compra registrada correctamente'
+                'orden registrada correctamente'
             );
 
         });

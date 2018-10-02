@@ -18,23 +18,23 @@ def product(request):
             template = 'product/product_frm.html'
             if action == 'new':
                 data['form'] = ProductForm()
-                data['title'] = 'Nuevo Registro de un Producto'
-                data['button'] = 'Guardar Producto'
+                data['title'] = 'Nuevo Registro de un Material'
+                data['button'] = 'Guardar Material'
             elif action == 'edit' and 'id' in request.GET:
                 id = request.GET['id']
                 if Product.objects.filter(pk=id).exists():
                     model = Product.objects.get(pk=id)
                     data['form'] = ProductForm(instance=model, initial={'id': model.id})
-                    data['title'] = 'Edición de un Producto'
-                    data['button'] = 'Editar Producto'
+                    data['title'] = 'Edición de un Material'
+                    data['button'] = 'Editar Material'
                 else:
                     return HttpResponseRedirect(src)
             else:
                 return HttpResponseRedirect(src)
         else:
             data['items'] = Product.objects.all().order_by('name')
-            data['title'] = 'Listado de Productos'
-            data['button'] = 'Nuevo Producto'
+            data['title'] = 'Listado de Materiales'
+            data['button'] = 'Nuevo Material'
             template = 'product/product_dt.html'
         return render(request, template, data)
     elif request.method == 'POST' and 'action' in request.POST:

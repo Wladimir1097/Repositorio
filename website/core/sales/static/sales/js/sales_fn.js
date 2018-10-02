@@ -43,7 +43,8 @@ var billing = {
 
         billing.details.dscto = dscto;
         billing.details.subtotal = subtotal;
-        billing.details.iva = (billing.details.subtotal-dscto) * iva;
+        //billing.details.iva = (billing.details.subtotal-dscto) * iva;
+        billing.details.iva = 0;
         billing.details.total = billing.details.subtotal + billing.details.iva;
 
         $('#subtotal').html('$' + billing.details.subtotal.toFixed(2));
@@ -265,7 +266,7 @@ $(function () {
         if(billing.details.products.length === 0){
             return false;
         }
-        action_alert('Notificación', '¿Estas seguro de eliminar todo el detalle de productos?', function () {
+        action_alert('Notificación', '¿Estas seguro de eliminar todo el detalle de materiales?', function () {
             billing.details.products = [];
             billing.load_products();
         });
@@ -322,7 +323,7 @@ $(function () {
 
     $('#tblProducts tbody').on('click', 'a[rel="remove"]', function () {
         var row = tblProducts.row($(this).parents('tr')).data();
-        action_alert('Notificación', '¿Estas seguro de eliminar la siguiente fila de productos?', function () {
+        action_alert('Notificación', '¿Estas seguro de eliminar la siguiente fila de materiales?', function () {
             billing.details.products.splice(row.pos, 1);
             billing.load_products();
         });

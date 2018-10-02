@@ -30,8 +30,8 @@ def ingress(request):
             if action == 'new':
                 data['form'] = IngressForm()
                 data['frmProv'] = ProviderForm()
-                data['title'] = 'Nuevo Registro de una Compra'
-                data['button'] = 'Guardar Compra'
+                data['title'] = 'Nuevo Registro de una Orden de Ingresos'
+                data['button'] = 'Guardar Orden'
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
                 if Ingress.objects.filter(id=id):
@@ -50,8 +50,8 @@ def ingress(request):
                 return HttpResponseRedirect(HOME)
         else:
             data['items'] = Ingress.objects.all().order_by('id')
-            data['title'] = 'Listado de Compras'
-            data['button'] = 'Nueva Compra'
+            data['title'] = 'Listado de Ordenes de Ingreso'
+            data['button'] = 'Nueva Orden'
             template = 'ingress/ingress_dt.html'
         return render(request, template, data)
 
@@ -87,7 +87,7 @@ def ingress(request):
                     ing.usuario_id = request.user.id
                     ing.prov_id = items['prov']
                     ing.date_joined = items['date_joined']
-                    ing.iva = items['iva']
+                    ing.iva = 0
                     ing.save()
                     for p in items['products']:
                         det = Inventory()
@@ -97,7 +97,7 @@ def ingress(request):
                         det.price = float(p['cost'])
                         det.subtotal = float(det.price) * int(det.cant)
                         det.save()
-                        det.prod.cost=det.prod.price
+                        det.prod.cost=det.price
                         det.prod.price=det.price
                         det.prod.stock += det.cant
                         det.prod.save()

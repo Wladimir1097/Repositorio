@@ -27,7 +27,7 @@ def information(request):
     data = {
         'icon_base64': Company.objects.all()[0].get_icon_base64(),
         'comp': Company.objects.first(),
-        'empleados':Personal.objects.count(),
+        'clientes':Client.objects.count(),
         'usuarios':User.objects.count(),
         'productos':Product.objects.count(),
         'ingresos':Ingress.objects.count(),

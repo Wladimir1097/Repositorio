@@ -4,6 +4,10 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <style>
+    p.center {
+        border-bottom: 6px solid red;
+    }
+
     #header {
         padding-top: 10px;
         width: 50%;
@@ -71,7 +75,7 @@
 <img src="{{ company.get_icon }}" style="width: 150px;text-align: center;">
 
 {% for e in Ingress %}
-    <p id="header">SOLICITUD N°{{ e.id|upper }}-/{% random_int 10 100 %}/-{{ e.date_joined|date:'Y-m-d ' }}</p>
+    <p id="header"> ORDEN N°: {{ e.id|upper }}-/{% random_int 10 100 %}/-{{ e.date_joined|date:'Y-m-d ' }}</p>
 {% endfor %}
 <table id="items-cabecera" width="100%">
     <thead style="font-weight: normal">
@@ -92,19 +96,10 @@
         <th><p>RUC: {{ company.ruc }}</p></th>
     </tr>
     <tr>
-        <th>DIRECCIÓN: {{ company.address }}</th>
-    </tr>
-    <tr>
-        <th>EMAIL: {{ company.email }}</th>
-    </tr>
-    <tr>
-        <th>CONTACTOS: {{ company.mobile }}</th>
-    </tr>
-    <tr>
         <th style="padding-bottom: 0px;">
 
             {% for e in Ingress %}
-                <strong>FECHA DE COMPRA :</strong> {{ e.date_joined }}
+                <strong>FECHA DE ORDEN :</strong> {{ e.date_joined }}
             {% endfor %}
         </th>
     </tr>
@@ -112,7 +107,7 @@
         <th style="padding-bottom: -5px; font-weight: normal;">
 
             {% for e in Ingress %}
-                <strong>Usuario Aprobador :</strong> {{ e.usuario.first_name|upper }} {{ e.usuario.last_name|upper }}
+                <strong>Aprobador :</strong> {{ e.usuario.first_name|upper }} {{ e.usuario.last_name|upper }}
             {% endfor %}
         </th>
     </tr>
@@ -158,7 +153,7 @@
             <br>
             <br>
             {% for e in Ingress %}
-                <tr>
+                <!--<tr>
                     <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;">
                         <strong>SUBTOTAL</strong>
                     </td>
@@ -180,12 +175,12 @@
                     <td class="total-line">
                         <div>${{ e.iva|floatformat:"2" }}</div>
                     </td>
-                </tr>
+                </tr>-->
                 <tr>
                     <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>TOTAL</strong>
                     </td>
                     <td class="total-line">
-                        <div>${{ e.total|floatformat:"2" }}</div>
+                        <div>${{ e.subtotal|floatformat:"2" }}</div>
                     </td>
                 </tr>
                 </tbody>
@@ -196,17 +191,19 @@
         <thead>
         <tr>
             <th style="width: 30%;"></th>
-            <th style="width: 40%;">FIRMA AUTORIZADA</th>
+            <th style="width: 40%;">Firma Autorizada</th>
             <th style="width: 30%;"></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 40%; text-align: center; padding-top: 0px;">
-                ---------------------------------------------------------------------------
-            </td>
-            <td style="width: 30%;"></td>
+            {% for e in Ingress %}
+                <td style="width: 30%;"></td>
+                <td style="width: 40%; text-align: center; padding-top: 0px;">
+                    ---------------------------------------------------------------------------
+                </td>
+                <td style="width: 30%;"></td>
+            {% endfor %}
         </tr>
         <tr>
             <td style="width: 30%;"></td>
