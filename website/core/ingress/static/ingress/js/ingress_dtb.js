@@ -15,18 +15,26 @@ function load_data() {
                 orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
-                    var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir factura" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
+                    var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir Orden" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="details" data-toggle="tooltip" title="Buscar Inventario" class="btn btn-success btn-xs btn-flat"><i class="fa fa-search" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="delete" data-toggle="tooltip" title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                     return buttons;
                 }
             },
             {
-                targets: [4, 5, 6],
+                targets: [5],
                 orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
                     return '$' + data;
+                }
+            },
+            {
+                targets: [3],
+                orderable: false,
+                class: 'text-center',
+                render: function (data, type, row) {
+                    return data + 'Materiales';
                 }
             }
         ],
