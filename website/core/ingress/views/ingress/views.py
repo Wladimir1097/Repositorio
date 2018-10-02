@@ -99,7 +99,7 @@ def ingress(request):
                         det.save()
                         det.prod.cost=det.price
                         det.prod.price=det.price
-                        det.prod.stock += det.cant
+                        det.prod.stock += det.cant/2
                         det.prod.save()
                     ing.get_totals()
                     data['resp'] = True
