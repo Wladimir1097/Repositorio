@@ -72,7 +72,7 @@
     }
 </style>
 <body>
-<img src="{{ company.get_icon }}" style="width: 150px;text-align: center;">
+<!--<img src="{{ company.get_icon }}" style="width: 150px;text-align: center;">-->
 
 {% for e in Ingress %}
     <p id="header"> ORDEN N°: {{ e.id|upper }}-/{% random_int 10 100 %}/-{{ e.date_joined|date:'Y-m-d ' }}</p>
