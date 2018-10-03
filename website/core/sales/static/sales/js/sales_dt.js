@@ -15,18 +15,18 @@ function load_data() {
                 orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
-                    var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir factura" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
+                    var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir Orden" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="delete" data-toggle="tooltip" title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="details" data-toggle="tooltip" title="Buscar Detalles" class="btn btn-success btn-xs btn-flat"><i class="fa fa-search" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="devolution" data-toggle="tooltip" title="Devolución" class="btn btn-instagram btn-xs btn-flat"><i class="fa fa-refresh" aria-hidden="true"></i></a> ';
                     if (data === 2) {
-                        buttons += '<a rel="dispatch_products" data-toggle="tooltip" title="Entregar productos" class="btn btn-dropbox btn-xs btn-flat"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>';
+                        buttons += '<a rel="dispatch_products" data-toggle="tooltip" title="Entregar materiales" class="btn btn-dropbox btn-xs btn-flat"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>';
                     }
                     return buttons;
                 }
             },
             {
-                targets: [5, 6, 7],
+                targets: [7],
                 class: 'text-center',
                 render: function (data, type, row) {
                     return '$' + data;
@@ -141,7 +141,7 @@ $(function () {
 
     $('#btnDispatch').on('click', function () {
         console.log(JSON.stringify(tblDispatch.data().toArray()));
-        action_by_ajax_with_alert('Notificación','¿Esta seguro de devolver los siguientes productos & envases?',
+        action_by_ajax_with_alert('Notificación','¿Esta seguro de devolver los siguientes Materiales?',
             pathname, {
                 items: JSON.stringify(tblDispatch.data().toArray()),
                 action: 'dispatch_products',
@@ -151,7 +151,7 @@ $(function () {
                 tblDispatch.ajax.reload(null, false);
                 table.ajax.reload(null, false);
             },
-            'Se han devueltos con exito los productos y envases'
+            'Se han devueltos con exito los Materiales'
         );
 
     });

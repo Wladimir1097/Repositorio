@@ -71,7 +71,8 @@ def ingress(request):
             elif action == 'delete':
                 ing = Ingress.objects.get(pk=request.POST['id'])
                 for i in Inventory.objects.filter(ing=ing):
-                    i.prod.stock -= i.cant
+                    cant = i.cant - i.diferencia
+                    i.prod.stock -= cant
                     i.prod.save()
                     i.delete()
                 ing.delete()
@@ -94,24 +95,46 @@ def ingress(request):
                         det.ing = ing
                         det.prod_id = p['id']
                         det.cant = int(p['cant'])
+                        det.diferencia = det.cant
                         det.price = float(p['cost'])
                         det.subtotal = float(det.price) * int(det.cant)
                         det.save()
                         det.prod.cost=det.price
                         det.prod.price=det.price
-                        det.prod.stock += det.cant/2
                         det.prod.save()
                     ing.get_totals()
                     data['resp'] = True
             elif action == 'details':
-                data = [[a.id, a.prod.name, a.price_format(), a.cant, a.subtotal_format()] for a in
-                        Inventory.objects.filter(ing_id=request.POST['id'])]
+                data = []
+                type = request.POST['type']
+                if type == 'distribucion':
+                    for i in Inventory.objects.filter(ing=request.POST['id']):
+                        data.append({
+                            'id': i.id, 'name': i.prod.name, 'cant': i.diferencia, 'cant_dev': 1, 'state': i.estado
+                        })
+                elif type == 'products':
+                    data = [[a.id, a.prod.name, a.price_format(), a.cant, a.subtotal_format()] for a in
+                            Inventory.objects.filter(ing_id=request.POST['id'])]
             elif action == 'load':
                 data = [
                     [i.id, [[e.first_name +' '+ e.last_name] for e in User.objects.filter(pk=i.usuario_id)], i.prov.name,
-                     i.prov.ruc,
+                     Inventory.objects.filter(ing=i).count(),
                      i.date_joined_format(), i.subtotal_format(), i.iva_format(), i.total_format()] for i in
                     Ingress.objects.filter()]
+            elif action == 'distr_products':
+                items = json.loads(request.POST['items'])
+                for i in items:
+                    cant_dev = int(i['cant'])
+                    if i['state'] and cant_dev > 0:
+                        cant = int(i['cant_dev'])
+                        det = Inventory.objects.get(pk=i['id'])
+                        det.diferencia -= cant
+                        det.estado = True
+                        prod = Product.objects.get(pk=det.prod_id)
+                        prod.stock += cant
+                        prod.save()
+                        det.save()
+                data['resp'] = True
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

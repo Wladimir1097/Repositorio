@@ -154,6 +154,8 @@ class Inventory(models.Model):
     subtotal = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     dscto = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    diferencia = models.IntegerField(default=0)
+    estado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.prod.name

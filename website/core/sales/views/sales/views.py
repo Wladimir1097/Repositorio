@@ -177,10 +177,9 @@ def sales(request):
                         dev.save()
                 data['resp'] = True
             elif action == 'load':
-                #[[e.username] for e in User.objects.filter(pk=i.usuario_id)],
-                data = [[i.id, i.get_nro(), i.cli.name,
-                         i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.iva_format(),
-                         i.total_format(), i.type] for i in Sales.objects.filter()]
+
+                data = [[i.id, i.get_nro(),[[e.username] for e in User.objects.filter(pk=i.usuario_id)], i.cli.name,
+                         i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.type] for i in Sales.objects.filter()]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

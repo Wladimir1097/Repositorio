@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bodegabd',
+        'NAME': 'bodegaMilagro',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',

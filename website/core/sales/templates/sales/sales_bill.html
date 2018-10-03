@@ -4,6 +4,20 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <style>
+
+    @media all {
+        div.saltopagina {
+            display: none;
+        }
+    }
+
+    @media print {
+        div.saltopagina {
+            display: block;
+            page-break-before: always;
+        }
+    }
+
     em {
         font-weight: bold;
     }
@@ -173,34 +187,28 @@
             </tr>-->
             </tbody>
         </table>
-        <br>
-        <br>
-        <p style="border-bottom: 6px solid red;">.</p>
-        <br>
-        <br>
-        <br>
-        <div>
-            <h1 style="text-align: center">PAGARE A LA ORDEN</h1>
+        <div class="saltopagina" style="font-size: 13px">
+        <h1 style="text-align: center">PAGARE A LA ORDEN</h1>
 
-            <p style="width: 30%;">POR: USD ${{ sales.subtotal|floatformat:"2" }}</p>
+        <p style="width: 30%;">POR: USD ${{ sales.subtotal|floatformat:"2" }}</p>
 
-            <div style="text-align: justify">Debo y pagaré solidaria e incondicionalmente a la orden del
-                <em>CONSORCIO MEDIDORES MILAGRO LOS RIOS</em> con RUC <em>{{ company.ruc }}</em> en la ciudad de
-                MILAGRO, o en el lugar donde se me(nos) reconvenga, la cantidad de: <em>(USD
-                    $: {{ sales.subtotal|floatformat:"2" }}) {% wahio sales.subtotal %} DOLARES DE LOS ESTADOS UNIDOS DE
-                    AMÉRICA</em> obligándome irrevocablemente a pagar en el caso de pérdida o hurto del material antes descrito.
-                <br>
-                Sin protesto. Exímase al acreedor de este pagaré a orden de su presentación para el pago al suscriptor
-                del mismo, así como realizar los avisos por falta de pago.
-                <br>
-                <br>
-                Lugar y fecha de suscripción: <em>Milagro {{ sales.date_joined }}</em>
-            </div>
+        <div style="text-align: justify">Debo y pagaré solidaria e incondicionalmente a la orden del
+            <em>CONSORCIO MEDIDORES MILAGRO LOS RIOS</em> con RUC <em>{{ company.ruc }}</em> en la ciudad de
+            {{ company.address|upper }}, o en el lugar donde se me(nos) reconvenga, la cantidad de: <em>(USD
+                $: {{ sales.subtotal|floatformat:"2" }}) {% wahio sales.subtotal %} DOLARES DE LOS ESTADOS UNIDOS DE
+                AMÉRICA</em> obligándome irrevocablemente a pagar en el caso de pérdida o hurto del material antes
+            descrito.
+            <br>
+            Sin protesto. Exímase al acreedor de este pagaré a orden de su presentación para el pago al suscriptor
+            del mismo, así como realizar los avisos por falta de pago.
+            <br>
+            <br>
+            Lugar y fecha de suscripción: <em>{{ company.address|upper }}, {{ sales.date_joined }}</em>
         </div>
-        <table>
+        <table style="font-size: 10px">
             <thead>
-            <tr style="height: 60px;">
-                <th style="width: 30%;">Firma del deudor</th>
+            <tr style="height: 100px;">
+                <th style="width: 30%; text-align: left">Firma del deudor</th>
                 <th style="width: 40%;"></th>
                 <th style="width: 30%;"></th>
             </tr>
@@ -231,10 +239,13 @@
             </tbody>
         </table>
     {% endif %}
+
+    </div>
 </div>
 </body>
-<!--<footer>
+
+<footer>
     <img src="/media/library/logo/MEMBRETE PROENERGY SA INFERIOR.JPG" style="width: 700px;text-align: center;">
 </footer>
--->
+
 </html>

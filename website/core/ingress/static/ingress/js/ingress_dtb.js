@@ -18,6 +18,7 @@ function load_data() {
                     var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir Orden" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="details" data-toggle="tooltip" title="Buscar Inventario" class="btn btn-success btn-xs btn-flat"><i class="fa fa-search" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="delete" data-toggle="tooltip" title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                    buttons += '<a rel="distribucion" data-toggle="tooltip" title="Distribucion" class="btn btn-instagram btn-xs btn-flat"><i class="fa fa-refresh" aria-hidden="true"></i></a> ';
                     return buttons;
                 }
             },
@@ -34,7 +35,7 @@ function load_data() {
                 orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
-                    return data + 'Materiales';
+                    return data + '  Materiales';
                 }
             }
         ],
@@ -56,7 +57,7 @@ $(function () {
             ajax: {
                 url: pathname,
                 type: 'POST',
-                data: {action: 'details', id: id},
+                data: {action: 'details', id: id, type: 'products'},
                 dataSrc: ""
             },
             columnDefs: [

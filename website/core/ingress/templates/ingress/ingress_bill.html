@@ -4,8 +4,17 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <style>
-    p.center {
-        border-bottom: 6px solid red;
+    @media all {
+        div.saltopagina {
+            display: none;
+        }
+    }
+
+    @media print {
+        div.saltopagina {
+            display: block;
+            page-break-before: always;
+        }
     }
 
     #header {
@@ -73,7 +82,6 @@
 </style>
 <body>
 <!--<img src="{{ company.get_icon }}" style="width: 150px;text-align: center;">-->
-
 {% for e in Ingress %}
     <p id="header"> ORDEN N°: {{ e.id|upper }}-/{% random_int 10 100 %}/-{{ e.date_joined|date:'Y-m-d ' }}</p>
 {% endfor %}
@@ -177,7 +185,8 @@
                     </td>
                 </tr>-->
                 <tr>
-                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>TOTAL</strong>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;">
+                        <strong>TOTAL</strong>
                     </td>
                     <td class="total-line">
                         <div>${{ e.subtotal|floatformat:"2" }}</div>
@@ -187,49 +196,52 @@
                 </table>
             {% endfor %}
     {% endif %}
-    <table style="margin-top: 50px;">
-        <thead>
-        <tr>
-            <th style="width: 30%;"></th>
-            <th style="width: 40%;">Firma Autorizada</th>
-            <th style="width: 30%;"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            {% for e in Ingress %}
+    <div class="saltopagina">
+        <table style="margin-top: 50px;">
+            <thead>
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 40%;">Firma Autorizada</th>
+                <th style="width: 30%;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for e in Ingress %}
+                    <td style="width: 30%;"></td>
+                    <td style="width: 40%; text-align: center; padding-top: 0px;">
+                        ---------------------------------------------------------------------------
+                    </td>
+                    <td style="width: 30%;"></td>
+                {% endfor %}
+            </tr>
+            <tr>
                 <td style="width: 30%;"></td>
-                <td style="width: 40%; text-align: center; padding-top: 0px;">
-                    ---------------------------------------------------------------------------
-                </td>
+                <td style="width: 40%; text-align: center; padding-top: 0px;">ADMINISTRADOR</td>
                 <td style="width: 30%;"></td>
-            {% endfor %}
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 40%; text-align: center; padding-top: 0px;">ADMINISTRADOR</td>
-            <td style="width: 30%;"></td>
-        </tr>
-        </tbody>
-    </table>
-    <table style="margin-top: 50px;">
-        <thead style="font-weight: normal;">
-        <tr>
-            <th>****OBSERVACIONES****</th>
-        </tr>
-        <tr>
-            <th>
-                RETIRO DE MATERIALES PARA TRABAJO DEL CONSORCIO MEDIDORES MILAGRO - LOS RIOS CONTRATO 050-2018
-                SOLICITUD QUE LO REALIZA EL ADMINISTRADOR DEL CONTRATO EL ING. HECTOR MAURICIO FLORES NICOLALDE
-                <br>
-                <br>
-            </th>
-        </tr>
-        <tr>
-            <th>{{ company.address }}-Ecuador</th>
-        </tr>
-        </thead>
-    </table>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-top: 50px;">
+            <thead style="font-weight: normal;">
+            <tr>
+                <th>****OBSERVACIONES****</th>
+            </tr>
+            <tr>
+                <th>
+                    RETIRO DE MATERIALES PARA TRABAJO DEL CONSORCIO MEDIDORES MILAGRO - LOS RIOS CONTRATO 050-2018
+                    SOLICITUD QUE LO REALIZA EL ADMINISTRADOR DEL CONTRATO EL ING. HECTOR MAURICIO FLORES NICOLALDE
+                    <br>
+                    <br>
+                </th>
+            </tr>
+            <tr>
+                <th>{{ company.address }}-Ecuador</th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
 </div>
 </body>
 </html>
