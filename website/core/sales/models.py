@@ -27,7 +27,7 @@ class Client(models.Model):
     email = models.CharField(max_length=500, null=True, blank=True, verbose_name='Email')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         verbose_name = 'Cliente'
@@ -47,7 +47,7 @@ class Sales(models.Model):
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     def get_iva(self):
         return self.iva / self.subtotal
@@ -65,7 +65,7 @@ class Sales(models.Model):
         return SalesProducts.objects.filter(sales_id=self.id).aggregate(val=Coalesce(Sum('cant_ent'), 0))['val']
 
     def count_prods_rest(self):
-        return self.count_products()-self.count_ent_products()
+        return self.count_products() - self.count_ent_products()
 
     def subtotal_format(self):
         return format(self.subtotal, '.2f')
@@ -83,7 +83,7 @@ class Sales(models.Model):
         data = []
         for i in range(1, 13):
             result = Sales.objects.filter(date_joined__month=i).aggregate(resp=Coalesce(Sum('total'), 0.00))['resp']
-            data.append(format(result,'.2f'))
+            data.append(format(result, '.2f'))
         return data
 
     def get_totals(self):
@@ -121,7 +121,7 @@ class SalesProducts(models.Model):
     is_dispatched = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.prod.name
+        return str(self.prod.name)
 
     def get_dscto(self):
         return format(self.dscto / self.subtotal, '.2f')
@@ -142,12 +142,12 @@ class SalesProducts(models.Model):
 
 
 class SalesServices(models.Model):
-    sales = models.ForeignKey(Sales, on_delete=models.PROTECT)
-    serv = models.ForeignKey(Services, on_delete=models.PROTECT)
+    sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
+    serv = models.ForeignKey(Services, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     def total_format(self):
         return format(self.total, '.2f')
@@ -164,7 +164,7 @@ class DevolutionSales(models.Model):
     cant = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.det.prod.name
+        return str(self.det.prod.name)
 
     def date_joined_format(self):
         return self.date_joined.strftime('%Y-%m-%d')
@@ -173,3 +173,17 @@ class DevolutionSales(models.Model):
         verbose_name = 'Devolución'
         verbose_name_plural = 'Devoluciones'
         ordering = ['-id']
+
+
+class SalesMedidores(models.Model):
+    sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
+    cant = models.IntegerField(default=0)
+    numeracion = models.PositiveIntegerField(verbose_name='numeracion', default=0)
+    estado = models.BooleanField(default=False)
+
+
+class SalesSellos(models.Model):
+    sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
+    cant = models.IntegerField(default=0)
+    numeracion = models.PositiveIntegerField(verbose_name='numeracion', default=0)
+    estado = models.BooleanField(default=False)

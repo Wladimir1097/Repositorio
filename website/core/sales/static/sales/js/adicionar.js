@@ -1,19 +1,19 @@
-var tblDevolution;
+var tblAdicion;
 
 $(function () {
 
-    $('#data tbody').on('click', 'a[rel="devolution"]', function () {
+    $('#data tbody').on('click', 'a[rel="agg"]', function () {
         $('.tooltip').remove();
         var td = $('#data').DataTable().cell($(this).closest('td, li')).index(),
             rows = table.row(td.row).data(), id = rows[0];
-        tblDevolution = $('#tblDevolution').DataTable({
+        tblAdicion = $('#tblAdicion').DataTable({
             responsive: true,
             autoWidth: false,
             destroy: true,
             ajax: {
                 url: pathname,
                 type: 'POST',
-                data: {action: 'details', id: id, type: 'devolution'},
+                data: {action: 'details', id: id, type: 'adicion'},
                 dataSrc: ""
             },
             columns: [
@@ -25,20 +25,25 @@ $(function () {
             ],
             columnDefs: [
                 {
-                    targets: [1,2],
+                    targets: [1],
                     class: 'text-center',
+                },
+
+                {
+                    targets: [2],
+                    class: 'text-center',
+                    'render': function (data, type, row) {
+                        return '<span class="badge bg-green-active">' + row.cant + '</span>';
+                    }
                 },
                 {
                     targets: [3],
                     class: 'text-center',
                     render: function (data, type, row) {
                         if (!row.state) {
-                            if(row.cant === 0){
-                                return 'Ya se devolvio todo';
-                            }
                             return '<input type="text" class="form-control input-sm" name="cant_dev" value="0">';
                         }
-                        return '<i class="fa fa-check" aria-hidden="true"></i>';
+                        return '<span class="badge bg-light-blue-active">' + row.cant_dev + '</span>';
                     }
                 },
                 {
@@ -46,9 +51,6 @@ $(function () {
                     class: 'text-center',
                     render: function (data, type, row) {
                         if (!row.state) {
-                            if(row.cant === 0){
-                                return 'Ya se devolvio todo';
-                            }
                             return '<input type="checkbox" class="check" value="" name="chk_dispatch">';
                         }
                         return '<i class="fa fa-check" aria-hidden="true"></i>';
@@ -60,7 +62,7 @@ $(function () {
                 row = $(row).closest('tr');
                 row.find("input[name='cant_dev']").TouchSpin({
                     min: 1,
-                    max: parseInt(data.cant),
+                    max:99999999999,
                     step: 1
                 });
                 row.find('input[name="cant_dev"]').keypress(function (e) {
@@ -68,54 +70,54 @@ $(function () {
                 });
             },
         });
-        $('#btnDevolution').prop('disabled',true);
-        $('#MyModalDevolution').modal('show');
+        $('#btnAdicion').prop('disabled',true);
+        $('#MyModalAdicion').modal('show');
     });
 
     function check_devolve() {
-        var enable = tblDevolution.rows().data().filter(function (value, index) {
+        var enable = tblAdicion.rows().data().filter(function (value, index) {
             return value.state === true;
         }).length === 0;
-        $('#btnDevolution').prop('disabled', enable);
+        $('#btnAdicion').prop('disabled', enable);
     }
 
-    $('#tblDevolution tbody').on('change', 'input[name="cant_dev"]', function () {
-        var td = tblDevolution.cell($(this).closest('td, li')).index(),
-            row = tblDevolution.row(td.row).data();
+    $('#tblAdicion tbody').on('change', 'input[name="cant_dev"]', function () {
+        var td = tblAdicion.cell($(this).closest('td, li')).index(),
+            row = tblAdicion.row(td.row).data();
         row.cant_dev = parseInt($(this).val());
     });
 
-    $('#tblDevolution tbody').on('change', 'input[type="checkbox"]', function () {
-        var td = tblDevolution.cell($(this).closest('td, li')).index(),
-            row = tblDevolution.row(td.row).data();
+    $('#tblAdicion tbody').on('change', 'input[type="checkbox"]', function () {
+        var td = tblAdicion.cell($(this).closest('td, li')).index(),
+            row = tblAdicion.row(td.row).data();
         row.state = this.checked;
 
         if (this.checked) {
-            tblDevolution.rows(td.row).nodes().to$().addClass('color-check');
+            tblAdicion.rows(td.row).nodes().to$().addClass('color-check');
         }
         else {
-            tblDevolution.rows(td.row).nodes().to$().removeClass('color-check');
+            tblAdicion.rows(td.row).nodes().to$().removeClass('color-check');
         }
         check_devolve();
     });
 
-    $('#btnDevolution').on('click', function () {
-        console.log(JSON.stringify(tblDevolution.data().toArray()));
-        action_by_ajax_with_alert('Notificación','¿Esta seguro de aplicar la devolución a estos productos?',
+    $('#btnAdicion').on('click', function () {
+        console.log(JSON.stringify(tblAdicion.data().toArray()));
+        action_by_ajax_with_alert('Notificación','¿Esta seguro de ingresar estas numeraciones?',
             pathname, {
-                items: JSON.stringify(tblDevolution.data().toArray()),
-                action: 'devolution_products'
+                items: JSON.stringify(tblAdicion.data().toArray()),
+                action: 'ingress_prod'
             },
             function () {
-                tblDevolution.ajax.reload(null, false);
+                tblAdicion.ajax.reload(null, false);
                 table.ajax.reload(null, false);
             },
-            'Se ha realizado con exito la devolución'
+            'Se ha realizado con exito el ingreso'
         );
 
     });
 
-    $('#MyModalDevolution').on('hidden.bs.modal', function () {
+    $('#MyModalAdicion').on('hidden.bs.modal', function () {
         table.ajax.reload(null, false);
     });
 });

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+{% load static from staticfiles %}
+{% load random_numbers %}
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<style>
+    @media all {
+        div.saltopagina {
+            display: none;
+        }
+    }
+
+    @media print {
+        div.saltopagina {
+            display: block;
+            page-break-before: always;
+        }
+    }
+
+    #header {
+        padding-top: 10px;
+        width: 50%;
+        margin: 20px 0;
+        background: #222;
+        text-align: center;
+        color: white;
+        text-decoration: none;
+        font-weight: bold
+    }
+
+    #details td.total-line, #details tr, #header {
+        text-align: center
+    }
+
+    #items, img {
+        margin: 0 auto
+    }
+
+    #page-wrap {
+        width: 80%
+    }
+
+    #header {
+        padding-top: 10px;
+        width: 50%;
+        margin: 0;
+        background-color: #000;
+        font-size: 15px;
+        color: #fff;
+        font-weight: 700
+    }
+
+    #items-cabecera th {
+        font-size: 11px;
+        font-weight: 400
+    }
+
+    #sinborde {
+        border: 0 solid #000
+    }
+
+    #items {
+        clear: both;
+        width: 100%
+    }
+
+    #items th {
+        padding-top: 3px
+    }
+
+    #details tr {
+        padding: 3px 1px 1px
+    }
+
+    #details td.blank {
+        border: 0
+    }
+
+    img {
+        width: 50px
+    }
+</style>
+<body>
+<!--<img src="{{ company.get_icon }}" style="width: 150px;text-align: center;">-->
+{% for e in Ingress %}
+    <p id="header"> ORDEN N°: {{ e.id|upper }}-/{% random_int 10 100 %}/-{{ e.date_joined|date:'Y-m-d ' }}</p>
+{% endfor %}
+<table id="items-cabecera" width="100%">
+    <thead style="font-weight: normal">
+    <tr>
+        <th style="padding: 0px 5px 0px 5px;"><h1>{{ company.name|upper }}</h1></th>
+    </tr>
+    <tr>
+        <th><p>{{ company.description }}</p></th>
+    </tr>
+    <tr>
+        <th>
+            <p style="padding-bottom: -0px;">
+                -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            </p>
+        </th>
+    </tr>
+    <tr>
+        <th><p>RUC: {{ company.ruc }}</p></th>
+    </tr>
+    <tr>
+        <th style="padding-bottom: 0px;">
+
+            {% for e in Ingress %}
+                <strong>FECHA DE ORDEN :</strong> {{ e.date_joined }}
+            {% endfor %}
+        </th>
+    </tr>
+    <tr id="sinborde">
+        <th style="padding-bottom: -5px; font-weight: normal;">
+
+            {% for e in Ingress %}
+                <strong>Aprobador :</strong> {{ e.usuario.first_name|upper }} {{ e.usuario.last_name|upper }}
+            {% endfor %}
+        </th>
+    </tr>
+    </thead>
+</table>
+<div id="page-wrap" style="text-align: left;">
+    {% if details %}
+        <p id="header">DETALLE DE PRODUCTOS</p>
+        <table id="items" style="width: 100%;">
+            <thead>
+            <tr>
+                <th style="width: 10%;">CANT.</th>
+                <th style="width: 50%;">DESCRIPCIÓN</th>
+                <th style="width: 20%;">P.UNIT</th>
+                <th style="width: 20%;">SUBTOTAL</th>
+            </tr>
+            </thead>
+            <tbody id="details">
+            <tr>
+                <td colspan="4" style="padding: -2px 10px -9px 10px;">
+                    <p style="padding-bottom: -0px;">
+                        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                    </p>
+                </td>
+            </tr>
+            {% for d in details %}
+                {% if d.cant > 0 %}
+                    <tr>
+                        <td>{{ d.cant }}</td>
+                        <td>{{ d.prod.name }}</td>
+                        <td>${{ d.price }}</td>
+                        <td>${{ d.subtotal|floatformat:"2" }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="padding: -3px 10px -9px 10px;">
+                            <p style="padding-bottom: -0px;">
+                                -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                            </p>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <br>
+            <br>
+            {% for e in Ingress %}
+                <!--<tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;">
+                        <strong>SUBTOTAL</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.subtotal|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>DSCTO</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.dscto|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>IVA
+                        ({{ e.get_iva|floatformat:"2" }})</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.iva|floatformat:"2" }}</div>
+                    </td>
+                </tr>-->
+                <tr>
+                    <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;">
+                        <strong>TOTAL</strong>
+                    </td>
+                    <td class="total-line">
+                        <div>${{ e.subtotal|floatformat:"2" }}</div>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+            {% endfor %}
+    {% endif %}
+    <div class="saltopagina">
+        <table style="margin-top: 50px;">
+            <thead>
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 40%;">Firma Autorizada</th>
+                <th style="width: 30%;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for e in Ingress %}
+                    <td style="width: 30%;"></td>
+                    <td style="width: 40%; text-align: center; padding-top: 0px;">
+                        ---------------------------------------------------------------------------
+                    </td>
+                    <td style="width: 30%;"></td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td style="width: 30%;"></td>
+                <td style="width: 40%; text-align: center; padding-top: 0px;">ADMINISTRADOR</td>
+                <td style="width: 30%;"></td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-top: 50px;">
+            <thead style="font-weight: normal;">
+            <tr>
+                <th>****OBSERVACIONES****</th>
+            </tr>
+            <tr>
+                <th>
+                    RETIRO DE MATERIALES PARA TRABAJO DEL CONSORCIO MEDIDORES MILAGRO - LOS RIOS CONTRATO 050-2018
+                    SOLICITUD QUE LO REALIZA EL ADMINISTRADOR DEL CONTRATO EL ING. HECTOR MAURICIO FLORES NICOLALDE
+                    <br>
+                    <br>
+                </th>
+            </tr>
+            <tr>
+                <th>{{ company.address }}-Ecuador</th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>
+
+<!--
+            elif action == 'pdf' and 'id' in request.GET:
+                id = request.GET['id']
+                if Ingress.objects.filter(id=id):
+                    template = get_template('ingress/ingress_bill.html')
+                    data['company'] = Company.objects.first()
+                    data['Ingress'] = Ingress.objects.filter(id=id)
+                    data['details'] = Inventory.objects.filter(ing_id=id).order_by('id')
+                    html = template.render(data)
+                    result = BytesIO()
+                    links = lambda uri, rel: os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ''))
+                    pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), result, encoding='UTF-8',
+                                            link_callback=links)
+                    return HttpResponse(result.getvalue(), content_type='application/pdf')-->

@@ -5,6 +5,8 @@ from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 import json
 from django.shortcuts import render
+from django.template.defaultfilters import safe
+
 from core.ingress.models import Product
 from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
@@ -15,6 +17,7 @@ from xhtml2pdf import pisa
 from django.template.loader import get_template
 import os
 from config.settings.base import MEDIA_URL, MEDIA_ROOT
+from decimal import Decimal
 
 
 @csrf_exempt
@@ -31,6 +34,32 @@ def sales(request):
                 data['form'] = SalesForm()
                 data['title'] = 'Nuevo Registro de Despacho'
                 data['button'] = 'Guardar Transacción'
+            elif action == 'edit' and 'id' in request.GET:
+                id = request.GET['id']
+                data['id'] = id
+                if Sales.objects.filter(pk=id).exists():
+                    model = Sales.objects.get(pk=id)
+                    data['form'] = SalesForm(instance=model, initial={'id': model.id})
+                    data['details'] = SalesProducts.objects.filter(sales=id)
+                    data['servicios'] = SalesServices.objects.filter(sales=id)
+                    data['title'] = 'Edición de Egreso'
+                    data['button'] = 'Editar Orden'
+                    # return render(request, 'ingress/editarIngreso.html', data)
+                else:
+                    return HttpResponseRedirect(src)
+            elif action == 'reuse' and 'id' in request.GET:
+                id = request.GET['id']
+                data['id'] = id
+                if Sales.objects.filter(pk=id).exists():
+                    model = Sales.objects.get(pk=id)
+                    data['form'] = SalesForm(instance=model, initial={'id': model.id})
+                    data['details'] = SalesProducts.objects.filter(sales=id)
+                    data['servicios'] = SalesServices.objects.filter(sales=id)
+                    data['title'] = 'Reutilizar este Egreso'
+                    data['button'] = 'Registrar Orden'
+                    # return render(request, 'ingress/editarIngreso.html', data)
+                else:
+                    return HttpResponseRedirect(src)
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
                 if Sales.objects.filter(id=id):
@@ -74,7 +103,10 @@ def sales(request):
             elif action == 'delete':
                 sales = Sales.objects.get(pk=request.POST['id'])
                 for d in SalesProducts.objects.filter(sales=sales):
-                    d.prod.stock += d.cant
+                    if d.sales.type == 2:
+                        d.prod.stock += d.cant_ent
+                    else:
+                        d.prod.stock += d.cant
                     d.prod.save()
                     d.delete()
                 sales.delete()
@@ -88,6 +120,16 @@ def sales(request):
                 elif type == 'services':
                     for s in SalesServices.objects.filter(sales_id=request.POST['id']):
                         data.append([s.id, s.serv.name, s.total_format()])
+                elif type == 'medidor':
+                    for s in SalesMedidores.objects.filter(sales_id=request.POST['id']):
+                        if s.numeracion > 0:
+                            for i in range(0, s.cant):
+                                data.append([i + 1, s.numeracion + i])
+                elif type == 'sello':
+                    for s in SalesSellos.objects.filter(sales_id=request.POST['id']):
+                        if s.numeracion > 0:
+                            for i in range(0, s.cant):
+                                data.append([i + 1, s.numeracion + i])
                 elif type == 'dispatch':
                     for s in SalesProducts.objects.filter(sales_id=request.POST['id']):
                         data.append({
@@ -99,6 +141,16 @@ def sales(request):
                         data.append({
                             'id': s.id, 'name': s.prod.name, 'cant': s.cant, 'cant_dev': 1, 'state': s.cant == 0
                         })
+                elif type == 'adicion':
+                    for s in SalesMedidores.objects.filter(sales_id=request.POST['id']):
+                        data.append({
+                            'id': s.id, 'name': 'Medidor', 'cant': s.cant, 'cant_dev': s.numeracion, 'state': s.estado
+                        })
+
+                    for s in SalesSellos.objects.filter(sales_id=request.POST['id']):
+                        data.append({
+                            'id': s.id, 'name': 'Sellos', 'cant': s.cant, 'cant_dev': s.numeracion, 'state': s.estado
+                        })
             elif action == 'search_products':
                 data = []
                 for p in Product.objects.filter().exclude(id__in=json.loads(request.POST['items'])):
@@ -107,8 +159,16 @@ def sales(request):
             elif action == 'search_services':
                 data = [[i.id, i.name, i.cost_format(), True] for i in
                         Services.objects.filter().exclude(id__in=json.loads(request.POST['items']))]
-            elif action == 'new':
+            elif action == 'new' or action == 'edit' or action == 'reuse':
                 with transaction.atomic():
+                    if action == 'edit':
+                        sal = Sales.objects.get(pk=request.POST['pk'])
+                        for d in SalesProducts.objects.filter(sales=sal):
+                            d.prod.stock += d.cant
+                            d.prod.save()
+                            d.delete()
+                        sal.delete()
+
                     items = json.loads(request.POST['items'])
                     vent = Sales()
                     vent.usuario_id = request.user.id
@@ -126,6 +186,10 @@ def sales(request):
                         det = SalesProducts()
                         det.sales = vent
                         det.prod_id = int(p['id'])
+                        if det.prod_id == 130:
+                            SalesMedidores.objects.create(sales_id=vent.pk, cant=int(p['cant']))
+                        elif det.prod_id == 107:
+                            SalesSellos.objects.create(sales_id=vent.pk, cant=int(p['cant']))
                         det.cant = int(p['cant'])
                         det.price = float(p['cost'])
                         det.subtotal = float(det.price) * int(det.cant)
@@ -146,6 +210,7 @@ def sales(request):
 
                     vent.get_totals()
                     data['resp'] = True
+
             elif action == 'dispatch_products':
                 items = json.loads(request.POST['items'])
                 for i in items:
@@ -153,7 +218,11 @@ def sales(request):
                         det = SalesProducts.objects.get(pk=i['id'])
                         det.cant_ent += int(i['cant_dis'])
                         det.is_dispatched = det.cant_ent == det.cant
+                        det.subtotal = float(det.price) * int(det.cant_ent)
                         det.save()
+                        sales = Sales.objects.get(pk=det.sales.pk)
+                        sales.subtotal += Decimal(det.subtotal)
+                        sales.save()
                         prod = Product.objects.get(pk=det.prod_id)
                         prod.stock -= int(i['cant_dis'])
                         prod.save()
@@ -176,10 +245,18 @@ def sales(request):
                         dev.cant = cant
                         dev.save()
                 data['resp'] = True
+            elif action == 'ingress_prod':
+                i = json.loads(request.POST['items'])
+                if int(i[0]['cant_dev']) > 0 and i[0]['state']:
+                    SalesMedidores.objects.filter(pk=i[0]['id']).update(numeracion=int(i[0]['cant_dev']), estado=True)
+                if int(i[1]['cant_dev']) > 0 and i[1]['state']:
+                    SalesSellos.objects.filter(pk=i[1]['id']).update(numeracion=int(i[1]['cant_dev']), estado=True)
+                data['resp'] = True
             elif action == 'load':
 
-                data = [[i.id, i.get_nro(),[[e.username] for e in User.objects.filter(pk=i.usuario_id)], i.cli.name,
-                         i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.type] for i in Sales.objects.filter()]
+                data = [[i.id, i.get_nro(), [[e.username] for e in User.objects.filter(pk=i.usuario_id)], i.cli.name,
+                         i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.type] for i in
+                        Sales.objects.filter()]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

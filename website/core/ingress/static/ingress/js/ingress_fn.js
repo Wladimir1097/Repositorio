@@ -12,6 +12,7 @@ var billing = {
         var prods = [];
         $.each(this.details.products, function (i, item) {
             prods.push(item.id);
+            console.log('entra');
         });
         return prods;
     },
@@ -92,7 +93,7 @@ var billing = {
                 {
                     targets: [6],
                     render: function (data, type, row) {
-                        return '<input type="text" class="form-control input-sm" autocomplete="off" name="cost" autocomplete="off" value="' + data.toFixed(2) + '">';
+                        return '<input type="text" class="form-control input-sm" autocomplete="off" name="cost" autocomplete="off" value="' + data.toFixed(4) + '">';
                     }
                 },
                 {
@@ -114,10 +115,10 @@ var billing = {
                 var row = $(row).closest('tr');
 
                 row.find("input[name='cost']").TouchSpin({
-                    min: 0.01,
+                    min: 0.0001,
                     max: 1000000,
                     step: 0.01,
-                    decimals: 2,
+                    decimals: 4,
                     boostat: 5
                 });
 
@@ -200,10 +201,10 @@ $(function () {
     });
     $('#tblProducts tbody').on('change', 'input[name="subt"]', function () {
         var row = tblProducts.row($(this).parents('tr')).data();
-        billing.details.products[row.pos].cost = parseFloat($(this).val())/parseInt(billing.details.products[row.pos].cant);
+        billing.details.products[row.pos].cost = parseFloat($(this).val()) / parseInt(billing.details.products[row.pos].cant);
         billing.get_produts();
         var nRow = $(this).parents('tr')[0];
-        $('td:eq(5)', nRow).html(billing.details.products[row.pos].cost.toFixed(2));
+        $('td:eq(5)', nRow).html(billing.details.products[row.pos].cost.toFixed(4));
     });
     $('#tblProducts tbody').on('click', 'a[rel="remove"]', function () {
         var row = tblProducts.row($(this).parents('tr')).data();
@@ -391,15 +392,19 @@ $(function () {
                 error_message('Debe al menos agregar un material para realizar una orden !!');
                 return false;
             }
-
+            var modo = getParameterByName('action');
+            var pk = getParameterByName('id');
+            if (modo == 'new') {
+                pk = 0
+            }
             billing.save_data();
-
             action_by_ajax_with_alert('Notificación',
                 '¿Estas seguro de guardar la siguiente orden?',
                 pathname,
                 {
-                    'action': 'new',
+                    'action': modo,
                     'id': 0,
+                    'pk' : pk,
                     'items': JSON.stringify(billing.details)
                 },
                 function () {
@@ -410,4 +415,10 @@ $(function () {
 
         });
 
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 });

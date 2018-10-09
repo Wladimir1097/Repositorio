@@ -17,11 +17,16 @@ function load_data() {
                 render: function (data, type, row) {
                     var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir Orden" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="delete" data-toggle="tooltip" title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a> ';
+                    if (data === 1) {
+                        buttons += '<a href="' + pathname + '?action=edit&id=' + row[0] + '" data-toggle="tooltip" title="Editar registro" class="btn btn-yahoo btn-xs btn-flat"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> ';
+                        buttons += '<a href="' + pathname + '?action=reuse&id=' + row[0] + '" data-toggle="tooltip" title="Reusar registro" class="btn btn-adn btn-xs btn-flat"><i class="fa fa-recycle" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="details" data-toggle="tooltip" title="Buscar Detalles" class="btn btn-success btn-xs btn-flat"><i class="fa fa-search" aria-hidden="true"></i></a> ';
-                    buttons += '<a rel="devolution" data-toggle="tooltip" title="Devolución" class="btn btn-instagram btn-xs btn-flat"><i class="fa fa-refresh" aria-hidden="true"></i></a> ';
+                        buttons += '<a rel="devolution" data-toggle="tooltip" title="Devolución" class="btn btn-instagram btn-xs btn-flat"><i class="fa fa-refresh" aria-hidden="true"></i></a> ';
+                    }
                     if (data === 2) {
                         buttons += '<a rel="dispatch_products" data-toggle="tooltip" title="Entregar materiales" class="btn btn-dropbox btn-xs btn-flat"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>';
                     }
+                    buttons += '<a rel="agg" data-toggle="tooltip" title="Adicionar Medidores y Sellos" class="btn btn-foursquare  btn-xs btn-flat"><i class="fa fa-plus-square" aria-hidden="true"></i></a> ';
                     return buttons;
                 }
             },
@@ -68,7 +73,7 @@ $(function () {
             ],
             columnDefs: [
                 {
-                    targets: [2,3,4],
+                    targets: [2, 3, 4],
                     class: 'text-center',
                 },
                 {
@@ -76,7 +81,7 @@ $(function () {
                     class: 'text-center',
                     render: function (data, type, row) {
                         if (!row.state) {
-                            if(row.stock === 0){
+                            if (row.stock === 0) {
                                 return 'Sin Stock';
                             }
                             return '<input type="text" class="form-control input-sm" name="cant_dis" value="0">';
@@ -89,7 +94,7 @@ $(function () {
                     class: 'text-center',
                     render: function (data, type, row) {
                         if (!row.state) {
-                            if(row.stock === 0){
+                            if (row.stock === 0) {
                                 return 'Sin Stock';
                             }
                             return '<input type="checkbox" class="check" value="" name="chk_dispatch">';
@@ -108,7 +113,7 @@ $(function () {
                 });
             },
         });
-        $('#btnDispatch').prop('disabled',true);
+        $('#btnDispatch').prop('disabled', true);
         $('#MyModalDispatch').modal('show');
     });
 
@@ -141,7 +146,7 @@ $(function () {
 
     $('#btnDispatch').on('click', function () {
         console.log(JSON.stringify(tblDispatch.data().toArray()));
-        action_by_ajax_with_alert('Notificación','¿Esta seguro de devolver los siguientes Materiales?',
+        action_by_ajax_with_alert('Notificación', '¿Esta seguro de devolver los siguientes Materiales?',
             pathname, {
                 items: JSON.stringify(tblDispatch.data().toArray()),
                 action: 'dispatch_products',
@@ -180,7 +185,7 @@ $(function () {
             },
             columnDefs: [
                 {
-                    targets: [2,4],
+                    targets: [2, 4],
                     class: 'text-center',
                     render: function (data, type, row) {
                         return '$' + parseFloat(data).toFixed(2);
@@ -194,7 +199,7 @@ $(function () {
                     targets: [-1],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        if (data){
+                        if (data) {
                             return '<i class="fa fa-check" aria-hidden="true"></i>';
                         }
                         return '<i class="fa fa-times" aria-hidden="true"></i>';
@@ -220,6 +225,50 @@ $(function () {
                     render: function (data, type, row) {
                         return '$' + parseFloat(data).toFixed(2);
                     }
+                },
+            ]
+        });
+        $('#tblMedidor').DataTable({
+            responsive: true,
+            autoWidth: false,
+            destroy: true,
+            ajax: {
+                url: pathname,
+                type: 'POST',
+                data: {action: 'details', id: id, type: 'medidor'},
+                dataSrc: "",
+                columns: [
+                {data: "id"},
+                {data: "numeracion"},
+            ],
+            },
+            columnDefs: [
+                {
+                    targets: [1],
+                    orderable: false,
+                    class: 'text-center'
+                },
+            ]
+        });
+        $('#tblSello').DataTable({
+            responsive: true,
+            autoWidth: false,
+            destroy: true,
+            ajax: {
+                url: pathname,
+                type: 'POST',
+                data: {action: 'details', id: id, type: 'sello'},
+                dataSrc: "",
+                columns: [
+                {data: "id"},
+                {data: "numeracion"},
+            ],
+            },
+            columnDefs: [
+                {
+                    targets: [1],
+                    orderable: false,
+                    class: 'text-center'
                 },
             ]
         });

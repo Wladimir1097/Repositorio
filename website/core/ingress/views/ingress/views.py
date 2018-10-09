@@ -32,6 +32,19 @@ def ingress(request):
                 data['frmProv'] = ProviderForm()
                 data['title'] = 'Nuevo Registro de una Orden de Ingresos'
                 data['button'] = 'Guardar Orden'
+            elif action == 'edit' and 'id' in request.GET:
+                id = request.GET['id']
+                data['id'] = id
+                if Ingress.objects.filter(pk=id).exists():
+                    model = Ingress.objects.get(pk=id)
+                    data['form'] = IngressForm(instance=model, initial={'id': model.id})
+                    data['frmProv'] = ProviderForm(instance=model, initial={'id': model.prov})
+                    data['details'] = Inventory.objects.filter(ing=id)
+                    data['title'] = 'Edición de Ingreso'
+                    data['button'] = 'Editar Orden'
+                    # return render(request, 'ingress/editarIngreso.html', data)
+                else:
+                    return HttpResponseRedirect(src)
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
                 if Ingress.objects.filter(id=id):
@@ -39,6 +52,10 @@ def ingress(request):
                     data['company'] = Company.objects.first()
                     data['Ingress'] = Ingress.objects.filter(id=id)
                     data['details'] = Inventory.objects.filter(ing_id=id).order_by('id')
+                    sub = 0
+                    for e in Inventory.objects.filter(ing_id=id):
+                        sub += e.get_sub()
+                    data['subtotal'] = sub
                     html = template.render(data)
                     result = BytesIO()
                     links = lambda uri, rel: os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ''))
@@ -81,8 +98,16 @@ def ingress(request):
                 prods = json.loads(request.POST['prods'])
                 data = [[p.id, p.name, p.get_image(), p.get_cat(), p.cost_format(), p.stock, True] for p in
                         Product.objects.filter().exclude(id__in=prods)]
-            elif action == 'new':
+            elif action == 'new' or action == 'edit':
                 with transaction.atomic():
+                    if action == 'edit':
+                        inge = Ingress.objects.get(pk=request.POST['pk'])
+                        for i in Inventory.objects.filter(ing=inge):
+                            cant = i.cant - i.diferencia
+                            i.prod.stock -= cant
+                            i.prod.save()
+                            i.delete()
+                        inge.delete()
                     items = json.loads(request.POST['items'])
                     ing = Ingress()
                     ing.usuario_id = request.user.id
@@ -99,8 +124,8 @@ def ingress(request):
                         det.price = float(p['cost'])
                         det.subtotal = float(det.price) * int(det.cant)
                         det.save()
-                        det.prod.cost=det.price
-                        det.prod.price=det.price
+                        det.prod.cost = det.price
+                        det.prod.price = det.price
                         det.prod.save()
                     ing.get_totals()
                     data['resp'] = True
@@ -110,16 +135,18 @@ def ingress(request):
                 if type == 'distribucion':
                     for i in Inventory.objects.filter(ing=request.POST['id']):
                         data.append({
-                            'id': i.id, 'name': i.prod.name, 'cant': i.diferencia, 'cant_dev': 1, 'state': i.estado
+                            'id': i.id, 'name': i.prod.name, 'cant': i.diferencia, 'c': i.cant,
+                            'cant_dev': 1, 'state': i.estado
                         })
                 elif type == 'products':
                     data = [[a.id, a.prod.name, a.price_format(), a.cant, a.subtotal_format()] for a in
                             Inventory.objects.filter(ing_id=request.POST['id'])]
             elif action == 'load':
                 data = [
-                    [i.id, [[e.first_name +' '+ e.last_name] for e in User.objects.filter(pk=i.usuario_id)], i.prov.name,
+                    [i.id, [[e.first_name + ' ' + e.last_name] for e in User.objects.filter(pk=i.usuario_id)],
+                     i.prov.name,
                      Inventory.objects.filter(ing=i).count(),
-                     i.date_joined_format(), i.subtotal_format(), i.iva_format(), i.total_format()] for i in
+                     i.date_joined_format(), i.subtotal_format(), i.iva_format(), i.total_format(), i.estado] for i in
                     Ingress.objects.filter()]
             elif action == 'distr_products':
                 items = json.loads(request.POST['items'])
@@ -134,6 +161,7 @@ def ingress(request):
                         prod.stock += cant
                         prod.save()
                         det.save()
+                        Ingress.objects.filter(pk=det.ing_id).update(estado=True)
                 data['resp'] = True
             else:
                 data['error'] = 'Ha ocurrido un error'

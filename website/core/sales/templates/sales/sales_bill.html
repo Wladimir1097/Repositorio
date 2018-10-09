@@ -142,9 +142,13 @@
             {% for d in details %}
                 {% if d.cant > 0 %}
                     <tr>
-                        <td>{{ d.cant }}</td>
+                        {% if d.cant_ent > 0 %}
+                            <td>{{ d.cant_ent }}</td>
+                        {% else %}
+                            <td>{{ d.cant }}</td>
+                        {% endif %}
                         <td>{{ d.prod.name }}</td>
-                        <td>${{ d.price }}</td>
+                        <td>${{ d.price|floatformat:"2" }}</td>
                         <td>${{ d.subtotal|floatformat:"2" }}</td>
                     </tr>
                     <tr>
@@ -163,28 +167,6 @@
                     <div>${{ sales.subtotal|floatformat:"2" }}</div>
                 </td>
             </tr>
-            <!-- <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>DSCTO</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.dscto|floatformat:"2" }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>IVA
-                    ({{ sales.get_iva|floatformat:"2" }})</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.iva|floatformat:"2" }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>TOTAL</strong>
-                </td>
-                <td class="total-line">
-                    <div>${{ sales.subtotal|floatformat:"2" }}</div>
-                </td>
-            </tr>-->
             </tbody>
         </table>
         <div class="saltopagina" style="font-size: 13px">
@@ -205,10 +187,10 @@
             <br>
             Lugar y fecha de suscripción: <em>{{ company.address|upper }}, {{ sales.date_joined }}</em>
         </div>
-        <table style="font-size: 10px">
+        <table style="font-size: 12px">
             <thead>
             <tr style="height: 100px;">
-                <th style="width: 30%; text-align: left">Firma del deudor</th>
+                <th style="width: 70%; text-align: left">Firma del deudor</th>
                 <th style="width: 40%;"></th>
                 <th style="width: 30%;"></th>
             </tr>
@@ -222,17 +204,17 @@
                 <td style="width: 30%;"></td>
             </tr>
             <tr>
-                <td style="width: 30%; font-weight: bold;">Nombre: {{ sales.cli }}</td>
+                <td style="width: 70%; font-weight: bold;">Nombre: {{ sales.cli }}</td>
                 <td style="width: 40%; text-align: center; padding-top: 0px;"></td>
                 <td style="width: 30%;"></td>
             </tr>
             <tr>
-                <td style="width: 30%; font-weight: bold;">CI: {{ sales.cli.ruc }}</td>
+                <td style="width: 70%; font-weight: bold;">CI: {{ sales.cli.ruc }}</td>
                 <td style="width: 40%; text-align: center; padding-top: 0px;"></td>
                 <td style="width: 30%;"></td>
             </tr>
             <tr>
-                <td style="width: 30%; font-weight: bold;">Direccion: {{ sales.cli.address }}</td>
+                <td style="width: 70%; font-weight: bold;">Direccion: {{ sales.cli.address }}</td>
                 <td style="width: 40%; text-align: center; padding-top: 0px;"></td>
                 <td style="width: 30%;"></td>
             </tr>
@@ -245,7 +227,7 @@
 </body>
 
 <footer>
-    <img src="/media/library/logo/MEMBRETE PROENERGY SA INFERIOR.JPG" style="width: 700px;text-align: center;">
+    <img src="/media/library/logo/MEMBRETE PROENERGY SA INFERIOR.JPG" style="width: 750px;text-align: center;">
 </footer>
 
 </html>

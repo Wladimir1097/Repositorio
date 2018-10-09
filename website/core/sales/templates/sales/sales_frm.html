@@ -16,7 +16,7 @@
     <script src="{% static "plugins/formvalidation-0.6.0/js/framework/bootstrap.js" %}" type="text/javascript"></script>
     <script src="{% static "plugins/formvalidation-0.6.0/js/language/es_ES.js" %}" type="text/javascript"></script>
     <script src="{% static "js/jquery.form.min.js" %}" type="text/javascript"></script>
-    <script src="{% static "sales/js/sales_fn.js" %}" type="text/javascript"></script>
+    <script src="{% static "sales/js/sales_frm.js" %}" type="text/javascript"></script>
 {% endblock %}
 {% block content %}
     <section class="content">
@@ -49,7 +49,8 @@
                         <input type="hidden" id="directory" name="directory" value="{{ model.url }}">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab_1" data-toggle="tab">Datos de la factura <i class="fa"></i></a></li>
+                                <li class="active"><a href="#tab_1" data-toggle="tab">Datos de la factura <i
+                                        class="fa"></i></a></li>
                                 <li><a href="#tab_2" data-toggle="tab">Datos del trabajador <i class="fa"></i></a></li>
                             </ul>
                             <div class="tab-content">
@@ -58,7 +59,7 @@
                                         <div class="col-lg-2">
                                             <div class="form-group">
                                                 <label class="control-label">Tipo de Factura:</label>
-                                                {{ form.type|add_class:"form-control input-sm selectpicker"}}
+                                                {{ form.type|add_class:"form-control input-sm selectpicker" }}
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
@@ -68,7 +69,7 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <div class="form-group"  id="pnlDelivery" style="display: none;">
+                                            <div class="form-group" id="pnlDelivery" style="display: none;">
                                                 <label class="control-label">Fecha de Entrega:</label>
                                                 {{ form.date_delivery|add_class:"form-control input-sm" }}
                                             </div>
@@ -152,7 +153,6 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -199,7 +199,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h5 class="modal-title"><b>Búsqueda de Materiales <i class="fa fa-search" aria-hidden="true"></i></b>
+                        <h5 class="modal-title"><b>Búsqueda de Materiales <i class="fa fa-search"
+                                                                             aria-hidden="true"></i></b>
                         </h5>
                     </div>
                     <div class="modal-body">
@@ -212,7 +213,8 @@
                                     <th style="width: 50%;">Nombre</th>
                                     <th style="width: 15%;">Stock</th>
                                     <th style="width: 15%;">Costo</th>
-                                    <th style="width: 10%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+                                    <th style="width: 10%;" class="text-center"><i class="fa fa-wrench"
+                                                                                   aria-hidden="true"></i></th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -239,7 +241,8 @@
                                     <th style="width: 10%;" class="text-center">Nro</th>
                                     <th style="width: 55%;">Nombre</th>
                                     <th style="width: 20%;">Costo</th>
-                                    <th style="width: 15%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
+                                    <th style="width: 15%;" class="text-center"><i class="fa fa-wrench"
+                                                                                   aria-hidden="true"></i></th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -255,40 +258,88 @@
         billing.details.services = [];
         $(function () {
 
-            $('#reset').on('click', function () {
-                $('#frmSales').formValidation('resetForm', true);
-                $('#frmSales :input:enabled:visible:first').focus();
+                $('#reset').on('click', function () {
+                    $('#frmSales').formValidation('resetForm', true);
+                    $('#frmSales :input:enabled:visible:first').focus();
 
-                $('#pdni').val("");
-                $('#pphone').val("");
-                $('#pemail').val("");
-                $('#paddress').val("");
+                    $('#pdni').val("");
+                    $('#pphone').val("");
+                    $('#pemail').val("");
+                    $('#paddress').val("");
 
-                $('#id_cli').selectpicker('refresh');
-            });
+                    $('#id_cli').selectpicker('refresh');
+                });
 
-            $('#tblProducts').DataTable({
-                responsive: true,
-                autoWidth: false,
-                destroy: true,
-                ordering: false,
-                columnDefs: [
-                    {orderable: false, targets: [-1]},
-                    {visible: false, targets: [0]},
-                ]
-            });
+                $('#tblProducts').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    ordering: false,
+                    bPaginate: false,
+                    lengthChange: false,
+                    columnDefs: [
+                        {orderable: false, targets: [-1]},
+                        {visible: false, targets: [0]},
+                    ]
+                });
 
-            $('#tblServices').DataTable({
-                responsive: true,
-                autoWidth: false,
-                destroy: true,
-                columnDefs: [
-                    {orderable: false, targets: [-1]}
-                ]
-            });
-
-            billing.load_products();
-        });
+                $('#tblServices').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    columnDefs: [
+                        {orderable: false, targets: [-1]}
+                    ]
+                });
+                var modo = '{{ action }}';
+                if (modo === 'edit' || modo === 'reuse') {
+                    var stock = 0;
+                    var cant =0
+                    {% for p in details %}
+                        s = '{{ p.prod.price }}';
+                        s = s.replace(",", ".");
+                        if (modo === 'edit') {
+                            stock = {{ p.prod.stock}} + {{p.cant}};
+                            cant = {{ p.cant }};
+                        }else {
+                            stock = {{ p.prod.stock}};
+                            cant = {{ p.cant}};
+                            if (stock < cant) {
+                                cant = {{ p.prod.stock}};
+                            }
+                        }
+                        var item = {
+                            'pos': {{ forloop.counter0 }},
+                            'id': {{ p.prod.id }},
+                            'name': '{{ p.prod.name|escapejs}}',
+                            'cant': cant,
+                            'deduction': 0.00,
+                            'cost': parseFloat(s),
+                            'dscto': 0,
+                            'stock': stock,
+                            'subtotal': 0.00,
+                            'option': 0
+                        };
+                        if (stock !== 0) {
+                            billing.add_products(item);
+                        }
+                    {% endfor %}
+                    {% for p in servicios %}
+                        s = '{{ p.serv.cost }}';
+                        s = s.replace(",", ".");
+                        var item = {
+                            'pos': {{ forloop.counter0 }},
+                            'id': {{ p.serv.id }},
+                            'name': '{{ p.serv.name|escapejs}}',
+                            'cost': parseFloat(s),
+                            'option': 0
+                        };
+                        billing.add_services(item);
+                    {% endfor %}
+                }
+                billing.load_products();
+            }
+        );
     </script>
     {% block extra %}
     {% endblock %}

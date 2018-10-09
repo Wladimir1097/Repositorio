@@ -16,7 +16,7 @@
     <script src="{% static "plugins/formvalidation-0.6.0/js/framework/bootstrap.js" %}" type="text/javascript"></script>
     <script src="{% static "plugins/formvalidation-0.6.0/js/language/es_ES.js" %}" type="text/javascript"></script>
     <script src="{% static "js/jquery.form.min.js" %}" type="text/javascript"></script>
-    <script src="{% static "ingress/js/ingress_frm.js" %}" type="text/javascript"></script>
+    <script src="{% static "ingress/js/ingress_fn.js" %}" type="text/javascript"></script>
 {% endblock %}
 {% block content %}
     <section class="content">
@@ -91,7 +91,8 @@
                         </div>
 
                         <div class="col-lg-offset-10 form-group">
-                            <button type="button" class="btn btn-danger btn-sm btn-flat" onclick="window.open('/ingress/product?action=new' , 'aggMaterial' , 'width=800, height=600, scrollbars=no')">
+                            <button type="button" class="btn btn-danger btn-sm btn-flat"
+                                    onclick="window.open('/ingress/product?action=new' , 'aggMaterial' , 'width=700, height=600, scrollbars=no')">
                                 <i class="fa fa-plus-square" aria-hidden="true"></i> Nuevo Material
                             </button>
                         </div>
@@ -111,7 +112,8 @@
                             </tr>
                             </thead>
                             <tbody>
-
+                            {% block datos %}
+                            {% endblock %}
                             </tbody>
                         </table>
                         <hr>
@@ -198,6 +200,32 @@
                 ]
             });
         });
+        var modo = '{{ action }}';
+        if (modo === 'edit') {
+
+            $('#id_prov').change();
+            {% for p in details %}
+                s = '{{ p.prod.price }}';
+                s = s.replace(",", ".");
+                o = '{{ p.subtotal}}';
+                o = o.replace(",", ".");
+                pro = '{{ p.prod.name|escapejs}}';
+                var item = {
+                    'pos': {{ forloop.counter0 }},
+                    'id': {{ p.prod.id }},
+                    'name': pro,
+                    'image': '{{ p.prod.get_image }}',
+                    'cant': {{ p.cant}},
+                    'cat': '{{ p.prod.cat }}',
+                    'cost': parseFloat(s),
+                    'iva': 0.00,
+                    'subtotal': parseFloat(o),
+                    'total': 0.00,
+                    'option': 0
+                };
+                billing.add_products(item);
+            {% endfor %}
+        }
     </script>
     {% block extra %}
     {% endblock %}

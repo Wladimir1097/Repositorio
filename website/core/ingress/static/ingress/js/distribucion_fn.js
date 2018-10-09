@@ -24,8 +24,15 @@ $(function () {
             ],
             columnDefs: [
                 {
-                    targets: [1, 2],
+                    targets: [1],
+                    class: 'text-center'
+                },
+                {
+                    targets: [2],
                     class: 'text-center',
+                    'render': function (data, type, row) {
+                        return '<span class="badge bg-green-active">' + row.cant + '</span>';
+                    }
                 },
                 {
                     targets: [3],
@@ -33,11 +40,12 @@ $(function () {
                     render: function (data, type, row) {
                         if (!row.state) {
                             if (row.cant === 0) {
-                                return 'Ya se entrego todo';
+                                return 'Distribuido';
                             }
                             return '<input type="text" class="form-control input-sm" name="cant_dev" value="0">';
                         }
-                        return '<i class="fa fa-check" aria-hidden="true"></i>';
+                        real = parseInt(row.c) - parseInt(row.cant)
+                        return '<span class="badge bg-light-blue-active">' + real + '</span>';
                     }
                 },
                 {
@@ -46,7 +54,7 @@ $(function () {
                     render: function (data, type, row) {
                         if (!row.state) {
                             if (row.cant === 0) {
-                                return 'Ya se entrego todo';
+                                return 'Distribuido';
                             }
                             return '<input type="checkbox" class="check" value="" name="chk_dispatch">';
                         }

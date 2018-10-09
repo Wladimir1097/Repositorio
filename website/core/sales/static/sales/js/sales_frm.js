@@ -1,11 +1,12 @@
 var tblSearchProducts, tblProducts;
 var tblSearchServices, tblServices;
 
+
 var billing = {
     details: {
         cli: "",
         date_joined: "",
-        date_delivery : "",
+        date_delivery: "",
         subtotal: 0.00,
         iva: 0.00,
         dscto: 0.00,
@@ -51,6 +52,9 @@ var billing = {
         $('#dsctos').html('$' + billing.details.dscto.toFixed(2));
         $('#iva').html('$' + billing.details.iva.toFixed(2));
         $('#total').html('$' + billing.details.total.toFixed(2));
+
+        console.clear();
+        console.log(billing.details);
     },
     load_products: function () {
         this.get_produts();
@@ -59,6 +63,8 @@ var billing = {
             autoWidth: false,
             destroy: true,
             ordering: false,
+            bPaginate: false,
+            lengthChange: false,
             data: this.details.products,
             columns: [
                 {data: "pos"},
@@ -79,7 +85,7 @@ var billing = {
                 {
                     targets: [3],
                     render: function (data, type, row) {
-                        return '<b>'+data+'</b>';
+                        return '<b>' + data + '</b>';
                     }
                 },
                 {
@@ -89,9 +95,9 @@ var billing = {
                     }
                 },
                 {
-                    targets: [5,6],
+                    targets: [5, 6],
                     render: function (data, type, row) {
-                        return '$'+data.toFixed(2);
+                        return '$' + data.toFixed(2);
                     }
                 },
                 {
@@ -116,7 +122,7 @@ var billing = {
                 });
 
                 row.find('input[name="cant"]').keypress(function (e) {
-                    return validate_form_text('numbers',e,null);
+                    return validate_form_text('numbers', e, null);
                 });
 
             },
@@ -143,7 +149,7 @@ var billing = {
                     targets: [3],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '$'+data.toFixed(2);
+                        return '$' + data.toFixed(2);
                     }
                 },
                 {
@@ -207,7 +213,7 @@ $(function () {
         setDate: new Date()
     })
         .on('changeDate', function (e) {
-            $("#id_date_delivery").datepicker('setStartDate',$(this).val());
+            $("#id_date_delivery").datepicker('setStartDate', $(this).val());
             $('#id_date_delivery').datepicker('setDate', $(this).val());
             $('#frmSales').formValidation('revalidateField', 'date_delivery');
         })
@@ -255,7 +261,7 @@ $(function () {
         $('[href="#tab2"]').closest('li').show();
         if ($(this).val() === '2') {
             $('#pnlDelivery').show();
-            $("#id_date_delivery").datepicker('setStartDate',$('#id_date_joined').val());
+            $("#id_date_delivery").datepicker('setStartDate', $('#id_date_joined').val());
             $('[href="#tab2"]').closest('li').hide();
         }
     });
@@ -263,7 +269,7 @@ $(function () {
     /*=============================================================================================*/
 
     $('#btnRemoveProducts').on('click', function () {
-        if(billing.details.products.length === 0){
+        if (billing.details.products.length === 0) {
             return false;
         }
         action_alert('Notificación', '¿Estas seguro de eliminar todo el detalle de materiales?', function () {
@@ -301,7 +307,7 @@ $(function () {
                     targets: [3],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '$'+data;
+                        return '$' + data;
                     }
                 }
             ]
@@ -360,7 +366,7 @@ $(function () {
                     targets: [3],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        return '$'+data;
+                        return '$' + data;
                     }
                 }
             ]
@@ -386,7 +392,7 @@ $(function () {
     });
 
     $('#btnRemoveServices').on('click', function () {
-        if(billing.details.services.length === 0){
+        if (billing.details.services.length === 0) {
             return false;
         }
         action_alert('Notificación', '¿Estas seguro de eliminar todo el detalle de servicios?', function () {
@@ -478,15 +484,20 @@ $(function () {
                 error_message('Debe agregar un item al menos al detalle de la distribucion');
                 return false;
             }
-
-            var msg = billing.details.type === 1 ?  'Registro ingresado correctamente':'Pedido registrado correctamente';
-
+            var modo = getParameterByName('action');
+            var pk = getParameterByName('id');
+            if (modo == 'new') {
+                pk = 0
+            }
+            var msg = billing.details.type === 1 ? 'Registro ingresado correctamente' : 'Pedido registrado correctamente';
             action_by_ajax_with_alert('Notificación',
                 '¿Estas seguro de guardar la siguiente Distribucion?',
                 pathname,
                 {
-                    'action': $('#action').val(),
+                    //'action': $('#action').val(),
+                    'action':modo,
                     'id': $('#id').val(),
+                    'pk': pk,
                     'items': JSON.stringify(billing.details),
                 },
                 function () {
@@ -498,4 +509,10 @@ $(function () {
 
         });
 
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 });

@@ -68,6 +68,7 @@ class IngressForm(ModelForm):
             'dscto': TextInput(),
             'total': TextInput()
         }
+        Exclude =['diferencia','estado']
 
     id = IntegerField(widget=HiddenInput(attrs={'id': 'id'}), initial=0)
 

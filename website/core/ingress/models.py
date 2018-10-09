@@ -37,8 +37,8 @@ class Product(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
     cat = models.ForeignKey(Category, verbose_name='Categoria', null=True, blank=True, on_delete=models.PROTECT)
     brand = models.ForeignKey(Brand, verbose_name='Marca', null=True, blank=True, on_delete=models.PROTECT)
-    cost = models.DecimalField(decimal_places=2, max_digits=9, default=0.00, verbose_name='Costo')
-    price = models.DecimalField(decimal_places=2, max_digits=9, default=0.00, verbose_name='Precio')
+    cost = models.DecimalField(decimal_places=5, max_digits=9, default=0.00, verbose_name='Costo')
+    price = models.DecimalField(decimal_places=5, max_digits=9, default=0.00, verbose_name='Precio')
     image = models.ImageField(upload_to='product/%Y/%m/%d', verbose_name='Imagen', null=True, blank=True)
     stock = models.IntegerField(default=0)
 
@@ -68,10 +68,10 @@ class Product(models.Model):
             'resp']
 
     def cost_format(self):
-        return format(self.cost, '.2f')
+        return format(self.cost, '.5f')
 
     def price_format(self):
-        return format(self.price, '.2f')
+        return format(self.price, '.5f')
 
     class Meta:
         verbose_name = 'Producto'
@@ -106,6 +106,7 @@ class Ingress(models.Model):
     dscto = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     iva = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    estado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.prov.name
@@ -134,9 +135,11 @@ class Ingress(models.Model):
     def get_totals(self):
         subtotal = 0.00
         for d in Inventory.objects.filter(ing=self):
-            subtotal += float(d.price) * int(d.cant)
+            subtotal += float(d.subtotal)
+            # subtotal += float(d.price) * int(d.cant)
         self.subtotal = subtotal
-        self.iva = float(0.12) * float(self.subtotal)
+        # self.iva = float(0.12) * float(self.subtotal)
+        self.iva = 0
         self.total = float(self.subtotal) + float(self.iva)
         self.save()
 
@@ -150,7 +153,7 @@ class Inventory(models.Model):
     ing = models.ForeignKey(Ingress, on_delete=models.PROTECT)
     prod = models.ForeignKey(Product, on_delete=models.PROTECT)
     cant = models.IntegerField(default=0)
-    price = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    price = models.DecimalField(max_digits=9, decimal_places=5, default=0.00)
     subtotal = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     dscto = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
@@ -161,10 +164,10 @@ class Inventory(models.Model):
         return self.prod.name
 
     def price_format(self):
-        return format(self.price, '.2f')
+        return format(self.price, '.5f')
 
     def dscto_format(self):
-        return format(self.dscto, '.2f')
+        return format(self.dscto, '.5f')
 
     def subtotal_format(self):
         return format(self.subtotal, '.2f')
@@ -174,6 +177,15 @@ class Inventory(models.Model):
 
     def get_dscto(self):
         return str((self.dscto / self.subtotal) * 100)
+
+    def get_sub(self):
+        return float(self.price) * int(self.diferencia)
+
+    def get_subTotal(self):
+        subtotal = 0.00
+        for d in Inventory.objects.filter(ing=self):
+            subtotal += d.get_sub()
+        return subtotal
 
     class Meta:
         verbose_name = 'Inventario'

@@ -1,0 +1,28 @@
+{% extends 'ingress/ingress_frm.html' %}
+{% block datos %}
+    {% for p in details %}
+        <tr>
+            <td>{{ forloop.counter0 }}</td>
+            <td>{{ p.id }}</td>
+            <td>{{ p.prod.name }}</td>
+            <td>{{ p.prod.image }}</td>
+            <td>{{ p.cant }}</td>
+            <td>{{ p.prod.cat }}</td>
+            <td>{{ p.price }}</td>
+            <td>{{ p.subtotal }}</td>
+            <td align="center">
+                <a rel="remove" class="btn btn-danger btn-xs btn-flat"><i
+                        class="fa fa-trash" aria-hidden="true"></i></a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">No existen registros</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+{% block extra %}
+    <script>
+        $('#id_prov').change();
+    </script>
+{% endblock %}

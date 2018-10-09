@@ -3,8 +3,9 @@
 {% block pnldatahead %}
     <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
     <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
-    <script src="{% static "sales/js/sales_dt.js" %}"></script>
+    <script src="{% static "sales/js/sales_dtab.js" %}"></script>
     <script src="{% static "devolution/js/devolution_fn.js" %}"></script>
+    <script src="{% static "sales/js/adicionar.js" %}"></script>
 {% endblock %}
 {% block columns %}
     <th style="width: 1%;">Nro</th>
@@ -35,9 +36,19 @@
                                         <b>Productos</b>
                                     </a>
                                 </li>
-                               <li class="">
+                                <li class="">
                                     <a href="#tab_2" data-toggle="tab" aria-expanded="false">
                                         <b>Servicios</b>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab_3" data-toggle="tab" aria-expanded="false">
+                                        <b>Medidores</b>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab_4" data-toggle="tab" aria-expanded="false">
+                                        <b>Sellos</b>
                                     </a>
                                 </li>
                             </ul>
@@ -73,6 +84,32 @@
                                         <tbody></tbody>
                                     </table>
                                 </div>
+                                <div class="tab-pane" id="tab_3">
+                                    <table width="100%"
+                                           class="table table-bordered table-hover"
+                                           id="tblMedidor">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%;">Nro</th>
+                                            <th style="width: 70%;">Numeracion</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="tab_4">
+                                    <table width="100%"
+                                           class="table table-bordered table-hover"
+                                           id="tblSello">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%;">Nro</th>
+                                            <th style="width: 70%;">Numeracion</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,12 +117,12 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="MyModalDispatch" role="dialog">
+    <div class="modal fade" id="MyModal" role="dialog">
         <div class="modal-dialog modal-ml">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title"><b>Productos para entregar <i class="fa fa-search" aria-hidden="true"></i></b>
+                    <h5 class="modal-title"><b>Medidores y sellos<i class="fa fa-search" aria-hidden="true"></i></b>
                     </h5>
                 </div>
                 <div class="modal-body">
@@ -93,15 +130,14 @@
                         <input type="hidden" id="sales">
                         <table width="100%"
                                class="table table-bordered table-hover"
-                               id="tblDispatch">
+                               id="tbl">
                             <thead>
                             <tr>
                                 <th style="width: 5%;">Nro</th>
                                 <th style="width: 50%;">Nombre</th>
                                 <th style="width: 10%;">Cantidad</th>
-                                <th style="width: 10%;">Cant.Ent</th>
-                                <th style="width: 10%;">Stock</th>
-                                <th style="width: 15%;">Cant.Desp</th>
+                                <th style="width: 10%;">Numeracion Inical</th>
+                                <th style="width: 10%;">Numeracion Final</th>
                                 <th style="width: 10%;">Entregado</th>
                             </tr>
                             </thead>
@@ -113,8 +149,8 @@
                     <div class="form-group text-left">
                         <div class="row">
                             <div class="col-lg-12">
-                                <button id="btnDispatch" class="btn btn-sm btn-primary btn-flat" disabled>
-                                    <i class="fa fa-plus" aria-hidden="true"></i> Entregar Pedido
+                                <button id="btn" class="btn btn-sm btn-primary btn-flat" disabled>
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Agregar Materiales
                                 </button>
                             </div>
                         </div>
@@ -123,6 +159,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="MyModalDevolution" role="dialog">
         <div class="modal-dialog modal-ml">
             <div class="modal-content">
@@ -156,6 +193,48 @@
                             <div class="col-lg-12">
                                 <button id="btnDevolution" class="btn btn-sm btn-primary btn-flat" disabled>
                                     <i class="fa fa-refresh" aria-hidden="true"></i> Devolver Productos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModalAdicion" role="dialog">
+        <div class="modal-dialog modal-ml">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Ingreso de Numeraciones <i class="fa fa-search"
+                                                                          aria-hidden="true"></i></b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="sales">
+                        <table width="100%"
+                               class="table table-bordered table-hover"
+                               id="tblAdicion">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%;">Nro</th>
+                                <th style="width: 30%;">Nombre</th>
+                                <th style="width: 10%;">Cantidad</th>
+                                <th style="width: 30%;">Numeracion Inicial</th>
+                                <th style="width: 10%;">Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group text-left">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button id="btnAdicion" class="btn btn-sm btn-primary btn-flat" disabled>
+                                    <i class="fa fa-refresh" aria-hidden="true"></i> Ingresar Numeraciones
                                 </button>
                             </div>
                         </div>
