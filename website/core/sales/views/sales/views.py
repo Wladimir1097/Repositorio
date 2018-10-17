@@ -6,6 +6,7 @@ from django.http import HttpResponse
 import json
 from django.shortcuts import render
 from django.template.defaultfilters import safe
+from django.utils.timezone import now
 
 from core.ingress.models import Product
 from core.security.views.module.views import get_module_options
@@ -31,7 +32,7 @@ def sales(request):
             data['action'] = action
             template = 'sales/sales_frm.html'
             if action == 'new':
-                data['form'] = SalesForm()
+                data['form'] = SalesForm(request.user.bodega_id, request.POST)
                 data['title'] = 'Nuevo Registro de Despacho'
                 data['button'] = 'Guardar Transacción'
             elif action == 'edit' and 'id' in request.GET:
@@ -39,7 +40,8 @@ def sales(request):
                 data['id'] = id
                 if Sales.objects.filter(pk=id).exists():
                     model = Sales.objects.get(pk=id)
-                    data['form'] = SalesForm(instance=model, initial={'id': model.id})
+                    data['form'] = SalesForm(request.user.bodega_id, request.POST, instance=model,
+                                             initial={'id': model.id})
                     data['details'] = SalesProducts.objects.filter(sales=id)
                     data['servicios'] = SalesServices.objects.filter(sales=id)
                     data['title'] = 'Edición de Egreso'
@@ -52,7 +54,7 @@ def sales(request):
                 data['id'] = id
                 if Sales.objects.filter(pk=id).exists():
                     model = Sales.objects.get(pk=id)
-                    data['form'] = SalesForm(instance=model, initial={'id': model.id})
+                    data['form'] = SalesForm(request.user.bodega_id, instance=model, initial={'id': model.id})
                     data['details'] = SalesProducts.objects.filter(sales=id)
                     data['servicios'] = SalesServices.objects.filter(sales=id)
                     data['title'] = 'Reutilizar este Egreso'
@@ -62,11 +64,14 @@ def sales(request):
                     return HttpResponseRedirect(src)
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
+                for e in Bodega.objects.filter(pk=request.user.bodega_id):
+                    direccion = e.address
                 if Sales.objects.filter(id=id):
                     template = get_template('sales/sales_bill.html')
                     context = {
                         'company': Company.objects.first(), 'sales': Sales.objects.get(id=id),
                         'details': SalesProducts.objects.filter(sales_id=id).order_by('id'),
+                        'ubicacion': direccion
                     }
                     html = template.render(context)
                     result = BytesIO()
@@ -121,15 +126,32 @@ def sales(request):
                     for s in SalesServices.objects.filter(sales_id=request.POST['id']):
                         data.append([s.id, s.serv.name, s.total_format()])
                 elif type == 'medidor':
-                    for s in SalesMedidores.objects.filter(sales_id=request.POST['id']):
-                        if s.numeracion > 0:
-                            for i in range(0, s.cant):
-                                data.append([i + 1, s.numeracion + i])
+                    cliente = 0
+                    for e in Sales.objects.filter(id=request.POST['id']):
+                        cliente = e.cli_id
+                    for s in InventoryMedidor.objects.filter(cli_id=cliente):
+                        data.append([s.id, s.numeracion])
                 elif type == 'sello':
-                    for s in SalesSellos.objects.filter(sales_id=request.POST['id']):
-                        if s.numeracion > 0:
-                            for i in range(0, s.cant):
-                                data.append([i + 1, s.numeracion + i])
+                    cliente = 0
+                    for e in Sales.objects.filter(id=request.POST['id']):
+                        cliente = e.cli_id
+                    for s in InventorySello.objects.filter(cli_id=cliente):
+                        data.append([s.id, s.numeracion])
+                elif type == 'adicion':
+                    for s in InventoryMedidor.objects.filter(usuario_id__bodega_id=request.user.bodega_id):
+                        if s.distribuido:
+                            if not s.estado:
+                                data.append({
+                                    'pk': request.POST['id'], 'id': s.id, 'tipo': True, 'num': s.numeracion,
+                                    'state': s.estado
+                                })
+                    for s in InventorySello.objects.filter(usuario_id__bodega_id=request.user.bodega_id):
+                        if s.distribuido:
+                            if not s.estado:
+                                data.append({
+                                    'pk': request.POST['id'], 'id': s.id, 'tipo': False, 'num': s.numeracion,
+                                    'state': s.estado
+                                })
                 elif type == 'dispatch':
                     for s in SalesProducts.objects.filter(sales_id=request.POST['id']):
                         data.append({
@@ -141,19 +163,10 @@ def sales(request):
                         data.append({
                             'id': s.id, 'name': s.prod.name, 'cant': s.cant, 'cant_dev': 1, 'state': s.cant == 0
                         })
-                elif type == 'adicion':
-                    for s in SalesMedidores.objects.filter(sales_id=request.POST['id']):
-                        data.append({
-                            'id': s.id, 'name': 'Medidor', 'cant': s.cant, 'cant_dev': s.numeracion, 'state': s.estado
-                        })
-
-                    for s in SalesSellos.objects.filter(sales_id=request.POST['id']):
-                        data.append({
-                            'id': s.id, 'name': 'Sellos', 'cant': s.cant, 'cant_dev': s.numeracion, 'state': s.estado
-                        })
             elif action == 'search_products':
                 data = []
-                for p in Product.objects.filter().exclude(id__in=json.loads(request.POST['items'])):
+                for p in Product.objects.filter(bodega_id=request.user.bodega_id).exclude(
+                        id__in=json.loads(request.POST['items'])):
                     if p.stock > 0:
                         data.append([p.id, p.name, p.stock, p.price_format(), 1])
             elif action == 'search_services':
@@ -186,10 +199,6 @@ def sales(request):
                         det = SalesProducts()
                         det.sales = vent
                         det.prod_id = int(p['id'])
-                        if det.prod_id == 130:
-                            SalesMedidores.objects.create(sales_id=vent.pk, cant=int(p['cant']))
-                        elif det.prod_id == 107:
-                            SalesSellos.objects.create(sales_id=vent.pk, cant=int(p['cant']))
                         det.cant = int(p['cant'])
                         det.price = float(p['cost'])
                         det.subtotal = float(det.price) * int(det.cant)
@@ -246,17 +255,30 @@ def sales(request):
                         dev.save()
                 data['resp'] = True
             elif action == 'ingress_prod':
-                i = json.loads(request.POST['items'])
-                if int(i[0]['cant_dev']) > 0 and i[0]['state']:
-                    SalesMedidores.objects.filter(pk=i[0]['id']).update(numeracion=int(i[0]['cant_dev']), estado=True)
-                if int(i[1]['cant_dev']) > 0 and i[1]['state']:
-                    SalesSellos.objects.filter(pk=i[1]['id']).update(numeracion=int(i[1]['cant_dev']), estado=True)
+                items = json.loads(request.POST['items'])
+                for i in items:
+                    if i['state']:
+                        cliente = 0
+                        if i['tipo']:
+                            det = InventoryMedidor.objects.get(pk=i['id'])
+                            for e in Sales.objects.filter(id=i['pk']):
+                                cliente = e.cli_id
+                            det.cli_id = cliente
+                            det.estado = True
+                            det.save()
+                        else:
+                            det = InventorySello.objects.get(pk=i['id'])
+                            for e in Sales.objects.filter(id=i['pk']):
+                                cliente = e.cli_id
+                            det.cli_id = cliente
+                            det.estado = True
+                            det.save()
                 data['resp'] = True
             elif action == 'load':
 
                 data = [[i.id, i.get_nro(), [[e.username] for e in User.objects.filter(pk=i.usuario_id)], i.cli.name,
                          i.date_joined_format(), i.get_type_display(), i.subtotal_format(), i.type] for i in
-                        Sales.objects.filter()]
+                        Sales.objects.filter(usuario_id__bodega_id=request.user.bodega_id)]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

@@ -5,12 +5,14 @@ from django.db.models import Sum
 from config.settings.base import STATIC_URL, MEDIA_URL
 from datetime import datetime
 
+from core.company.models import Bodega
 from core.users.models import User
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name="Nombre")
+    name = models.CharField(max_length=50, verbose_name="Nombre")
     description = models.CharField(max_length=500, null=True, blank=True, verbose_name="Descripción")
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -22,7 +24,8 @@ class Category(models.Model):
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name="Nombre")
+    name = models.CharField(max_length=50, verbose_name="Nombre")
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -34,12 +37,13 @@ class Brand(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200, unique=True, verbose_name='Nombre')
+    name = models.CharField(max_length=200, verbose_name='Nombre')
     cat = models.ForeignKey(Category, verbose_name='Categoria', null=True, blank=True, on_delete=models.PROTECT)
     brand = models.ForeignKey(Brand, verbose_name='Marca', null=True, blank=True, on_delete=models.PROTECT)
     cost = models.DecimalField(decimal_places=5, max_digits=9, default=0.00, verbose_name='Costo')
     price = models.DecimalField(decimal_places=5, max_digits=9, default=0.00, verbose_name='Precio')
     image = models.ImageField(upload_to='product/%Y/%m/%d', verbose_name='Imagen', null=True, blank=True)
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
     stock = models.IntegerField(default=0)
 
     def __str__(self):
@@ -56,7 +60,9 @@ class Product(models.Model):
         return "{0}{1}".format(STATIC_URL, 'img/default/product.png')
 
     def get_ingress(self):
-        return Inventory.objects.filter(prod=self).aggregate(resp=Coalesce(Sum('cant'), 0))['resp']
+        cant = Inventory.objects.filter(prod=self).aggregate(resp=Coalesce(Sum('cant'), 0))['resp']
+        dif = Inventory.objects.filter(prod=self).aggregate(resp=Coalesce(Sum('diferencia'), 0))['resp']
+        return cant - dif
 
     def get_sales(self):
         from core.sales.models import SalesProducts
@@ -80,11 +86,12 @@ class Product(models.Model):
 
 
 class Provider(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name='Nombre')
-    ruc = models.CharField(max_length=13, unique=True, verbose_name='Ruc')
-    mobile = models.CharField(max_length=10, unique=True, null=True, blank=True, verbose_name='Celular')
+    name = models.CharField(max_length=100, verbose_name='Nombre')
+    ruc = models.CharField(max_length=13, verbose_name='Ruc', blank=True, null=True)
+    mobile = models.CharField(max_length=10, null=True, blank=True, verbose_name='Celular')
     address = models.CharField(max_length=500, null=True, blank=True, verbose_name='Dirección')
     email = models.CharField(max_length=500, null=True, blank=True, verbose_name='Email')
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -191,3 +198,4 @@ class Inventory(models.Model):
         verbose_name = 'Inventario'
         verbose_name_plural = 'Inventarios'
         ordering = ['-id']
+

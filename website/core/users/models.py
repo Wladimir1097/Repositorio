@@ -6,9 +6,11 @@ from django.utils import timezone
 from .managers import UserManager
 from core.dashboard.choices import gender_choices
 from django.core.mail import send_mail
-from config.settings.base import MEDIA_URL,STATIC_URL
+from config.settings.base import MEDIA_URL, STATIC_URL
 import unicodedata
 import uuid
+from core.company.models import Bodega
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(verbose_name='Username', max_length=20, unique=True)
@@ -16,8 +18,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(verbose_name="Apellidos", max_length=255)
     dni = models.CharField(max_length=13, unique=True, verbose_name="Cédula o RUC")
     email = models.EmailField(verbose_name="Correo Electrónico", unique=True)
-    phone = models.CharField(verbose_name="Teléfono Convencional", max_length=255,null=True,blank=True)
-    mobile = models.CharField(verbose_name="Teléfono Celular", max_length=255,null=True,blank=True)
+    phone = models.CharField(verbose_name="Teléfono Convencional", max_length=255, null=True, blank=True)
+    mobile = models.CharField(verbose_name="Teléfono Celular", max_length=255, null=True, blank=True)
     gender = models.IntegerField(choices=gender_choices, verbose_name="Género", default=1)
     address = models.CharField(verbose_name="Dirección", max_length=255, null=True, blank=True)
     birthdate = models.DateField(verbose_name="Fecha de Nacimiento", blank=True, null=True)
@@ -27,8 +29,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     is_change_password = models.BooleanField(default=False)
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
 
-    token = models.UUIDField(primary_key=False, editable=False, null=True, blank=True, default=uuid.uuid4,unique=True)
+    token = models.UUIDField(primary_key=False, editable=False, null=True, blank=True, default=uuid.uuid4, unique=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
@@ -42,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 base = username
                 cod = 1
                 while User.objects.filter(username=username).exclude(id=self.id).exists():
-                    username = "{}{}".format(base,cod)
+                    username = "{}{}".format(base, cod)
                     cod = cod + 1
                 return ''.join(c for c in unicodedata.normalize('NFD', username) if unicodedata.category(c) != 'Mn')
         except:

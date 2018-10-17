@@ -13,13 +13,13 @@ def inventory_report(request):
     data = get_module_options(request)
     if request.method == 'GET':
         data['title'] = 'Reporte de Inventarios'
-        data['form'] = ReportForm()
+        data['form'] = ReportForm(request.user.bodega_id)
         return render(request, 'inventory_report/inventory_report_rp.html', data)
     elif request.method == 'POST':
         prod = request.POST['prod']
         data = []
         try:
-            items = Product.objects.filter()
+            items = Product.objects.filter(bodega=request.user.bodega_id)
             if len(prod):
                 items = items.filter(id=prod)
             for i in items:

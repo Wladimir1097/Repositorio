@@ -6,6 +6,7 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.sales.forms import *
 
+
 @csrf_exempt
 @access_module
 def client(request):
@@ -45,9 +46,11 @@ def client(request):
                 if action == 'new':
                     f = ClientForm(request.POST)
                 elif action == 'edit':
-                    f = ClientForm(request.POST,instance=Client.objects.get(pk=request.POST['id']))
+                    f = ClientForm(request.POST, instance=Client.objects.get(pk=request.POST['id']))
                 if f.is_valid():
-                    f.save()
+                    p = f.save(commit=False)
+                    p.bodega_id = request.user.bodega_id
+                    p.save()
                     data['resp'] = True
                 else:
                     data['resp'] = False
@@ -89,7 +92,7 @@ def client(request):
                             return JsonResponse({'valid': 'false'})
                 return JsonResponse({'valid': 'true'})
             elif action == 'load':
-                data = [[c.id,c.name,c.ruc,c.mobile,c.address,True] for c in Client.objects.filter()]
+                data = [[c.id, c.name, c.ruc, c.mobile, c.address, True] for c in Client.objects.filter(bodega_id=request.user.bodega_id)]
         except Exception as e:
             data['error'] = str(e)
             data['resp'] = False

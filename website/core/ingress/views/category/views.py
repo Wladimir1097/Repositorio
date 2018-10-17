@@ -6,6 +6,7 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.ingress.forms import *
 
+
 @csrf_exempt
 @access_module
 def category(request):
@@ -47,7 +48,9 @@ def category(request):
                 elif action == 'edit':
                     f = CategoryForm(request.POST, instance=Category.objects.get(pk=request.POST['id']))
                 if f.is_valid():
-                    f.save()
+                    p = f.save()
+                    p.bodega_id = request.user.bodega_id
+                    p.save()
                     data['resp'] = True
                 else:
                     data['resp'] = False
@@ -68,7 +71,7 @@ def category(request):
                             return JsonResponse({'valid': 'false'})
                 return JsonResponse({'valid': 'true'})
             elif action == 'load':
-                data = [[i.id, i.name,i.description, True] for i in Category.objects.filter()]
+                data = [[i.id, i.name, i.description, True] for i in Category.objects.filter(bodega_id=request.user.bodega_id)]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

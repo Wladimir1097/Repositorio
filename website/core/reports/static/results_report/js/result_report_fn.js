@@ -178,7 +178,7 @@ function graph_report(data) {
             text: ''
         },
         xAxis: {
-            categories: ['Compras','Gastos','Compras','Ventas','Pedidos']
+            categories: ['Ingresos','Gastos','Egresos','Ventas','Pedidos']
         },
         series: [{
             type: 'column',

@@ -28,7 +28,7 @@ def ingress(request):
             data['action'] = action
             template = 'ingress/ingress_frm.html'
             if action == 'new':
-                data['form'] = IngressForm()
+                data['form'] = IngressForm(request.user.bodega_id, request.POST)
                 data['frmProv'] = ProviderForm()
                 data['title'] = 'Nuevo Registro de una Orden de Ingresos'
                 data['button'] = 'Guardar Orden'
@@ -37,7 +37,8 @@ def ingress(request):
                 data['id'] = id
                 if Ingress.objects.filter(pk=id).exists():
                     model = Ingress.objects.get(pk=id)
-                    data['form'] = IngressForm(instance=model, initial={'id': model.id})
+                    data['form'] = IngressForm(request.user.bodega_id, request.POST, instance=model,
+                                               initial={'id': model.id})
                     data['frmProv'] = ProviderForm(instance=model, initial={'id': model.prov})
                     data['details'] = Inventory.objects.filter(ing=id)
                     data['title'] = 'Edición de Ingreso'
@@ -47,11 +48,15 @@ def ingress(request):
                     return HttpResponseRedirect(src)
             elif action == 'pdf' and 'id' in request.GET:
                 id = request.GET['id']
+                for e in Bodega.objects.filter(pk=request.user.bodega_id):
+                    direccion = e.address
                 if Ingress.objects.filter(id=id):
                     template = get_template('ingress/ingress_bill.html')
                     data['company'] = Company.objects.first()
                     data['Ingress'] = Ingress.objects.filter(id=id)
                     data['details'] = Inventory.objects.filter(ing_id=id).order_by('id')
+                    data['ubicacion'] = direccion
+                    data['vacio'] = request.user.bodega_id
                     sub = 0
                     for e in Inventory.objects.filter(ing_id=id):
                         sub += e.get_sub()
@@ -97,7 +102,7 @@ def ingress(request):
             elif action == 'search_products':
                 prods = json.loads(request.POST['prods'])
                 data = [[p.id, p.name, p.get_image(), p.get_cat(), p.cost_format(), p.stock, True] for p in
-                        Product.objects.filter().exclude(id__in=prods)]
+                        Product.objects.filter(bodega_id=request.user.bodega_id).exclude(id__in=prods)]
             elif action == 'new' or action == 'edit':
                 with transaction.atomic():
                     if action == 'edit':
@@ -147,7 +152,7 @@ def ingress(request):
                      i.prov.name,
                      Inventory.objects.filter(ing=i).count(),
                      i.date_joined_format(), i.subtotal_format(), i.iva_format(), i.total_format(), i.estado] for i in
-                    Ingress.objects.filter()]
+                    Ingress.objects.filter(usuario_id__bodega_id=request.user.bodega_id)]
             elif action == 'distr_products':
                 items = json.loads(request.POST['items'])
                 for i in items:

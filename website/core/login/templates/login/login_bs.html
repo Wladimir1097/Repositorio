@@ -1,13 +1,24 @@
 {% extends 'bs_form.html' %}
 {% load static from staticfiles %}
 {% block pnlformhead %}
-     <link rel="stylesheet" href="{% static 'login/css/login.css' %}"/>
-     {% block loginhead %}
-     
-     {% endblock %}
+    <link rel="stylesheet" href="{% static 'login/css/login.css' %}"/>
+    {% block loginhead %}
+
+    {% endblock %}
 {% endblock %}
 {% block body %}
-    <body class="hold-transition login-page">
+    <style>
+        .fondo {
+            background-image: url('https://okdiario.com/img/2016/12/25/electricidad-como-se-genera.jpg');
+            background-color: #cccccc;
+            height: 500px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+    </style>
+    <body class="hold-transition login-page fondo">
     {% block content %}{% endblock %}
     </body>
 {% endblock %}

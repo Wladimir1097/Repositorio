@@ -62,7 +62,7 @@ $(function () {
                 row = $(row).closest('tr');
                 row.find("input[name='cant_dev']").TouchSpin({
                     min: 1,
-                    max:99999999999,
+                    max: 99999999999,
                     step: 1
                 });
                 row.find('input[name="cant_dev"]').keypress(function (e) {
@@ -70,7 +70,7 @@ $(function () {
                 });
             },
         });
-        $('#btnAdicion').prop('disabled',true);
+        $('#btnAdicion').prop('disabled', true);
         $('#MyModalAdicion').modal('show');
     });
 
@@ -103,7 +103,7 @@ $(function () {
 
     $('#btnAdicion').on('click', function () {
         console.log(JSON.stringify(tblAdicion.data().toArray()));
-        action_by_ajax_with_alert('Notificación','¿Esta seguro de ingresar estas numeraciones?',
+        action_by_ajax_with_alert('Notificación', '¿Esta seguro de ingresar estas numeraciones?',
             pathname, {
                 items: JSON.stringify(tblAdicion.data().toArray()),
                 action: 'ingress_prod'

@@ -3,6 +3,7 @@ function load_data() {
         responsive: true,
         autoWidth: false,
         destroy: true,
+        order: [[ 0, 'desc' ],[ 4, 'desc' ]],
         ajax: {
             url: pathname,
             type: 'POST',

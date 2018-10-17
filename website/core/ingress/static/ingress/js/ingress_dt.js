@@ -3,6 +3,7 @@ function load_data() {
         responsive: true,
         autoWidth: false,
         destroy: true,
+        order: [[ 0, 'desc' ],[ 4, 'desc' ]],
         ajax: {
             url: pathname,
             type: 'POST',
@@ -16,7 +17,7 @@ function load_data() {
                 class: 'text-center',
                 render: function (data, type, row) {
                     if (!row[8]) {
-                        var buttons = '<a href="' + pathname + '?action=edit&id=' + row[0] + '" data-toggle="tooltip" title="Editar registro" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> ';
+                        var buttons = '<a href="' + pathname + '?action=edit&id=' + row[0] + '" data-toggle="tooltip" title="Editar registro" class="btn btn-yahoo btn-xs btn-flat"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> ';
                     } else {
                         var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir Orden" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
                     }
@@ -28,7 +29,6 @@ function load_data() {
             },
             {
                 targets: [5],
-                orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
                     return '$' + data;
@@ -36,7 +36,6 @@ function load_data() {
             },
             {
                 targets: [3],
-                orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
                     return data + '  Materiales';

@@ -31,7 +31,7 @@ def devolution(request):
                 data['resp'] = True
             elif action == 'load':
                 data = [[d.id, d.det.sales.get_nro(), d.det.id, d.det.prod.name, d.date_joined_format(), d.cant, True]
-                        for d in DevolutionSales.objects.filter()]
+                        for d in DevolutionSales.objects.filter(det_id__sales_id__usuario_id__bodega_id=request.user.bodega_id)]
         except Exception as e:
             data['error'] = str(e)
             data['resp'] = False

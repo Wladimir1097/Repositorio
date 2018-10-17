@@ -1,6 +1,20 @@
 from django.forms import *
 from .models import *
 
+class BodegaForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Bodega
+        fields = '__all__'
+        widgets = {
+            'name': TextInput(attrs={'placeholder': 'Ingrese una descripción'}),
+            'ubicacion': TextInput(attrs={'placeholder': 'Ingrese una ubicacion'})
+        }
+
+    id = IntegerField(widget=HiddenInput(attrs={'id': 'id'}), initial=0)
 
 class CompanyForm(ModelForm):
     def __init__(self, *args, **kwargs):

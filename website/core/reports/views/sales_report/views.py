@@ -7,13 +7,14 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.sales.models import *
 
+
 @access_module
 @csrf_exempt
 def sales_report(request):
     data = get_module_options(request)
     if request.method == 'GET':
-        data['title'] = 'Reporte de Ventas'
-        data['form'] = ReportForm()
+        data['title'] = 'Reporte de Egresos'
+        data['form'] = ReportForm(request.user.bodega_id)
         return render(request, 'sales_report/sales_report_rp.html', data)
     elif request.method == 'POST':
         filter = request.POST['filter']
@@ -25,7 +26,7 @@ def sales_report(request):
         if month == "" and filter == '3':
             filter = '2'
         try:
-            items = Sales.objects.filter(type=1)
+            items = Sales.objects.filter(type=1, usuario_id__bodega_id=request.user.bodega_id)
             if len(cli):
                 items = items.filter(cli_id=cli)
             if filter == '1':
@@ -37,8 +38,10 @@ def sales_report(request):
             subtotal = items.aggregate(resp=Coalesce(Sum('subtotal'), 0.00))['resp']
             iva = items.aggregate(resp=Coalesce(Sum('iva'), 0.00))['resp']
             total = items.aggregate(resp=Coalesce(Sum('total'), 0.00))['resp']
-            data = [[i.id,i.get_nro(),i.cli.name,i.date_joined_format(),i.subtotal_format(),i.iva_format(),i.total_format()] for i in items]
-            data.append(['-------','-------','-------','-------',format(subtotal,'.2f'),format(iva,'.2f'),format(total,'.2f')])
+            data = [[i.id, i.get_nro(), i.cli.name, i.date_joined_format(), i.subtotal_format(), i.iva_format(),
+                     i.total_format()] for i in items]
+            data.append(['-------', '-------', '-------', '-------', format(subtotal, '.2f'), format(iva, '.2f'),
+                         format(total, '.2f')])
         except Exception as e:
             data = {}
             data['error'] = str(e)

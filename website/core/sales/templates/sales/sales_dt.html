@@ -3,9 +3,9 @@
 {% block pnldatahead %}
     <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
     <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
-    <script src="{% static "sales/js/sales_dtab.js" %}"></script>
+    <script src="{% static "sales/js/sales_dta.js" %}"></script>
     <script src="{% static "devolution/js/devolution_fn.js" %}"></script>
-    <script src="{% static "sales/js/adicionar.js" %}"></script>
+    <script src="{% static "sales/js/adicionarM.js" %}"></script>
 {% endblock %}
 {% block columns %}
     <th style="width: 1%;">Nro</th>
@@ -218,10 +218,10 @@
                                id="tblAdicion">
                             <thead>
                             <tr>
+                                <th style="width: 5%;">pk</th>
                                 <th style="width: 5%;">Nro</th>
-                                <th style="width: 30%;">Nombre</th>
-                                <th style="width: 10%;">Cantidad</th>
-                                <th style="width: 30%;">Numeracion Inicial</th>
+                                <th style="width: 30%;">Tipo</th>
+                                <th style="width: 10%;">Numeracion</th>
                                 <th style="width: 10%;">Estado</th>
                             </tr>
                             </thead>

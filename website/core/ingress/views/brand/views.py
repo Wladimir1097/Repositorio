@@ -47,7 +47,9 @@ def brand(request):
                 elif action == 'edit':
                     f = BrandForm(request.POST, instance=Brand.objects.get(pk=request.POST['id']))
                 if f.is_valid():
-                    f.save()
+                    p = f.save()
+                    p.bodega_id = request.user.bodega_id
+                    p.save()
                     data['resp'] = True
                 else:
                     data['resp'] = False
@@ -68,7 +70,7 @@ def brand(request):
                             return JsonResponse({'valid': 'false'})
                 return JsonResponse({'valid': 'true'})
             elif action == 'load':
-                data = [[i.id, i.name, True] for i in Brand.objects.filter()]
+                data = [[i.id, i.name, True] for i in Brand.objects.filter(bodega_id=request.user.bodega_id)]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

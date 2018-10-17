@@ -1,3 +1,5 @@
+from django.db import models
+
 from core.ingress.models import *
 from datetime import datetime
 from core.dashboard.choices import sales_choices
@@ -25,6 +27,7 @@ class Client(models.Model):
     mobile = models.CharField(max_length=10, unique=True, null=True, blank=True, verbose_name='Teléfono')
     address = models.CharField(max_length=500, null=True, blank=True, verbose_name='Dirección')
     email = models.CharField(max_length=500, null=True, blank=True, verbose_name='Email')
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.name)
@@ -175,15 +178,53 @@ class DevolutionSales(models.Model):
         ordering = ['-id']
 
 
-class SalesMedidores(models.Model):
-    sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    cant = models.IntegerField(default=0)
-    numeracion = models.PositiveIntegerField(verbose_name='numeracion', default=0)
-    estado = models.BooleanField(default=False)
+class GestionMedidor(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    cantmed = models.IntegerField(default=0)
+    cantsell = models.IntegerField(default=0)
+    date_joined = models.DateField(default=datetime.now)
+
+    def date_joined_format(self):
+        return self.date_joined.strftime('%Y-%m-%d')
 
 
-class SalesSellos(models.Model):
-    sales = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    cant = models.IntegerField(default=0)
-    numeracion = models.PositiveIntegerField(verbose_name='numeracion', default=0)
+class MedidorType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class InventoryMedidor(models.Model):
+    gestion = models.ForeignKey(GestionMedidor, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    medtype = models.ForeignKey(MedidorType, on_delete=models.PROTECT, blank=True, null=True)
+    cli = models.ForeignKey(Client, on_delete=models.PROTECT, blank=True, null=True)
+    date_joined = models.DateField(default=datetime.now)
+    date_delivery = models.DateField(default=datetime.now)
+    numeracion = models.CharField(max_length=100)
+    distribuido = models.BooleanField(default=False)
     estado = models.BooleanField(default=False)
+
+    def date_joined_format(self):
+        return self.date_joined.strftime('%Y-%m-%d')
+
+    def date_delivery_format(self):
+        return self.date_delivery.strftime('%Y-%m-%d')
+
+
+class InventorySello(models.Model):
+    gestion = models.ForeignKey(GestionMedidor, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    cli = models.ForeignKey(Client, on_delete=models.PROTECT, blank=True, null=True)
+    date_joined = models.DateField(default=datetime.now)
+    date_delivery = models.DateField(default=datetime.now)
+    numeracion = models.CharField(max_length=100)
+    distribuido = models.BooleanField(default=False)
+    estado = models.BooleanField(default=False)
+
+    def date_joined_format(self):
+        return self.date_joined.strftime('%Y-%m-%d')
+
+    def date_delivery_format(self):
+        return self.date_delivery.strftime('%Y-%m-%d')

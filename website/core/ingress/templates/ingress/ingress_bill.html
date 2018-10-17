@@ -123,20 +123,18 @@
                     </tr>
                 {% endif %}
             {% endfor %}
-           <!-- <tr>
+            <tr>
                 <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;">
                     <strong>TOTAL</strong>
                 </td>
                 <td class="total-line">
                     <div>${{ subtotal }}</div>
                 </td>
-            </tr>-->
+            </tr>
             </tbody>
         </table>
     {% endif %}
 </div>
-<br>
-<br>
 <div>
     <table style="margin-top: 5px;">
         <thead>
@@ -148,13 +146,11 @@
         </thead>
         <tbody>
         <tr>
-            {% for e in Ingress %}
-                <td style="width: 30%;"></td>
-                <td style="width: 40%; text-align: center; padding-top: 0px;">
-                    ---------------------------------------------------------------------------
-                </td>
-                <td style="width: 30%;"></td>
-            {% endfor %}
+            <td style="width: 30%;"></td>
+            <td style="width: 40%; text-align: center; padding-top: 0px;">
+                ---------------------------------------------------------------------------
+            </td>
+            <td style="width: 30%;"></td>
         </tr>
         <tr>
             <td style="width: 30%;"></td>
@@ -170,11 +166,21 @@
             <th></th>
             <th>_____________________________________</th>
         </tr>
-        <tr>
-            <th>Roxana Almedia</th>
-            <th></th>
-            <th>Galo Reyes</th>
-        </tr>
+        {% ifnotequal vacio 1 %}
+            <tr>
+                <th>______________</th>
+                <th></th>
+                <th>______________</th>
+            </tr>
+        {% else %}
+
+            <tr>
+                <th>Roxana Almedia</th>
+                <th></th>
+                <th>Galo Reyes</th>
+            </tr>
+
+        {% endifnotequal %}
         <tr>
             <th>Bodega ProEnergy</th>
             <th></th>
@@ -182,7 +188,7 @@
         </tr>
         <tr>
             <th></th>
-            <th>{{ company.address }}-Ecuador</th>
+            <th>{{ ubicacion }}-Ecuador</th>
             <th></th>
         </tr>
         </thead>

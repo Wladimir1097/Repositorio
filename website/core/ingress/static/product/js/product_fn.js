@@ -38,19 +38,6 @@ $(function () {
                     notEmpty: {},
                     stringLength: {
                         min: 4
-                    },
-                    remote: {
-                       message: 'El nombre ya se encuentra registrado',
-                        url: pathname,
-                        data: function (validator, $field, value) {
-                            return {
-                                obj: validator.getFieldElements('name').val(),
-                                id: validator.getFieldElements('id').val(),
-                                type: 'name',
-                                action: 'repeated'
-                            }
-                        },
-                        type: 'POST'
                     }
                 }
             },

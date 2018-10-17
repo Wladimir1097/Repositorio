@@ -27,6 +27,7 @@ class UserForm(ModelForm):
             'gender': Select(attrs={'class': 'form-control selectpicker', 'data-live-search': 'true'}),
             'job': Select(attrs={'class': 'form-control selectpicker', 'data-live-search': 'true'}),
             'address': TextInput(attrs={'placeholder': 'Ingrese el nombre de su dirección'}),
+            'bodega': Select(attrs={'class': 'form-control selectpicker', 'data-live-search': 'true'}),
             'birthdate': DateInput(format='%Y-%m-%d',attrs={'value': datetime.now().strftime('%Y-%m-%d'), 'readonly': True}),
             'groups': SelectMultiple(attrs={'class': 'select2', 'multiple': 'multiple', 'style': 'width:100%'}),
         }

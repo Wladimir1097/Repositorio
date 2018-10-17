@@ -17,27 +17,6 @@ $(function () {
         },
         excluded: ':disabled',
         fields: {
-            name: {
-                validators: {
-                    notEmpty: {},
-                    stringLength: {
-                        min: 4
-                    },
-                    remote: {
-                        message: 'El nombre ya se encuentra registrado',
-                        url: pathname,
-                        data: function (validator, $field, value) {
-                            return {
-                                obj: validator.getFieldElements('name').val(),
-                                id: validator.getFieldElements('id').val(),
-                                type: 'name',
-                                action: 'repeated'
-                            }
-                        },
-                        type: 'POST'
-                    }
-                }
-            },
             ruc: {
                 validators: {
                     notEmpty: {},
@@ -45,19 +24,6 @@ $(function () {
                         min: 13,
                     },
                     digits: {},
-                    remote: {
-                        message: 'El ruc ya se encuentra registrado',
-                        url: pathname,
-                        data: function (validator, $field, value) {
-                            return {
-                                obj: validator.getFieldElements('ruc').val(),
-                                id: validator.getFieldElements('id').val(),
-                                type: 'ruc',
-                                action: 'repeated'
-                            };
-                        },
-                        type: 'POST'
-                    },
                     callback: {
                         message: 'Ruc invalido',
                         callback: function (value, validator, $field) {
@@ -70,19 +36,6 @@ $(function () {
                 validators: {
                     stringLength: {
                         min: 5
-                    },
-                    remote: {
-                        message: 'El email ya se encuentra registrado',
-                        url: pathname,
-                        data: function (validator, $field, value) {
-                            return {
-                                obj: validator.getFieldElements('email').val(),
-                                id: validator.getFieldElements('id').val(),
-                                type: 'email',
-                                action: 'repeated'
-                            };
-                        },
-                        type: 'POST'
                     },
                     regexp: {
                         regexp: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/i,
@@ -102,19 +55,6 @@ $(function () {
                         callback: function (value, validator, $field) {
                             return value === '' || $field.intlTelInput('isValidNumber');
                         }
-                    },
-                    remote: {
-                        message: 'El teléfono celular ya se encuentra registrado.',
-                        url: pathname,
-                        data: function (validator, $field, value) {
-                            return {
-                                obj: validator.getFieldElements('mobile').val(),
-                                id: validator.getFieldElements('id').val(),
-                                type: 'mobile',
-                                action: 'repeated'
-                            };
-                        },
-                        type: 'POST'
                     },
                 }
             },

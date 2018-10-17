@@ -6,6 +6,7 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.ingress.forms import *
 
+
 @csrf_exempt
 @access_module
 def provider(request):
@@ -47,7 +48,9 @@ def provider(request):
                 elif action == 'edit':
                     f = ProviderForm(request.POST, request.FILES, instance=Provider.objects.get(pk=request.POST['id']))
                 if f.is_valid():
-                    f.save()
+                    p = f.save()
+                    p.bodega_id = request.user.bodega_id
+                    p.save()
                     data['resp'] = True
                 else:
                     data['resp'] = False
@@ -89,7 +92,8 @@ def provider(request):
                             return JsonResponse({'valid': 'false'})
                 return JsonResponse({'valid': 'true'})
             elif action == 'load':
-                data = [[i.id, i.name, i.ruc, i.mobile, i.email, i.address, True] for i in Provider.objects.filter()]
+                data = [[i.id, i.name, i.ruc, i.mobile, i.email, i.address, True] for i in
+                        Provider.objects.filter(bodega_id=request.user.bodega_id)]
             else:
                 data['resp'] = False
                 data['error'] = 'Ha ocurrido un error'

@@ -4,36 +4,46 @@
     <script src="{% static "login/js/login_fn.js" %}"></script>
 {% endblock %}
 {% block content %}
+    <style>
+        img:hover {
+            filter: grayscale(80%);
+        }
+    </style>
     <div class="login-box">
-        <div class="login-box">
-            <div class="login-logo">
+        <div class=" login-box">
+            <!--<div class="login-logo contenedor">
                 <a>
-                     <i class="fa fa-truck" aria-hidden="true"></i>
-                    <br><h3>BodegaSystem</h3>
-                </a>
-            </div>
-            <div class="login-box-body">
-                <p class="login-box-msg">Inicio de Sesión</p>
-                <form action="{% url 'login' %}" method="post" id="frmLogin">
-                    <div class="form-group">
-                        <label>Username:</label>
-                        <input type="text" class="form-control" placeholder="Username" name="username" id="username" autocomplete="off" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label>Password:</label>
-                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">
-                                <i class="fa fa-sign-out" aria-hidden="true"></i> Ingresar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div class="login-details">
-                    Si has olvidado tu contraseña<a id="reset_password"> da click aqui <i class="fa fa-key" aria-hidden="true"></i></a>
+                    <i class="fa fa-truck" aria-hidden="true"></i>
+                    <br>
+                    <h3>BodegaSystem</h3>
+                </a>-->
+        </div>
+        <div class="login-box-body">
+            <img src="{{ comp.login }}" class="img-responsive center-block img-panel">
+            <p class="login-box-msg">Inicio de Sesión</p>
+            <form action="{% url 'login' %}" method="post" id="frmLogin">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" class="form-control" placeholder="Username" name="username" id="username"
+                           autocomplete="off" autofocus>
                 </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" class="form-control" placeholder="Password" name="password"
+                           id="password"
+                           autocomplete="off">
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i> Ingresar
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="login-details">
+                Si has olvidado tu contraseña<a id="reset_password"> da click aqui <i class="fa fa-key"
+                                                                                      aria-hidden="true"></i></a>
             </div>
         </div>
     </div>

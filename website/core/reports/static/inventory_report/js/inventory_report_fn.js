@@ -112,7 +112,7 @@ function generate_report() {
                     });
                     doc.content[4].table.widths = ['5%', '30%', '10%', '10%', '15%', '15%', '15%'];
                     doc.content[4].margin = [0, 35, 0, 0];
-                    doc.content[4].layout = {}
+                    doc.content[4].layout = {};
                     doc['footer'] = (function (page, pages) {
                         return {
                             columns: [

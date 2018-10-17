@@ -6,6 +6,7 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.ingress.forms import *
 
+
 @csrf_exempt
 @access_module
 def product(request):
@@ -17,14 +18,14 @@ def product(request):
             data['action'] = action
             template = 'product/product_frm.html'
             if action == 'new':
-                data['form'] = ProductForm()
+                data['form'] = ProductForm(request.user.bodega_id)
                 data['title'] = 'Nuevo Registro de un Material'
                 data['button'] = 'Guardar Material'
             elif action == 'edit' and 'id' in request.GET:
                 id = request.GET['id']
                 if Product.objects.filter(pk=id).exists():
                     model = Product.objects.get(pk=id)
-                    data['form'] = ProductForm(instance=model, initial={'id': model.id})
+                    data['form'] = ProductForm(request.user.bodega_id, instance=model, initial={'id': model.id})
                     data['title'] = 'Edición de un Material'
                     data['button'] = 'Editar Material'
                 else:
@@ -43,11 +44,14 @@ def product(request):
         try:
             if action == 'new' or action == 'edit':
                 if action == 'new':
-                    f = ProductForm(request.POST, request.FILES)
+                    f = ProductForm(request.user.bodega_id, request.POST, request.FILES)
                 elif action == 'edit':
-                    f = ProductForm(request.POST, request.FILES , instance=Product.objects.get(pk=request.POST['id']))
+                    f = ProductForm(request.user.bodega_id, request.POST, request.FILES,
+                                    instance=Product.objects.get(pk=request.POST['id']))
                 if f.is_valid():
-                    f.save()
+                    p = f.save()
+                    p.bodega_id = request.user.bodega_id
+                    p.save()
                     data['resp'] = True
                 else:
                     data['resp'] = False
@@ -68,7 +72,9 @@ def product(request):
                             return JsonResponse({'valid': 'false'})
                 return JsonResponse({'valid': 'true'})
             elif action == 'load':
-                data = [[i.id, i.name, i.get_image(), i.cat.name, i.brand.name,i.stock,i.cost_format(), i.price_format(), True] for i in Product.objects.filter()]
+                data = [
+                    [i.id, i.name, i.get_image(), i.cat.name, i.brand.name, i.stock, i.cost_format(), i.price_format(),
+                     True] for i in Product.objects.filter(bodega_id=request.user.bodega_id)]
             else:
                 data['error'] = 'Ha ocurrido un error'
                 data['resp'] = False

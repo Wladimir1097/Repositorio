@@ -176,7 +176,7 @@
 
         <div style="text-align: justify">Debo y pagaré solidaria e incondicionalmente a la orden del
             <em>CONSORCIO MEDIDORES MILAGRO LOS RIOS</em> con RUC <em>{{ company.ruc }}</em> en la ciudad de
-            {{ company.address|upper }}, o en el lugar donde se me(nos) reconvenga, la cantidad de: <em>(USD
+            {{ ubicacion|upper }}, o en el lugar donde se me(nos) reconvenga, la cantidad de: <em>(USD
                 $: {{ sales.subtotal|floatformat:"2" }}) {% wahio sales.subtotal %} DOLARES DE LOS ESTADOS UNIDOS DE
                 AMÉRICA</em> obligándome irrevocablemente a pagar en el caso de pérdida o hurto del material antes
             descrito.
@@ -185,7 +185,7 @@
             del mismo, así como realizar los avisos por falta de pago.
             <br>
             <br>
-            Lugar y fecha de suscripción: <em>{{ company.address|upper }}, {{ sales.date_joined }}</em>
+            Lugar y fecha de suscripción: <em>{{ ubicacion|upper }}, {{ sales.date_joined }}</em>
         </div>
         <table style="font-size: 12px">
             <thead>

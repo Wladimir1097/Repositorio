@@ -10,6 +10,7 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.ingress.models import *
 
+
 @access_module
 @csrf_exempt
 def results_report(request):
@@ -62,7 +63,8 @@ def results_report(request):
                 status = 1
             elif utility < 0:
                 status = 3
-            data.append([format(purchase,'.2f'),format(expenses,'.2f'),format(salary,'.2f'),format(sales,'.2f'),format(pedids,'.2f'),format(utility,'.2f'),status])
+            data.append([format(purchase, '.2f'), format(expenses, '.2f'), format(salary, '.2f'), format(sales, '.2f'),
+                         format(pedids, '.2f'), format(utility, '.2f'), status])
         except Exception as e:
             data = {}
             data['error'] = str(e)
@@ -70,7 +72,6 @@ def results_report(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return HttpResponseRedirect(HOME)
-
 
 # for i in Sales.objects.filter():
 #     i.get_totals()

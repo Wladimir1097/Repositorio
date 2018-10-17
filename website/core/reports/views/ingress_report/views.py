@@ -12,8 +12,8 @@ from core.ingress.models import *
 def ingress_report(request):
     data = get_module_options(request)
     if request.method == 'GET':
-        data['title'] = 'Reporte de Compras'
-        data['form'] = ReportForm()
+        data['title'] = 'Reporte de Ingresos'
+        data['form'] = ReportForm(request.user.bodega_id)
         return render(request, 'ingress_report/ingress_report_rp.html', data)
     elif request.method == 'POST':
         filter = request.POST['filter']
@@ -25,7 +25,7 @@ def ingress_report(request):
         if month == "" and filter == '3':
             filter = '2'
         try:
-            items = Ingress.objects.filter()
+            items = Ingress.objects.filter(usuario_id__bodega_id=request.user.bodega_id)
             if len(provs):
                 items = items.filter(prov_id=provs)
             if filter == '1':
@@ -38,7 +38,7 @@ def ingress_report(request):
             dscto = items.aggregate(resp=Coalesce(Sum('dscto'), 0.00))['resp']
             iva = items.aggregate(resp=Coalesce(Sum('iva'), 0.00))['resp']
             total = items.aggregate(resp=Coalesce(Sum('total'), 0.00))['resp']
-            data = [[i.id,i.prov.name,i.date_joined_format(),i.subtotal_format(),i.dscto_format(),i.iva_format(),i.total_format()] for i in items]
+            data = [[i.id,i.prov.name,i.date_joined_format(),i.subtotal_format(),i.total_format()] for i in items]
             data.append(['-------','-------','-------',format(subtotal,'.2f'),format(dscto,'.2f'),format(iva,'.2f'),format(total,'.2f')])
         except Exception as e:
             data = {}

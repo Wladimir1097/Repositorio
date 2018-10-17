@@ -1,0 +1,274 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% load widget_tweaks %}
+{% load dashboard_tags %}
+{% block pnldatahead %}
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
+    <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-datepicker-1.7.0/css/bootstrap-datepicker.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/js/bootstrap-datepicker.min.js" %}"></script>
+    <script src="{% static "plugins/bootstrap-datepicker-1.7.0/locales/bootstrap-datepicker.es.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/bootstrap-select-1.12.2/css/bootstrap-select.min.css" %}"/>
+    <script src="{% static "plugins/bootstrap-select-1.12.2/js/bootstrap-select.js" %}"></script>
+    <link rel="stylesheet" href="{% static "plugins/formvalidation-0.6.0/css/formValidation.css" %}"/>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/jquery.validate.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/formValidation.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/framework/bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/language/es_ES.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/jquery.form.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "medidores/js/med_frm.js" %}" type="text/javascript"></script>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <form class="form" id="frmGestion" method="POST" action="{{ model.url }}" enctype="multipart/form-data">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="col-lg-8">
+                                <h2 class="page-header">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> {{ title }}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-right">
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-sm btn-primary btn-flat">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Registro
+                                </button>
+                                <a id="reset" class="btn btn-sm btn-primary btn-flat">
+                                    <i class="fa fa-clipboard" aria-hidden="true"></i> Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="action" name="action" value="new">
+                        <input type="hidden" id="directory" name="directory" value="{{ model.url }}">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab_1" data-toggle="tab">Datos Principal <i
+                                        class="fa"></i></a></li>
+                                <li><a href="#tab_2" data-toggle="tab">Ingreso Secuencial <i
+                                        class="fa"></i></a></li>
+                                <li><a href="#tab_3" data-toggle="tab">Ingreso Individual <i
+                                        class="fa"></i></a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Fecha de Registro:</label>
+                                                <input type="text" value="{{ fecha }}" class="form-control input-sm"
+                                                       id="fecha">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_2">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Material:</label>
+                                                <select name="typeProd" class="form-control input-sm selectpicker"
+                                                        id="id_typeProd">
+                                                    <option value="1">Medidores</option>
+
+                                                    <option value="2">Sellos</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Numeracion Inicial:</label>
+                                                <input type="text" id="med1" name="med" value="000000"
+                                                       class="form-control input-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Numeracion Final:</label>
+                                                <input type="text" id="med2" name="med" value="000000"
+                                                       class="form-control input-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Bodega:</label>
+                                                <select name="type" class="form-control input-sm selectpicker"
+                                                        id="id_type">
+                                                    <option selected>-------</option>
+                                                    <option value="0">Wagner</option>
+                                                    <option value="1">ProEnergy</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group" id="tipo">
+                                                <label class="control-label">Tipo:</label>
+                                                {{ form.medtype|add_class:"form-control input-sm selectpicker" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <br>
+                                            <button class="form-control btn-adn" id="btn1" type="button">Generar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_3">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Material:</label>
+                                                <select name="typeProd2" class="form-control input-sm selectpicker"
+                                                        id="id_typeProd2">
+                                                    <option value="1">Medidor</option>
+
+                                                    <option value="2">Sello</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label">Numeracion:</label>
+                                                <input type="text" id="med3" name="med" value="000000"
+                                                       class="form-control input-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <label class="control-label">Bodega:</label>
+                                                <select name="type2" class="form-control input-sm selectpicker"
+                                                        id="id_type2">
+                                                    <option selected>--------</option>
+                                                    <option value="0">Wagner</option>
+                                                    <option value="1">ProEnergy</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group" id="tipo2">
+                                                <label class="control-label">Tipo:</label>
+                                                {{ form.medtype|add_class:"form-control input-sm selectpicker" }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <br>
+                                            <button class="form-control btn-adn" id="btn2" type="button">Generar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#tab1" data-toggle="tab">Detalle de Medidores
+                                        <button type="button" class="btn btn-danger btn-xs btn-flat"
+                                                id="btnRemoveMed">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+                                </li>
+                                <li><a href="#tab2" data-toggle="tab">Detalle de Sellos <i class="fa"></i>
+                                    <button type="button" class="btn btn-danger btn-xs btn-flat"
+                                            id="btnRemoveSell">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button>
+                                </a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <table width="100%" class="table table-bordered" id="tblMedidores">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">Posición</th>
+                                            <th style="width: 30%;">Num Inicial</th>
+                                            <th style="width: 30%;">Num Final</th>
+                                            <th style="width: 15%;">Tipo</th>
+                                            <th style="width: 15%;">Bodega</th>
+                                            <th style="width: 5%;">Opción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <table width="100%" class="table table-bordered" id="tblSellos">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">Posición</th>
+                                            <th style="width: 30%;">Num Inicial</th>
+                                            <th style="width: 30%;">Num Final</th>
+                                            <th style="width: 15%;">Bodega</th>
+                                            <th style="width: 5%;">Opción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <script type="application/javascript">
+
+        billing.details.medidores = [];
+        billing.details.sellos = [];
+        $(function () {
+
+                $('#reset').on('click', function () {
+                    $('#frmGestion').formValidation('resetForm', true);
+                    $('#frmGestion:input:enabled:visible:first').focus();
+
+                    $('#med1').val("0");
+                    $('#med2').val("0");
+                    $('#med3').val("0");
+
+                    $('#id_type').selectpicker('refresh');
+                    $('#tipo').selectpicker('refresh');
+                    $('#id_type2').selectpicker('refresh');
+                    $('#tipo2').selectpicker('refresh');
+                });
+
+                $('#tblMedidores').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    //ordering: false,
+                    //bPaginate: false,
+                    //lengthChange: false,
+                    columnDefs: [
+                        {orderable: false, targets: [-1]},
+                        {visible: false, targets: [0]},
+                    ]
+                });
+
+                $('#tblSellos').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    columnDefs: [
+                        {orderable: false, targets: [-1]},
+                        {visible: false, targets: [0]},
+                    ]
+                });
+                billing.load_med();
+            }
+        );
+    </script>
+    {% block extra %}
+    {% endblock %}
+{% endblock %}

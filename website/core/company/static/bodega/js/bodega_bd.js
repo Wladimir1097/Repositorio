@@ -3,7 +3,6 @@ function load_data() {
         responsive: true,
         autoWidth: false,
         destroy: true,
-        deferRender: true,
         ajax: {
             url: pathname,
             type: 'POST',

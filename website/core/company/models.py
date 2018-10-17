@@ -3,6 +3,19 @@ from config.settings.base import STATIC_URL, MEDIA_URL
 from datetime import datetime
 
 
+class Bodega(models.Model):
+    name = models.CharField(max_length=100, unique=True, verbose_name='Nombre')
+    address = models.CharField(verbose_name="Ubicacion", max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Bodega'
+        verbose_name_plural = 'Bodegas'
+        ordering = ['id']
+
+
 class Company(models.Model):
     name = models.CharField(verbose_name="Nombre", max_length=50, unique=True)
     proprietor = models.CharField(verbose_name="Propietario", max_length=255, blank=True, null=True)
@@ -19,6 +32,9 @@ class Company(models.Model):
 
     def __str__(self):
         return self.name
+
+    def login(self):
+        return "{0}{1}".format(MEDIA_URL, 'library/2018/10/11/MEMBRETE_PROENERGY_SA.JPG')
 
     def get_icon_base64(self):
         return self.generate_img_base64()
@@ -37,6 +53,7 @@ class Company(models.Model):
             return "data:image/{};base64,{}".format(type_image, image)
         except Exception as e:
             raise
+
 
     def get_icon(self):
         if self.icon:
@@ -89,7 +106,7 @@ class Tools(models.Model):
     date_joined = models.DateField(default=datetime.now, verbose_name='Fecha de Registro')
     code = models.CharField(max_length=20, unique=True, verbose_name='Serie')
     cost = models.DecimalField(max_digits=9, decimal_places=2, default=0.00, verbose_name='Valor')
-    guarantee = models.IntegerField(default=0,verbose_name='Garantía (Años)')
+    guarantee = models.IntegerField(default=0, verbose_name='Garantía (Años)')
     dep = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __str__(self):
