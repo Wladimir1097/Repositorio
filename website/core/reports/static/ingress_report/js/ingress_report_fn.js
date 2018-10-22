@@ -93,6 +93,14 @@ function generate_report() {
                             color: 'white',
                             fillColor: '#2d4154',
                             alignment: 'center'
+                        },
+                        tableBodyOdd:{
+                            fontSize: 10,
+                            alignment: 'center'
+                        },
+                        tableBodyEven:{
+                            fontSize: 10,
+                            alignment: 'center'
                         }
                     };
                     doc.content.splice(0, 0, {
@@ -112,7 +120,7 @@ function generate_report() {
                     });
                     doc.content.splice(3, 0, {
                         alignment: 'center',
-                        text: ('Reporte de Compras ' + $report_text).toUpperCase(),
+                        text: ('Reporte de Ingresos ' + $report_text).toUpperCase(),
                         style: 'subheader'
                     });
                     doc.content[4].table.widths = ['5%', '20%', '15%', '15%', '15%', '15%', '15%'];

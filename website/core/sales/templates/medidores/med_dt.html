@@ -1,7 +1,7 @@
 {% extends 'bs_data.html' %}
 {% load static from staticfiles %}
 {% block pnldatahead %}
-    <script src="{% static "medidores/js/med_dt.js" %}"></script>
+    <script src="{% static "medidores/js/med_dta.js" %}"></script>
 {% endblock %}
 {% block columns %}
     <th style="width: 5%;">Nro</th>
@@ -45,7 +45,8 @@
                                         <thead>
                                         <tr>
                                             <th style="width: 10%;">Nro</th>
-                                            <th style="width: 70%;">Numeracion</th>
+                                            <th style="width: 50%;">Numeracion</th>
+                                            <th style="width: 30%;">Tipo</th>
                                             <th style="width: 10%;">Bodega</th>
                                         </tr>
                                         </thead>

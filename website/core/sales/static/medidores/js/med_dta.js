@@ -70,7 +70,7 @@ $(function () {
                     targets: [-1],
                     class: 'text-center',
                     render: function (data, type, row) {
-                        if (row[2]) {
+                        if (row[3]) {
                             return 'ProEnergy';
                         }
                         return 'Wagner';

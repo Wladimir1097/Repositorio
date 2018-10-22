@@ -40,6 +40,14 @@
                 <label>Electricista:</label>
                 {{ form.cli|add_class:'form-control' }}
             </div>
+            <div class="col-lg-2" id="f_type" style="display: none;">
+                <label>Tipo:</label>
+                {{ form.type|add_class:'form-control' }}
+            </div>
+            <div class="col-lg-2" id="f_bod" style="display: none;">
+                <label>Bodega:</label>
+                {{ form.bod|add_class:'form-control' }}
+            </div>
         </div>
     </div>
     <div class="form-group">
@@ -48,16 +56,14 @@
             <thead>
             <tr>
                 <th style="width: 5%;" class="text-center">Nro</th>
-                <th style="width: 10%;">Factura</th>
-                <th style="width: 25%;">Electricista</th>
-                <th style="width: 15%;">F.Registro</th>
-                <th style="width: 15%;">Subtotal</th>
-                <th style="width: 15%;">Iva</th>
-                <th style="width: 15%;">Total</th>
+                <th style="width: 15%;">F.Asignacion</th>
+                <th style="width: 15%;">Electricista</th>
+                <th style="width: 30%;">Numeracion</th>
+                <th style="width: 10%;">Bodega</th>
             </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
-    <script src="{% static "sales_report/js/sales_report_fn.js" %}" type="text/javascript"></script>
+    <script src="{% static "med_report/js/med_report_rp.js" %}" type="text/javascript"></script>
 {% endblock %}

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from pydoc import cli
+
 from django.db import transaction
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -40,7 +42,7 @@ def sales(request):
                 data['id'] = id
                 if Sales.objects.filter(pk=id).exists():
                     model = Sales.objects.get(pk=id)
-                    data['form'] = SalesForm(request.user.bodega_id, request.POST, instance=model,
+                    data['form'] = SalesForm(request.user.bodega_id, instance=model,
                                              initial={'id': model.id})
                     data['details'] = SalesProducts.objects.filter(sales=id)
                     data['servicios'] = SalesServices.objects.filter(sales=id)
@@ -107,6 +109,12 @@ def sales(request):
                         }
             elif action == 'delete':
                 sales = Sales.objects.get(pk=request.POST['id'])
+                if InventoryMedidor.objects.filter(cli_id=sales.cli, sales_id=request.POST['id']).exists():
+                    InventoryMedidor.objects.filter(cli_id=sales.cli.id, sales_id=request.POST['id']).update(
+                        cli_id=None, sales_id=None, estado=False)
+                if InventorySello.objects.filter(cli_id=sales.cli, sales_id=request.POST['id']).exists():
+                    InventorySello.objects.filter(cli_id=sales.cli.id, sales_id=request.POST['id']).update(
+                        cli_id=None, sales_id=None, estado=False)
                 for d in SalesProducts.objects.filter(sales=sales):
                     if d.sales.type == 2:
                         d.prod.stock += d.cant_ent
@@ -129,13 +137,13 @@ def sales(request):
                     cliente = 0
                     for e in Sales.objects.filter(id=request.POST['id']):
                         cliente = e.cli_id
-                    for s in InventoryMedidor.objects.filter(cli_id=cliente):
+                    for s in InventoryMedidor.objects.filter(sales_id=request.POST['id'], cli_id=cliente):
                         data.append([s.id, s.numeracion])
                 elif type == 'sello':
                     cliente = 0
                     for e in Sales.objects.filter(id=request.POST['id']):
                         cliente = e.cli_id
-                    for s in InventorySello.objects.filter(cli_id=cliente):
+                    for s in InventorySello.objects.filter(sales_id=request.POST['id'], cli_id=cliente):
                         data.append([s.id, s.numeracion])
                 elif type == 'adicion':
                     for s in InventoryMedidor.objects.filter(usuario_id__bodega_id=request.user.bodega_id):
@@ -180,12 +188,13 @@ def sales(request):
                             d.prod.stock += d.cant
                             d.prod.save()
                             d.delete()
-                        sal.delete()
+                        vent = sal
 
                     items = json.loads(request.POST['items'])
-                    vent = Sales()
+                    if action != 'edit':
+                        vent = Sales()
+                        vent.cli_id = items['cli']
                     vent.usuario_id = request.user.id
-                    vent.cli_id = items['cli']
                     vent.date_joined = items['date_joined']
                     vent.date_delivery = items['date_delivery']
                     vent.subtotal = items['subtotal']
@@ -264,6 +273,7 @@ def sales(request):
                             for e in Sales.objects.filter(id=i['pk']):
                                 cliente = e.cli_id
                             det.cli_id = cliente
+                            det.sales_id = i['pk']
                             det.estado = True
                             det.save()
                         else:
@@ -271,6 +281,7 @@ def sales(request):
                             for e in Sales.objects.filter(id=i['pk']):
                                 cliente = e.cli_id
                             det.cli_id = cliente
+                            det.sales_id = i['pk']
                             det.estado = True
                             det.save()
                 data['resp'] = True

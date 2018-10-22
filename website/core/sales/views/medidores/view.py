@@ -54,7 +54,7 @@ def medidores(request):
                 type = request.POST['type']
                 if type == 'medidor':
                     for index, s in enumerate(InventoryMedidor.objects.filter(gestion_id=request.POST['id'])):
-                        data.append([index + 1, s.numeracion, s.distribuido])
+                        data.append([index + 1, s.numeracion, s.medtype.name, s.distribuido])
                 if type == 'sello':
                     for index, s in enumerate(InventorySello.objects.filter(gestion_id=request.POST['id'])):
                         data.append(

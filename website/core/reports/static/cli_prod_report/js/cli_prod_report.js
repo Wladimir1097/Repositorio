@@ -8,9 +8,9 @@ function generate_report() {
         year: $('#year').val(),
         month: $month,
         start_date: $('#start_date').val(),
-        end_date: $('#end_date').val()
+        end_date: $('#end_date').val(),
+        prod: $('#products').val()
     };
-
     var $report_text = "";
 
     if ($month === "" && $filter === '3') {
@@ -45,25 +45,29 @@ function generate_report() {
         },
         columnDefs: [
             {
-                targets: [4,5,6],
+                targets: ['_all'],
+                class: 'text-center'
+            },
+            {
+                targets: [5],
                 orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
-                   return '$'+data;
+                    return '$' + data;
                 }
             }
         ],
         dom: 'Bfrtip',
         buttons: [
             {
-                extend:    'excelHtml5',
-                text:      'Descargar Excel <i class="fa fa-file-excel-o"></i>',
+                extend: 'excelHtml5',
+                text: 'Descargar Excel <i class="fa fa-file-excel-o"></i>',
                 titleAttr: 'Excel',
                 className: 'btn btn-primary btn-flat btn-sm'
             },
             {
-                extend:    'pdfHtml5',
-                text:      'Descargar Pdf <i class="fa fa-file-pdf-o"></i>',
+                extend: 'pdfHtml5',
+                text: 'Descargar Pdf <i class="fa fa-file-pdf-o"></i>',
                 titleAttr: 'PDF',
                 className: 'btn btn-primary btn-flat btn-sm',
                 title: '',
@@ -120,12 +124,12 @@ function generate_report() {
                     });
                     doc.content.splice(3, 0, {
                         alignment: 'center',
-                        text: ('Reporte de Egresos ' + $report_text).toUpperCase(),
+                        text: ('Reporte de Materiales ' + $report_text).toUpperCase(),
                         style: 'subheader'
                     });
-                    doc.content[4].table.widths = ['5%', '10%', '25%', '15%', '15%', '15%', '15%'];
-                    doc.content[4].margin = [0, 35, 0, 0];
-                    doc.content[4].layout = {}
+                    doc.content[4].table.widths = ['5%', '10%', '10%', '20%', '30%', '10%', '10%'];
+                    doc.content[4].margin = [25, 35, 0, 0];
+                    doc.content[4].layout = {};
                     doc['footer'] = (function (page, pages) {
                         return {
                             columns: [
@@ -156,9 +160,11 @@ $(function () {
         $('#f_year').hide();
         $('#f_month').hide();
         $('#f_cli').hide();
+        $('#f_prod').hide();
         table.clear().draw();
         if (filter) {
             $('#f_cli').show();
+            $('#f_prod').show();
             switch (filter) {
                 case '1':
                     $('#f_start_date').show();
@@ -202,8 +208,11 @@ $(function () {
     }).on('changeDate', function (e) {
         generate_report();
     });
+    $('#products').on('change', function () {
+        generate_report();
+    });
 
-    $('#cli, #month').on('change',function () {
+    $('#cli, #month').on('change', function () {
         generate_report();
     });
 

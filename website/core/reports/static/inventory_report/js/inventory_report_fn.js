@@ -88,6 +88,14 @@ function generate_report() {
                             color: 'white',
                             fillColor: '#2d4154',
                             alignment: 'center'
+                        },
+                        tableBodyOdd:{
+                            fontSize: 10,
+                            alignment: 'center'
+                        },
+                        tableBodyEven:{
+                            fontSize: 10,
+                            alignment: 'center'
                         }
                     };
                     doc.content.splice(0, 0, {

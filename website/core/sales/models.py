@@ -198,6 +198,7 @@ class MedidorType(models.Model):
 class InventoryMedidor(models.Model):
     gestion = models.ForeignKey(GestionMedidor, on_delete=models.CASCADE)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    sales = models.ForeignKey(Sales, on_delete=models.CASCADE, blank=True, null=True)
     medtype = models.ForeignKey(MedidorType, on_delete=models.PROTECT, blank=True, null=True)
     cli = models.ForeignKey(Client, on_delete=models.PROTECT, blank=True, null=True)
     date_joined = models.DateField(default=datetime.now)
@@ -216,6 +217,7 @@ class InventoryMedidor(models.Model):
 class InventorySello(models.Model):
     gestion = models.ForeignKey(GestionMedidor, on_delete=models.CASCADE)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    sales = models.ForeignKey(Sales, on_delete=models.CASCADE, blank=True, null=True)
     cli = models.ForeignKey(Client, on_delete=models.PROTECT, blank=True, null=True)
     date_joined = models.DateField(default=datetime.now)
     date_delivery = models.DateField(default=datetime.now)

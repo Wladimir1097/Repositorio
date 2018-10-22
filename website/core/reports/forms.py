@@ -1,4 +1,6 @@
 from django.forms import *
+
+from core.dashboard.choices import *
 from core.employees.models import *
 from core.sales.models import *
 from core.company.models import *
@@ -32,3 +34,9 @@ class ReportForm(forms.Form):
                'data-size': '10'}))
     type_sales = ChoiceField(choices=sales_choices, widget=Select(
         attrs={'id': 'type_sales', 'class': 'form-control selectpicker', 'data-live-search': 'true'}))
+
+    type = ChoiceField(choices=type_choices, widget=Select(
+        attrs={'id': 'type', 'class': 'form-control selectpicker', 'data-live-search': 'true'}))
+
+    bod = ChoiceField(choices=bodega_choices, widget=Select(
+        attrs={'id': 'bod', 'class': 'form-control selectpicker', 'data-live-search': 'true'}))

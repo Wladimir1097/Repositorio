@@ -1,5 +1,5 @@
 from django.db import models
-from config.settings.base import STATIC_URL, MEDIA_URL
+from config.settings.base import STATIC_URL, MEDIA_URL, MEDIA_ROOT, STATIC_ROOT
 from datetime import datetime
 
 
@@ -44,7 +44,10 @@ class Company(models.Model):
             from PIL import Image
             import base64
             if self.icon:
-                image = base64.b64encode(open(self.icon.path, "rb").read()).decode('utf-8')
+                # image = base64.b64encode(open(self.icon.path, "rb").read()).decode('utf-8')
+                image = base64.b64encode(open("{0}{1}".format(MEDIA_ROOT,
+                                                              'library/2018/10/11/MEMBRETE_PROENERGY_SA.JPG'),
+                                              "rb").read()).decode('utf-8')
             else:
                 image = base64.b64encode(
                     open("{0}{1}".format(STATIC_URL, 'img/default/company.png'), "rb").read()).decode('utf-8')
@@ -53,7 +56,6 @@ class Company(models.Model):
             return "data:image/{};base64,{}".format(type_image, image)
         except Exception as e:
             raise
-
 
     def get_icon(self):
         if self.icon:

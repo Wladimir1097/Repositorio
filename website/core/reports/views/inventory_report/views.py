@@ -7,6 +7,7 @@ from core.security.views.module.views import get_module_options
 from core.security.decorators.module.decorators import *
 from core.ingress.models import *
 
+
 @access_module
 @csrf_exempt
 def inventory_report(request):

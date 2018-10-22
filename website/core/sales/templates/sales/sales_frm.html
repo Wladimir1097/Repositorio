@@ -294,7 +294,7 @@
                 var modo = '{{ action }}';
                 if (modo === 'edit' || modo === 'reuse') {
                     var stock = 0;
-                    var cant =0
+                    var cant =0;
                     {% for p in details %}
                         s = '{{ p.prod.price }}';
                         s = s.replace(",", ".");

@@ -22,3 +22,14 @@ sales_choices = (
     (1, 'Despacho'),
     (2, 'Pedido')
 )
+
+type_choices = (
+    ('', '-----------'),
+    (1, 'Medidores'),
+    (2, 'Sellos')
+)
+bodega_choices = (
+    ('', '-----------'),
+    (1, 'ProEnergy'),
+    (2, 'Wagner')
+)
