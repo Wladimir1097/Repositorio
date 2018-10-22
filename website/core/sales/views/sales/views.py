@@ -37,6 +37,14 @@ def sales(request):
                 data['form'] = SalesForm(request.user.bodega_id, request.POST)
                 data['title'] = 'Nuevo Registro de Despacho'
                 data['button'] = 'Guardar Transacción'
+            elif action == 'delete':
+                if InventoryMedidor.objects.filter(numeracion=request.GET['num']).exists():
+                    InventoryMedidor.objects.filter(numeracion=request.GET['num']).update(
+                        cli_id=None, sales_id=None, estado=False)
+                if InventorySello.objects.filter(numeracion=request.GET['num']).exists():
+                    InventorySello.objects.filter(numeracion=request.GET['num']).update(
+                        cli_id=None, sales_id=None, estado=False)
+                return HttpResponseRedirect(src)
             elif action == 'edit' and 'id' in request.GET:
                 id = request.GET['id']
                 data['id'] = id
@@ -138,13 +146,13 @@ def sales(request):
                     for e in Sales.objects.filter(id=request.POST['id']):
                         cliente = e.cli_id
                     for s in InventoryMedidor.objects.filter(sales_id=request.POST['id'], cli_id=cliente):
-                        data.append([s.id, s.numeracion])
+                        data.append([s.id, s.numeracion, True])
                 elif type == 'sello':
                     cliente = 0
                     for e in Sales.objects.filter(id=request.POST['id']):
                         cliente = e.cli_id
                     for s in InventorySello.objects.filter(sales_id=request.POST['id'], cli_id=cliente):
-                        data.append([s.id, s.numeracion])
+                        data.append([s.id, s.numeracion, True])
                 elif type == 'adicion':
                     for s in InventoryMedidor.objects.filter(usuario_id__bodega_id=request.user.bodega_id):
                         if s.distribuido:
