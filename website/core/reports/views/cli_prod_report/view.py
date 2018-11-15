@@ -40,11 +40,16 @@ def cli_prod_report(request):
                 items = items.filter(date_joined__year=year)
             elif filter == '3':
                 items = items.filter(date_joined__year=year, date_joined__month=month)
-
+            sum = 0
+            cant =0
             for i in items:
                 for j in productos.filter(sales=i.id):
+                    sum += float(j.subtotal_format()) * int(j.cant)
+                    cant +=j.cant
                     data.append([i.id, i.get_nro(), i.date_joined_format(), i.cli.name, j.prod.name,
                                  format(float(j.subtotal_format()) * int(j.cant), '.2f'), j.cant])
+            data.append(
+                ['-------', '-------', '-------', '-------', '-------', format(sum,'.2f'), cant])
         except Exception as e:
             data = {}
             data['error'] = str(e)

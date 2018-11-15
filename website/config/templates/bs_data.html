@@ -1,8 +1,10 @@
 {% extends 'bs_menu.html' %}
 {% load static from staticfiles %}
 {% block pnlbodyhead %}
-    <link rel="stylesheet" href="{% static "plugins/datatables-1.10.16/dataTables-1.10.16/css/dataTables.bootstrap.min.css" %}"/>
-    <link rel="stylesheet" href="{% static "plugins/datatables-1.10.16/responsive-2.2.1/css/responsive.bootstrap.min.css" %}"/>
+    <link rel="stylesheet"
+          href="{% static "plugins/datatables-1.10.16/dataTables-1.10.16/css/dataTables.bootstrap.min.css" %}"/>
+    <link rel="stylesheet"
+          href="{% static "plugins/datatables-1.10.16/responsive-2.2.1/css/responsive.bootstrap.min.css" %}"/>
     <script src="{% static "plugins/datatables-1.10.16/dataTables-1.10.16/js/jquery.dataTables.js" %}"></script>
     <script src="{% static "plugins/datatables-1.10.16/dataTables-1.10.16/js/dataTables.bootstrap.min.js" %}"></script>
     <script src="{% static "plugins/datatables-1.10.16/responsive-2.2.1/js/dataTables.responsive.min.js" %}"></script>
@@ -67,7 +69,7 @@
                     var td = $('#data').DataTable().cell($(this).closest('td, li')).index(),
                         rows = table.row(td.row).data(),
                         rel = $(this).attr('rel');
-                    delete_registry_by_id(pathname,{id: rows[0], action: rel},function () {
+                    delete_registry_by_id(pathname, {id: rows[0], action: rel}, function () {
                         table.ajax.reload();
                     });
                 });

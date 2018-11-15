@@ -18,15 +18,22 @@ var billing = {
         this.load_med();
     },
     get_med: function () {
+        $('#cmed').val(0);
+        billing.details.cantmed = 0;
         $.each(this.details.medidores, function (i, item) {
             item.pos = i;
+            billing.details.cantmed += item.rang;
         });
+        $('#cmed').val(billing.details.cantmed);
 
         /*=====================================================*/
-
+         $('#csell').val(0);
+        billing.details.cantsell = 0;
         $.each(this.details.sellos, function (i, item) {
             item.pos = i;
+            billing.details.cantsell += item.rang;
         });
+          $('#csell').val(billing.details.cantsell);
 
         /*=====================================================*/
 
@@ -45,6 +52,7 @@ var billing = {
                 {data: "pos"},
                 {data: "num1"},
                 {data: "num2"},
+                {data: "rang"},
                 {data: "tiponom"},
                 {data: "bod"},
                 {data: "option"},
@@ -63,7 +71,7 @@ var billing = {
                 },
 
                 {
-                    targets: [4],
+                    targets: [5],
                     render: function (data, type, row) {
                         return '<b>' + bodega[data] + '</b>';
                     }
@@ -92,6 +100,7 @@ var billing = {
                 {data: "pos"},
                 {data: "num1"},
                 {data: "num2"},
+                {data: "rang"},
                 {data: "bod"},
                 {data: "option"},
             ],
@@ -108,7 +117,7 @@ var billing = {
                     }
                 },
                 {
-                    targets: [3],
+                    targets: [4],
                     render: function (data, type, row) {
                         return '<b>' + bodega[data] + '</b>';
                     }
@@ -142,8 +151,8 @@ var billing = {
         return data;
     },
     exists_med: function () {
-        return this.details.medidores.length > 0;
-    }
+        return this.details.medidores.length > 0 || this.details.sellos.length > 0;
+    },
 };
 
 $(function () {
@@ -201,7 +210,15 @@ $(function () {
             error_message('La numeracion final debe ser mayor a la final');
         } else {
             var item = {
-                'pos': 0, 'num1': num1, 'num2': num2, 'ban': 1, 'tipo': tipo, 'tiponom': nom, 'bod': cual, 'option': 0
+                'pos': 0,
+                'num1': num1,
+                'num2': num2,
+                'rang': (num2 - num1),
+                'ban': 1,
+                'tipo': tipo,
+                'tiponom': nom,
+                'bod': cual,
+                'option': 0
             };
             opcion === 1 ? billing.add_med(item) : billing.add_sell(item);
         }
@@ -227,7 +244,15 @@ $(function () {
         var tipo = parseInt($("#tipo2 option:selected").val());
         var nom = $("#tipo2 option:selected").text();
         var item = {
-            'pos': 0, 'num1': num1, 'num2': 0, 'tipo': tipo, 'tiponom': nom, 'ban': 2, 'bod': cual, 'option': 0
+            'pos': 0,
+            'num1': num1,
+            'num2': 0,
+            'rang': 1,
+            'tipo': tipo,
+            'tiponom': nom,
+            'ban': 2,
+            'bod': cual,
+            'option': 0
         };
         opcion === 1 ? billing.add_med(item) : billing.add_sell(item);
         $('#med3').val("0");
@@ -311,8 +336,8 @@ $(function () {
             fv.disableSubmitButtons(false);
 
             billing.details.date_joined = $('#fecha').val();
-            billing.details.cantmed = billing.details.medidores.length;
-            billing.details.cantsell = billing.details.sellos.length;
+            billing.details.cantmed =0;
+            billing.details.cantsell = 0;
 
 
             if (!billing.exists_med()) {

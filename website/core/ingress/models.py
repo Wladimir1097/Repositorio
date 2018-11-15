@@ -59,6 +59,20 @@ class Product(models.Model):
             return "{0}{1}".format(MEDIA_URL, self.image)
         return "{0}{1}".format(STATIC_URL, 'img/default/product.png')
 
+    def get_ingress_year_month(self, year, month):
+        cant = \
+            Inventory.objects.filter(prod=self, ing__date_joined__year=year, ing__date_joined__month=month).aggregate(
+                resp=Coalesce(Sum('cant'), 0))['resp']
+        dif = Inventory.objects.filter(prod=self, ing__date_joined__year=year, ing__date_joined__month=month).aggregate(
+            resp=Coalesce(Sum('diferencia'), 0))['resp']
+        return cant - dif
+
+    def get_sales_year_month(self, year, month):
+        from core.sales.models import SalesProducts
+        return SalesProducts.objects.filter(prod=self, sales__type=1, sales__date_joined__year=year,
+                                            sales__date_joined__month=month).aggregate(resp=Coalesce(Sum('cant'), 0))[
+            'resp']
+
     def get_ingress(self):
         cant = Inventory.objects.filter(prod=self).aggregate(resp=Coalesce(Sum('cant'), 0))['resp']
         dif = Inventory.objects.filter(prod=self).aggregate(resp=Coalesce(Sum('diferencia'), 0))['resp']
@@ -68,16 +82,64 @@ class Product(models.Model):
         from core.sales.models import SalesProducts
         return SalesProducts.objects.filter(prod=self, sales__type=1).aggregate(resp=Coalesce(Sum('cant'), 0))['resp']
 
+    def get_ingress_year(self, year):
+        cant = \
+            Inventory.objects.filter(prod=self, ing__date_joined__year=year).aggregate(resp=Coalesce(Sum('cant'), 0))[
+                'resp']
+        dif = \
+            Inventory.objects.filter(prod=self, ing__date_joined__year=year).aggregate(
+                resp=Coalesce(Sum('diferencia'), 0))[
+                'resp']
+        return cant - dif
+
+    def get_sales_year(self, year):
+        from core.sales.models import SalesProducts
+        return SalesProducts.objects.filter(prod=self, sales__type=1, sales__date_joined__year=year).aggregate(
+            resp=Coalesce(Sum('cant'), 0))['resp']
+
+    def get_ingress_range(self, start_date, end_date):
+        cant = Inventory.objects.filter(prod=self, ing__date_joined__range=[start_date, end_date]).aggregate(
+            resp=Coalesce(Sum('cant'), 0))['resp']
+        dif = Inventory.objects.filter(prod=self, ing__date_joined__range=[start_date, end_date]).aggregate(
+            resp=Coalesce(Sum('diferencia'), 0))['resp']
+        return cant - dif
+
+    def get_sales_range(self, start_date, end_date):
+        from core.sales.models import SalesProducts
+        return \
+            SalesProducts.objects.filter(prod=self, sales__type=1,
+                                         sales__date_joined__range=[start_date, end_date]).aggregate(
+                resp=Coalesce(Sum('cant'), 0))['resp']
+
     def get_pedids(self):
         from core.sales.models import SalesProducts
         return SalesProducts.objects.filter(prod=self, sales__type=2).aggregate(resp=Coalesce(Sum('cant_ent'), 0))[
             'resp']
 
+    def get_pedids_range(self, start_date, end_date):
+        from core.sales.models import SalesProducts
+        return \
+            SalesProducts.objects.filter(prod=self, sales__type=2,
+                                         sales__date_joined__range=[start_date, end_date]).aggregate(
+                resp=Coalesce(Sum('cant_ent'), 0))['resp']
+
+    def get_pedids_year_month(self, year, month):
+        from core.sales.models import SalesProducts
+        return SalesProducts.objects.filter(prod=self, sales__type=2, sales__date_joined__year=year,
+                                            sales__date_joined__month=month).aggregate(
+            resp=Coalesce(Sum('cant_ent'), 0))[
+            'resp']
+
+    def get_pedids_year(self, year):
+        from core.sales.models import SalesProducts
+        return SalesProducts.objects.filter(prod=self, sales__type=2, sales__date_joined__year=year).aggregate(
+            resp=Coalesce(Sum('cant_ent'), 0))['resp']
+
     def cost_format(self):
-        return format(self.cost, '.5f')
+        return format(self.cost, '.2f')
 
     def price_format(self):
-        return format(self.price, '.5f')
+        return format(self.price, '.2f')
 
     class Meta:
         verbose_name = 'Producto'
@@ -151,8 +213,8 @@ class Ingress(models.Model):
         self.save()
 
     class Meta:
-        verbose_name = 'Despacho'
-        verbose_name_plural = 'Despachos'
+        verbose_name = 'Ingreso'
+        verbose_name_plural = 'Ingresos'
         ordering = ['-id']
 
 
@@ -171,10 +233,10 @@ class Inventory(models.Model):
         return self.prod.name
 
     def price_format(self):
-        return format(self.price, '.5f')
+        return format(self.price, '.2f')
 
     def dscto_format(self):
-        return format(self.dscto, '.5f')
+        return format(self.dscto, '.2f')
 
     def subtotal_format(self):
         return format(self.subtotal, '.2f')
@@ -199,3 +261,25 @@ class Inventory(models.Model):
         verbose_name_plural = 'Inventarios'
         ordering = ['-id']
 
+
+class Document(models.Model):
+    description = models.CharField(max_length=500, null=True, blank=True, verbose_name="Descripción")
+    date_joined = models.DateField(default=datetime.now, verbose_name='Fechax')
+    image = models.ImageField(upload_to='document/%Y/%m/%d', verbose_name='Imagen', null=True, blank=True)
+    bodega = models.ForeignKey(Bodega, verbose_name='Bodega', blank=True, null=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.description
+
+    def get_image(self):
+        if self.image:
+            return "{0}{1}".format(MEDIA_URL, self.image)
+        return "{0}{1}".format(STATIC_URL, 'img/default/module.png')
+
+    def date_joined_format(self):
+        return self.date_joined.strftime('%Y-%m-%d')
+
+    class Meta:
+        verbose_name = 'Document'
+        verbose_name_plural = 'Documents'
+        ordering = ['-date_joined']

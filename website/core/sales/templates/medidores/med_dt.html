@@ -1,18 +1,68 @@
 {% extends 'bs_data.html' %}
 {% load static from staticfiles %}
 {% block pnldatahead %}
-    <script src="{% static "medidores/js/med_dta.js" %}"></script>
+    <script src="{% static "medidores/js/med_dt.js" %}"></script>
 {% endblock %}
 {% block columns %}
     <th style="width: 5%;">Nro</th>
-    <th style="width: 20%;">Fecha de Ingreso</th>
+    <th style="width: 10%;">Fecha de Ingreso</th>
     <th style="width: 15%;">Medidores</th>
     <th style="width: 15%;">Sellos</th>
-    <th style="width: 20%;">Responsable</th>
+    <th style="width: 15%;">Responsable</th>
+    <th style="width: 25%;">Eliminar</th>
     <th style="width: 15%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
 {% endblock %}
 
+{% block add_js %}
+    <script type="application/javascript">
+        var table;
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#data tbody').on('click', 'a[rel="deletemed"]', function () {
+                $('.tooltip').remove();
+                var td = $('#data').DataTable().cell($(this).closest('td, li')).index(),
+                    rows = table.row(td.row).data(),
+                    rel = $(this).attr('rel');
+                delete_registry_by_id(pathname, {id: rows[0], action: 'deletemed'}, function () {
+                    table.ajax.reload();
+                });
+            });
 
+            $('.table tbody').on('mouseover', 'tr', function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: 'hover',
+                    html: true
+                });
+            });
+
+            $('.table').on('click', 'img', function () {
+                load_image($(this).attr('src'));
+            });
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#data tbody').on('click', 'a[rel="deletesell"]', function () {
+            $('.tooltip').remove();
+            var td = $('#data').DataTable().cell($(this).closest('td, li')).index(),
+                rows = table.row(td.row).data(),
+                rel = $(this).attr('rel');
+            delete_registry_by_id(pathname, {id: rows[0], action: 'deletesell'}, function () {
+                table.ajax.reload();
+            });
+        });
+
+        $('.table tbody').on('mouseover', 'tr', function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: 'hover',
+                html: true
+            });
+        });
+
+        $('.table').on('click', 'img', function () {
+            load_image($(this).attr('src'));
+        });
+    </script>
+
+{% endblock %}
 {% block additional %}
     <div class="modal fade" id="MyModal" role="dialog">
         <div class="modal-dialog modal-lg">

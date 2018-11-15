@@ -10,6 +10,7 @@ from config.settings.base import LOGIN_URL
 from core.security.models import AccessUsers
 from core.users.models import User
 
+
 @csrf_exempt
 def session_login(request):
     data = {
@@ -73,6 +74,7 @@ def session_login(request):
             data['error'] = e
         return HttpResponse(json.dumps(data), content_type="application/json")
 
+
 def send_email_reset_password(id, server):
     from django.core.mail import EmailMessage
     from django.template.loader import render_to_string
@@ -84,6 +86,7 @@ def send_email_reset_password(id, server):
     msg = EmailMessage(subject=subject, body=msg_html, to=[user.email])
     msg.content_subtype = "html"
     msg.send()
+
 
 def login_default(request):
     return HttpResponseRedirect(LOGIN_URL)

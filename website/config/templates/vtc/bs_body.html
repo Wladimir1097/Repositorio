@@ -31,6 +31,49 @@
                 </section>
             {% endblock %}
             {% block content %}{% endblock %}
+            {% block login %}
+                <script type="application/javascript">
+
+                    $(document).ready(function () {
+                        setTimeout(function () {
+                            $.LoadingOverlay("hide");
+                            $.confirm({
+                                theme: 'modern',
+                                type: 'blue',
+                                icon: 'fa fa-exclamation-triangle',
+                                title: 'Alerta!',
+                                columnClass: 'small',
+                                typeAnimated: true,
+                                cancelButtonClass: "btn-primary",
+                                content: 'La sesión esta por expirar.',
+                                autoClose: 'logoutUser|15000',
+                                buttons: {
+                                    logoutUser: {
+
+                                        text: 'cerrar sesión',
+                                        btnClass: 'btn-primary',
+                                        action: function () {
+                                            $.alert('La sesión ha expirado');
+                                            window.location = '/login/logout/';
+                                        }
+                                    },
+                                    danger: {
+                                        text: 'cancelar',
+                                        btnClass: 'btn-red',
+                                        action: function () {
+                                            $.alert('continue trabajando');
+                                        }
+
+                                    }
+
+
+                                }
+                            });
+                        }, 3600000);
+                    });
+
+                </script>
+            {% endblock %}
         </div>
         {% include 'bs_footer.html' %}
         {% include 'vtc/bs_sbtoggle.html' %}

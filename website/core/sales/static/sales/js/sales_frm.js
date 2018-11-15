@@ -91,7 +91,7 @@ var billing = {
                 {
                     targets: [4],
                     render: function (data, type, row) {
-                        return '<input type="text" class="form-control input-sm" name="cant" value="' + data + '">';
+                        return '<input type="text" class="form-control input-sm" autocomplete="off" name="cant" autocomplete="off" value="' + data + '">';
                     }
                 },
                 {
@@ -200,9 +200,11 @@ $(function () {
     $('#tblProducts tbody').on('change', 'input[name="cant"]', function () {
         var row = tblProducts.row($(this).parents('tr')).data();
         billing.details.products[row.pos].cant = parseInt($(this).val());
-        billing.load_products();
+        //billing.load_products();
+        billing.get_produts();
+        var nRow = $(this).parents('tr')[0];
+        $('td:eq(5)', nRow).html(billing.details.products[row.pos].subtotal.toFixed(2));
     });
-
     /*=============================================================================================*/
 
     $('#id_date_joined').datepicker({

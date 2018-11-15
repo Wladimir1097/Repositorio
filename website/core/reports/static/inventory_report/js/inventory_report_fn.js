@@ -1,14 +1,39 @@
 var tblReport;
 
 function generate_report() {
+    var $month = $('#month').val();
+    var $filter = $('#filter').val();
     var data = {
-        prod: $('#products').val()
+        prod: $('#products').val(),
+        filter: $filter,
+        year: $('#year').val(),
+        month: $month,
+        start_date: $('#start_date').val(),
+        end_date: $('#end_date').val()
     };
 
     var $report_text = "";
 
+    if ($month === "" && $filter === '3') {
+        $filter = '2';
+    }
+
     var now = new Date();
     var jsDate = now.getDate() + '-' + (now.getMonth() + 1) + '-' + now.getFullYear();
+
+    switch ($filter) {
+        case '1':
+            $report_text += 'Desde ' + $("#start_date").val() + ' hasta ' + $("#end_date").val();
+            break;
+        case '2':
+            $report_text += 'del Año ' + $("#year").val();
+            break;
+        case '3':
+            $report_text += 'del Año ' + $("#year").val();
+            $report_text += ' y del mes de ' + $("#month option:selected").text().toUpperCase();
+            break;
+    }
+    ;
 
     tblReport = $('#data').DataTable({
         destroy: true,
@@ -26,39 +51,35 @@ function generate_report() {
                 orderable: false,
                 class: 'text-center',
                 render: function (data, type, row) {
-                   if(data !== '-------'){
-                       return '$'+data;
-                   }
-                   return data;
+                    if (data !== '-------') {
+                        return '$' + data;
+                    }
+                    return data;
                 }
             },
             {
                 targets: [3],
                 class: 'text-center',
                 render: function (data, type, row) {
-                   return '<span class="badge">'+data+'</span>';
+                    return '<span class="badge">' + data + '</span>';
                 }
             },
             {
-                targets: [4],
-                class: 'text-center'
-            },
-            {
-                targets: [5,6],
+                targets: [4,5,6],
                 class: 'text-center'
             }
         ],
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         buttons: [
             {
-                extend:    'excelHtml5',
-                text:      'Descargar Excel <i class="fa fa-file-excel-o"></i>',
+                extend: 'excelHtml5',
+                text: 'Descargar Excel <i class="fa fa-file-excel-o"></i>',
                 titleAttr: 'Excel',
                 className: 'btn btn-success btn-flat btn-sm'
             },
             {
-                extend:    'pdfHtml5',
-                text:      'Descargar Pdf <i class="fa fa-file-pdf-o"></i>',
+                extend: 'pdfHtml5',
+                text: 'Descargar Pdf <i class="fa fa-file-pdf-o"></i>',
                 titleAttr: 'PDF',
                 className: 'btn btn-success btn-flat btn-sm',
                 title: '',
@@ -89,11 +110,11 @@ function generate_report() {
                             fillColor: '#2d4154',
                             alignment: 'center'
                         },
-                        tableBodyOdd:{
+                        tableBodyOdd: {
                             fontSize: 10,
                             alignment: 'center'
                         },
-                        tableBodyEven:{
+                        tableBodyEven: {
                             fontSize: 10,
                             alignment: 'center'
                         }
@@ -118,7 +139,7 @@ function generate_report() {
                         text: ('Reporte de Inventario ' + $report_text).toUpperCase(),
                         style: 'subheader'
                     });
-                    doc.content[4].table.widths = ['5%', '30%', '10%', '10%', '15%', '15%', '15%'];
+                    doc.content[4].table.widths = ['5%', '40%', '10%', '10%', '15%', '15%'];
                     doc.content[4].margin = [0, 35, 0, 0];
                     doc.content[4].layout = {};
                     doc['footer'] = (function (page, pages) {
@@ -142,10 +163,63 @@ function generate_report() {
     });
 }
 
-
 $(function () {
+    $('#filter').change(function () {
+        var filter = $(this).val();
+        $('#f_start_date').hide();
+        $('#f_end_date').hide();
+        $('#f_year').hide();
+        $('#f_month').hide();
+        table.clear().draw();
+        switch (filter) {
+            case '1':
+                $('#f_start_date').show();
+                $('#f_end_date').show();
+                generate_report();
+                break;
+            case '2':
+                $('#f_year').show();
+                generate_report();
+                break;
+            case '3':
+                $('#f_year').show();
+                $('#f_month').show();
+                generate_report();
+                break;
+            default:
+                generate_report();
+        }
+    });
 
-    $('#products').on('change',function () {
+    $("#year").datepicker({
+        format: "yyyy",
+        autoclose: true,
+        minViewMode: "years",
+        orientation: "down bottom"
+    }).on('changeDate', function (e) {
+        generate_report();
+    });
+
+    $("#start_date").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        orientation: "down bottom"
+    }).on('changeDate', function (e) {
+        generate_report();
+    });
+
+    $("#end_date").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        orientation: "down bottom"
+    }).on('changeDate', function (e) {
+        generate_report();
+    });
+
+    $('#month').on('change', function () {
+        generate_report();
+    });
+    $('#products').on('change', function () {
         generate_report();
     });
 

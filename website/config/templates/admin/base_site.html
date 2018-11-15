@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+{% load staticfiles %}
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+     <img src="{% static 'img/logo/MEMBRETE PROENERGY SA.JPG' %}" height="40px" />
+    <a href="{% url 'admin:index' %}">Administración de Bodega ProEnergy</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

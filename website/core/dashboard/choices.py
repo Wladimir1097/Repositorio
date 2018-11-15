@@ -2,6 +2,11 @@ gender_choices = (
     (1, 'Masculino'),
     (2, 'Femenino')
 )
+ESTADOS_SOLICITUD = (
+        (1, 'Prestado'),
+        (2, 'Proceso'),
+        (3, 'Devuelto'),
+    )
 months_choices = (
     ('', '-----------'),
     (1, 'Enero'),
@@ -22,6 +27,7 @@ sales_choices = (
     (1, 'Despacho'),
     (2, 'Pedido')
 )
+
 
 type_choices = (
     ('', '-----------'),

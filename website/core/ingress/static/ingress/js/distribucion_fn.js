@@ -44,7 +44,7 @@ $(function () {
                             }
                             return '<input type="text" class="form-control input-sm" name="cant_dev" value="0">';
                         }
-                        real = parseInt(row.c) - parseInt(row.cant)
+                        real = parseInt(row.c) - parseInt(row.cant);
                         return '<span class="badge bg-light-blue-active">' + real + '</span>';
                     }
                 },
@@ -66,7 +66,7 @@ $(function () {
             rowCallback: function (row, data, index) {
                 row = $(row).closest('tr');
                 row.find("input[name='cant_dev']").TouchSpin({
-                    min: 1,
+                    min: 0,
                     max: parseInt(data.cant),
                     step: 1
                 });

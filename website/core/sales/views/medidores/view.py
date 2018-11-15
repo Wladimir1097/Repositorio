@@ -1,3 +1,5 @@
+from builtins import range
+
 from django.db import transaction
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -30,10 +32,19 @@ def medidores(request):
             data['action'] = action
             template = 'medidores/med_frm.html'
             if action == 'new':
-                data['form'] = MedidorForm(request.user.bodega_id, request.POST)
+                data['form'] = MedidorForm(request.user.bodega_id)
                 data['title'] = 'Nuevo Registro de Medidores'
                 data['button'] = 'Guardar Registro'
                 data['fecha'] = datetime.now().strftime('%Y-%m-%d')
+            elif action == 'edit' and 'id' in request.GET:
+                id = request.GET['id']
+                data['id'] = id
+                if GestionMedidor.objects.filter(pk=id).exists():
+                    model = GestionMedidor.objects.get(pk=id)
+                    data['form'] = MedidorForm(request.user.bodega_id, instance=model,
+                                               initial={'id': model.id})
+                    data['title'] = 'Edicion Registro de Medidores'
+                    data['button'] = 'Editar Registro'
             else:
                 return HttpResponseRedirect(HOME)
         else:
@@ -49,6 +60,12 @@ def medidores(request):
             if action == 'delete':
                 GestionMedidor.objects.get(pk=request.POST['id']).delete()
                 data['resp'] = True
+            elif action == 'deletemed':
+                InventoryMedidor.objects.filter(gestion_id__exact=request.POST['id']).delete()
+                data['resp'] = True
+            elif action == 'deletesell':
+                InventorySello.objects.filter(gestion_id__exact=request.POST['id']).delete()
+                data['resp'] = True
             elif action == 'details':
                 data = []
                 type = request.POST['type']
@@ -59,8 +76,86 @@ def medidores(request):
                     for index, s in enumerate(InventorySello.objects.filter(gestion_id=request.POST['id'])):
                         data.append(
                             [index + 1, s.numeracion, s.distribuido])
+            elif action == 'edit':
+                with transaction.atomic():
+                    items = json.loads(request.POST['items'])
+                    ges = GestionMedidor.objects.get(pk=request.POST['pk'])
+
+                    for p in items['medidores']:
+                        if int(p['ban']) == 1:
+                            num1 = int(p['num1'])
+                            num2 = (int(p['num2']) + 1)
+                            for num in range(num1, num2):
+                                if InventoryMedidor.objects.filter(numeracion__exact=num).exists():
+                                    InventoryMedidor.objects.filter(numeracion__exact=num).update(
+                                        cli_id=None, medtype_id=int(p['tipo']), sales_id=None,
+                                        distribuido=bool(p['bod']), date_joined=ges.date_joined,
+                                        estado=False)
+                                else:
+                                    det = InventoryMedidor()
+                                    det.gestion = ges
+                                    det.usuario_id = request.user.id
+                                    det.medtype_id = int(p['tipo'])
+                                    det.date_joined = ges.date_joined
+                                    det.numeracion = num
+                                    if bool(p['bod']):
+                                        det.distribuido = bool(p['bod'])
+                                    det.save()
+                        else:
+                            if InventoryMedidor.objects.filter(numeracion__exact=int(p['num1'])).exists():
+                                InventoryMedidor.objects.filter(numeracion__exact=int(p['num1'])).update(
+                                    cli_id=None, medtype_id=int(p['tipo']), date_joined=ges.date_joined, sales_id=None,
+                                    distribuido=bool(p['bod']),
+                                    estado=False)
+                            else:
+                                det = InventoryMedidor()
+                                det.gestion = ges
+                                det.usuario_id = request.user.id
+                                det.medtype_id = int(p['tipo'])
+                                det.date_joined = ges.date_joined
+                                det.numeracion = int(p['num1'])
+                                if bool(p['bod']):
+                                    det.distribuido = bool(p['bod'])
+                                det.save()
+
+                    for p in items['sellos']:
+                        if int(p['ban']) == 1:
+                            num1 = int(p['num1'])
+                            num2 = (int(p['num2']) + 1)
+                            print(num1, num2)
+                            for num in range(num1, num2):
+                                if InventorySello.objects.filter(numeracion__exact=num).exists():
+                                    InventorySello.objects.filter(numeracion__exact=num).update(
+                                        cli_id=None, date_joined=ges.date_joined, sales_id=None,
+                                        distribuido=bool(p['bod']), estado=False)
+                                else:
+                                    det = InventorySello()
+                                    det.gestion = ges
+                                    det.usuario_id = request.user.id
+                                    det.date_joined = ges.date_joined
+                                    det.numeracion = num
+                                    if bool(p['bod']):
+                                        det.distribuido = bool(p['bod'])
+                                    det.save()
+                        else:
+                            if InventorySello.objects.filter(numeracion__exact=int(p['num1'])).exists():
+                                InventorySello.objects.filter(numeracion__exact=int(p['num1'])).update(
+                                    cli_id=None, date_joined=ges.date_joined, sales_id=None, distribuido=bool(p['bod']),
+                                    estado=False)
+                            else:
+                                det = InventorySello()
+                                det.gestion = ges
+                                det.usuario_id = request.user.id
+                                det.date_joined = ges.date_joined
+                                det.numeracion = int(p['num1'])
+                                if bool(p['bod']):
+                                    det.distribuido = bool(p['bod'])
+                                det.save()
+                    data['resp'] = True
+
             elif action == 'new':
                 with transaction.atomic():
+
                     cantmed = 0
                     cantsell = 0
                     items = json.loads(request.POST['items'])
@@ -74,27 +169,41 @@ def medidores(request):
                             num1 = int(p['num1'])
                             num2 = (int(p['num2']) + 1)
                             for num in range(num1, num2):
+                                if InventoryMedidor.objects.filter(numeracion__exact=num).exists():
+                                    InventoryMedidor.objects.filter(numeracion__exact=num).update(
+                                        cli_id=None, medtype_id=int(p['tipo']), sales_id=None,
+                                        distribuido=bool(p['bod']), date_joined=ges.date_joined,
+                                        estado=False)
+                                    cantmed += 1
+                                else:
+                                    det = InventoryMedidor()
+                                    det.gestion = ges
+                                    det.usuario_id = request.user.id
+                                    det.medtype_id = int(p['tipo'])
+                                    det.date_joined = ges.date_joined
+                                    det.numeracion = num
+                                    cantmed += 1
+                                    if bool(p['bod']):
+                                        det.distribuido = bool(p['bod'])
+                                    det.save()
+                        else:
+                            if InventoryMedidor.objects.filter(numeracion__exact=int(p['num1'])).exists():
+                                InventoryMedidor.objects.filter(numeracion__exact=int(p['num1'])).update(
+                                    cli_id=None, medtype_id=int(p['tipo']), date_joined=ges.date_joined, sales_id=None,
+                                    distribuido=bool(p['bod']),
+                                    estado=False)
+                                cantmed += 1
+                            else:
                                 det = InventoryMedidor()
                                 det.gestion = ges
                                 det.usuario_id = request.user.id
                                 det.medtype_id = int(p['tipo'])
                                 det.date_joined = ges.date_joined
-                                det.numeracion = num
+                                det.numeracion = int(p['num1'])
                                 cantmed += 1
                                 if bool(p['bod']):
                                     det.distribuido = bool(p['bod'])
                                 det.save()
-                        else:
-                            det = InventoryMedidor()
-                            det.gestion = ges
-                            det.usuario_id = request.user.id
-                            det.medtype_id = int(p['tipo'])
-                            det.date_joined = ges.date_joined
-                            det.numeracion = int(p['num1'])
-                            cantmed += 1
-                            if bool(p['bod']):
-                                det.distribuido = bool(p['bod'])
-                            det.save()
 
                     for p in items['sellos']:
                         if int(p['ban']) == 1:
@@ -102,25 +211,37 @@ def medidores(request):
                             num2 = (int(p['num2']) + 1)
                             print(num1, num2)
                             for num in range(num1, num2):
+                                if InventorySello.objects.filter(numeracion__exact=num).exists():
+                                    InventorySello.objects.filter(numeracion__exact=num).update(
+                                        cli_id=None, date_joined=ges.date_joined, sales_id=None,
+                                        distribuido=bool(p['bod']), estado=False)
+                                    cantsell += 1
+                                else:
+                                    det = InventorySello()
+                                    det.gestion = ges
+                                    det.usuario_id = request.user.id
+                                    det.date_joined = ges.date_joined
+                                    det.numeracion = num
+                                    cantsell += 1
+                                    if bool(p['bod']):
+                                        det.distribuido = bool(p['bod'])
+                                    det.save()
+                        else:
+                            if InventorySello.objects.filter(numeracion__exact=int(p['num1'])).exists():
+                                InventorySello.objects.filter(numeracion__exact=int(p['num1'])).update(
+                                    cli_id=None, date_joined=ges.date_joined, sales_id=None, distribuido=bool(p['bod']),
+                                    estado=False)
+                                cantsell += 1
+                            else:
                                 det = InventorySello()
                                 det.gestion = ges
                                 det.usuario_id = request.user.id
                                 det.date_joined = ges.date_joined
-                                det.numeracion = num
+                                det.numeracion = int(p['num1'])
                                 cantsell += 1
                                 if bool(p['bod']):
                                     det.distribuido = bool(p['bod'])
                                 det.save()
-                        else:
-                            det = InventorySello()
-                            det.gestion = ges
-                            det.usuario_id = request.user.id
-                            det.date_joined = ges.date_joined
-                            det.numeracion = int(p['num1'])
-                            cantsell += 1
-                            if bool(p['bod']):
-                                det.distribuido = bool(p['bod'])
-                            det.save()
                     ges.cantsell = cantsell
                     ges.cantmed = cantmed
                     ges.save()

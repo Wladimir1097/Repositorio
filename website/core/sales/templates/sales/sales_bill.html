@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 {% load static from staticfiles %}
 {% load random_numbers %}
 <html>
@@ -89,9 +90,15 @@
 <p id="header">ORDEN N°: {{ sales.id|upper }}-/{% random_int 10 100 %}/-{{ sales.date_joined|date:'Y-m-d ' }}</p>
 <table id="items-cabecera" width="100%">
     <thead style="font-weight: normal">
-    <tr>
-        <th style="padding: 0px 5px 0px 5px;"><h1>{{ company.name|upper }}</h1></th>
-    </tr>
+    {% ifequal vacio 3 %}
+        <tr>
+            <th style="padding: 0px 5px 0px 5px;"><h1>PROENERGY.SA</h1></th>
+        </tr>
+    {% else %}
+        <tr>
+            <th style="padding: 0px 5px 0px 5px;"><h1>{{ company.name|upper }}</h1></th>
+        </tr>
+    {% endifequal %}
     <tr>
         <th><p>{{ company.description }}</p></th>
     </tr>
@@ -102,9 +109,16 @@
             </p>
         </th>
     </tr>
-    <tr>
-        <th><p>RUC: {{ company.ruc }}</p></th>
-    </tr>
+    {% ifequal vacio 3 %}
+        <tr>
+            <th><p>RUC: 0992373563001</p></th>
+        </tr>
+    {% else %}
+
+        <tr>
+            <th><p>RUC: {{ company.ruc }}</p></th>
+        </tr>
+    {% endifequal %}
     <tr>
         <th style="padding-bottom: 0px;">
             <strong>FECHA DE ORDEN :</strong> {{ sales.date_joined }}
@@ -140,25 +154,23 @@
                 </td>
             </tr>
             {% for d in details %}
-                {% if d.cant > 0 %}
-                    <tr>
-                        {% if d.cant_ent > 0 %}
-                            <td>{{ d.cant_ent }}</td>
-                        {% else %}
-                            <td>{{ d.cant }}</td>
-                        {% endif %}
-                        <td>{{ d.prod.name }}</td>
-                        <td>${{ d.price|floatformat:"2" }}</td>
-                        <td>${{ d.subtotal|floatformat:"2" }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" style="padding: -3px 10px -9px 10px;">
-                            <p style="padding-bottom: -0px;">
-                                -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                            </p>
-                        </td>
-                    </tr>
-                {% endif %}
+                <tr>
+                    {% if d.cant_ent > 0 %}
+                        <td>{{ d.cant_ent }}</td>
+                    {% else %}
+                        <td>{{ d.cant }}</td>
+                    {% endif %}
+                    <td>{{ d.prod.name }}</td>
+                    <td>${{ d.price|floatformat:"2" }}</td>
+                    <td>${{ d.subtotal|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding: -3px 10px -9px 10px;">
+                        <p style="padding-bottom: -0px;">
+                            -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                        </p>
+                    </td>
+                </tr>
             {% endfor %}
             <tr>
                 <td colspan="3" class="blank" style="text-align: right; padding-right: 20px;"><strong>Total</strong>
@@ -169,13 +181,63 @@
             </tr>
             </tbody>
         </table>
+        <div id="page-wrap" style="text-align: left;">
+
+            <table id="items-cabecera" width="100%">
+                <tbody id="details" style="font-size: 10px">
+                {% if medidor %}
+                    <tr>
+                        <td style="font-size: 15px; font-weight: bold">Medidores:</td>
+                    </tr>
+                    {% for e in medidor %}
+                        {% ifnotequal forloop.counter0 contador %}
+                            <td>{{ e.numeracion }}</td>
+                        {% else %}
+                            <tr>
+                            </tr>
+                            <td>{{ e.numeracion }}</td>
+                            {% define forloop.counter0 as contador %}
+                        {% endifnotequal %}
+
+                    {% endfor %}
+                    </tr>
+                {% endif %}
+                {% retorn 12 as contador %}
+                {% if sello %}
+                    <tr>
+                        <td style="font-size: 15px; font-weight: bold">Sellos:</td>
+                    </tr>
+                    {% for e in sello %}
+                        {% ifnotequal forloop.counter0 contador %}
+                            <td>{{ e.numeracion }}</td>
+                        {% else %}
+                            <tr></tr>
+                            <td>{{ e.numeracion }}</td>
+                            {% define forloop.counter0 as contador %}
+                        {% endifnotequal %}
+                    {% endfor %}
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
         <div class="saltopagina" style="font-size: 13px">
         <h1 style="text-align: center">PAGARE A LA ORDEN</h1>
 
         <p style="width: 30%;">POR: USD ${{ sales.subtotal|floatformat:"2" }}</p>
 
         <div style="text-align: justify">Debo y pagaré solidaria e incondicionalmente a la orden del
-            <em>CONSORCIO MEDIDORES MILAGRO LOS RIOS</em> con RUC <em>{{ company.ruc }}</em> en la ciudad de
+            {% ifnotequal vacio 3 %}
+                <em>CONSORCIO MEDIDORES MILAGRO LOS RIOS</em>
+            {% else %}
+                <em>PROENERGY.SA</em>
+            {% endifnotequal %}
+            con RUC
+            {% ifnotequal vacio 3 %}
+                <em>{{ company.ruc }}</em>
+            {% else %}
+                <em>0992373563001</em>
+            {% endifnotequal %} en la ciudad de
             {{ ubicacion|upper }}, o en el lugar donde se me(nos) reconvenga, la cantidad de: <em>(USD
                 $: {{ sales.subtotal|floatformat:"2" }}) {% wahio sales.subtotal %} DOLARES DE LOS ESTADOS UNIDOS DE
                 AMÉRICA</em> obligándome irrevocablemente a pagar en el caso de pérdida o hurto del material antes

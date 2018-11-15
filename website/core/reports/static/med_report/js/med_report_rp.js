@@ -50,7 +50,7 @@ function generate_report() {
                 class: 'text-center'
             }
         ],
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -120,7 +120,7 @@ function generate_report() {
                         text: ('Reporte de Medidores ' + $report_text).toUpperCase(),
                         style: 'subheader'
                     });
-                    doc.content[4].table.widths = ['15%', '20%', '20%', '20%', '20%'];
+                    doc.content[4].table.widths = ['15%', '10%', '20%', '20%','15%', '20%'];
                     doc.content[4].margin = [25, 35, 0, 0];
                     doc.content[4].layout = {};
                     doc['footer'] = (function (page, pages) {

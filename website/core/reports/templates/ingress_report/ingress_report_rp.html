@@ -4,6 +4,10 @@
 {% block pnlreport %}
     <div class="form-group">
         <div class="row">
+            <div class="col-lg-4">
+                <label>Accesorio:</label>
+                {{ form.productsmult|add_class:'form-control' }}
+            </div>
             <div class="col-lg-2 selectContainer">
                 <label>Buscar por:</label>
                 <div class="input-group my-group">
@@ -36,7 +40,7 @@
                 <label>Mes:</label>
                 {{ form.month|add_class:'form-control' }}
             </div>
-            <div class="col-lg-2" id="f_provs" style="display: none;">
+            <div class="col-lg-2" id="f_provs">
                 <label>Proveedor:</label>
                 {{ form.provs|add_class:'form-control' }}
             </div>
@@ -49,10 +53,9 @@
             <tr>
                 <th style="width: 5%;" class="text-center">Nro</th>
                 <th style="width: 20%;">Proveedor</th>
+                <th style="width: 15%;">Material</th>
                 <th style="width: 15%;">F.Registro</th>
-                <th style="width: 15%;">Subtotal</th>
-                <th style="width: 15%;">Dscto</th>
-                <th style="width: 15%;">Iva</th>
+                <th style="width: 15%;">Cantidad</th>
                 <th style="width: 15%;">Total</th>
             </tr>
             </thead>

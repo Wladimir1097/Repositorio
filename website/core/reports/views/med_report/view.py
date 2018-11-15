@@ -56,21 +56,21 @@ def med_report(request):
                 for i in items:
                     data.append(
                         [i.id, i.date_joined_format(), '---' if i.cli_id is None else i.cli.name, i.numeracion,
-                         'ProEnergy' if i.distribuido is True else 'Wagner'])
+                         i.medtype.name, 'ProEnergy' if i.distribuido is True else 'Wagner'])
                 for i in items1:
                     data.append(
                         [i.id, i.date_joined_format(), '---' if i.cli_id is None else i.cli.name, i.numeracion,
-                         'ProEnergy' if i.distribuido is True else 'Wagner'])
+                         '------', 'ProEnergy' if i.distribuido is True else 'Wagner'])
             elif type == '1':
                 for i in items:
                     data.append(
                         [i.id, i.date_joined_format(), '---' if i.cli_id is None else i.cli.name, i.numeracion,
-                         'ProEnergy' if i.distribuido is True else 'Wagner'])
+                         i.medtype.name, 'ProEnergy' if i.distribuido is True else 'Wagner'])
             elif type == '2':
                 for i in items1:
                     data.append(
                         [i.id, i.date_joined_format(), '---' if i.cli_id is None else i.cli.name, i.numeracion,
-                         'ProEnergy' if i.distribuido is True else 'Wagner'])
+                         '------', 'ProEnergy' if i.distribuido is True else 'Wagner'])
         except Exception as e:
 
             print('se sale')

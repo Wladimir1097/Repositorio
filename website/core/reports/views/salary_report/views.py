@@ -14,7 +14,7 @@ def salary_report(request):
     data = get_module_options(request)
     if request.method == 'GET':
         data['title'] = 'Reporte de Empleados y Salarios'
-        data['form'] = ReportForm()
+        data['form'] = ReportForm(request.user.bodega_id)
         return render(request, 'salary_report/salary_report_rp.html', data)
     elif request.method == 'POST':
         year = request.POST['year']

@@ -28,7 +28,7 @@ def ingress(request):
             data['action'] = action
             template = 'ingress/ingress_frm.html'
             if action == 'new':
-                data['form'] = IngressForm(request.user.bodega_id, request.POST)
+                data['form'] = IngressForm(request.user.bodega_id)
                 data['frmProv'] = ProviderForm()
                 data['title'] = 'Nuevo Registro de una Orden de Ingresos'
                 data['button'] = 'Guardar Orden'
@@ -37,7 +37,7 @@ def ingress(request):
                 data['id'] = id
                 if Ingress.objects.filter(pk=id).exists():
                     model = Ingress.objects.get(pk=id)
-                    data['form'] = IngressForm(request.user.bodega_id, request.POST, instance=model,
+                    data['form'] = IngressForm(request.user.bodega_id, instance=model,
                                                initial={'id': model.id})
                     data['frmProv'] = ProviderForm(instance=model, initial={'id': model.prov})
                     data['details'] = Inventory.objects.filter(ing=id)
@@ -112,9 +112,10 @@ def ingress(request):
                             i.prod.stock -= cant
                             i.prod.save()
                             i.delete()
-                        inge.delete()
+                        ing = inge
                     items = json.loads(request.POST['items'])
-                    ing = Ingress()
+                    if action == 'new':
+                        ing = Ingress()
                     ing.usuario_id = request.user.id
                     ing.prov_id = items['prov']
                     ing.date_joined = items['date_joined']
@@ -141,7 +142,7 @@ def ingress(request):
                     for i in Inventory.objects.filter(ing=request.POST['id']):
                         data.append({
                             'id': i.id, 'name': i.prod.name, 'cant': i.diferencia, 'c': i.cant,
-                            'cant_dev': 1, 'state': i.estado
+                            'cant_dev': 0, 'state': i.estado
                         })
                 elif type == 'products':
                     data = [[a.id, a.prod.name, a.price_format(), a.cant, a.subtotal_format()] for a in

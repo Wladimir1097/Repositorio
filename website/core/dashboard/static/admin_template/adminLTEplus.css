@@ -1919,7 +1919,7 @@ a:focus {
     /*
   border-top-color: #3c8dbc;
    */
-    border-top-color: #613cbc;
+    border-top-color: #ff116e;
 }
 
 .box.box-info {
@@ -2819,8 +2819,8 @@ a:focus {
   background-color: #3c8dbc;
   border-color: #367fa9;
   */
-    background-color: #3cbcaa;
-    border-color: #3638a9;
+    background-color: #52ab6fb3;
+    border-color: #19459f;
 }
 
 .btn-primary:hover,

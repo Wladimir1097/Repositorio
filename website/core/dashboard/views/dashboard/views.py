@@ -16,9 +16,9 @@ from core.users.models import User
 def dashboard(request):
     data = {
         'title': 'Panel de Administración',
-        'vents': Sales.objects.filter()[:10],
-        'prodts': Product.objects.filter(stock__gt=0, bodega_id=request.user.bodega_id).order_by('stock')[:10],
-        'sales_by_month': json.dumps(Sales().sales_by_month())
+        'vents': Sales.objects.filter(usuario_id__bodega_id=request.user.bodega_id)[:10],
+        'prodts': Product.objects.filter(stock__gt=0, bodega_id=request.user.bodega_id).order_by('-stock')[:10],
+        'sales_by_month': json.dumps(Sales().sales_by_month(request.user.bodega_id))
     }
     get_modules_hrz_vrt_treev(request)
     return render(request, 'bs_panel.html', data)
@@ -45,7 +45,7 @@ def information(request):
             'clientes': 0,
             'usuarios': 0,
             'productos': 0,
-            'ingresos':0,
+            'ingresos': 0,
             'hostname': socket.gethostname(),
             'localhost': socket.gethostbyname(socket.gethostname()),
             'date_joined': datetime.now(),
@@ -55,12 +55,21 @@ def information(request):
 
 
 def handler404(request):
-    return HttpResponseRedirect('/login')
+    return HttpResponseRedirect('/login/')
 
 
 def handler500(request):
-    return HttpResponseRedirect('/login')
+    return HttpResponseRedirect('/login/')
 
 
 def login_default(request):
-    return HttpResponseRedirect('/login')
+    return HttpResponseRedirect('/login/')
+
+
+from django.views.defaults import page_not_found
+
+
+def mi_error_404(request):
+    nombre_template = '404.html'
+
+    return page_not_found(request, nombre_template, template_name=nombre_template)

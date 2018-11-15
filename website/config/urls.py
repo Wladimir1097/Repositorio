@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from core.login.views.login import views as v_login
 from config.settings import local
-from core.dashboard.views.dashboard.views import handler404, handler500, login_default
+from core.dashboard.views.dashboard.views import handler500, login_default, handler404, mi_error_404
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -40,3 +40,5 @@ handler500 = handler500
 if local.DEBUG:
     urlpatterns += static(local.STATIC_URL, document_root=local.STATIC_ROOT)
     urlpatterns += static(local.MEDIA_URL, document_root=local.MEDIA_ROOT)
+
+urlpatterns += re_path(r'.', mi_error_404),

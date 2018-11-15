@@ -15,7 +15,7 @@ class ClientForm(ModelForm):
             'ruc': TextInput(attrs={'placeholder': 'Ingrese un ruc'}),
             'mobile': TextInput(attrs={'placeholder': 'Ingrese un teléfono'}),
             'address': TextInput(attrs={'placeholder': 'Ingrese una dirección'}),
-            'email': TextInput(attrs={'placeholder': 'Ingrese un email'})
+            'email': TextInput(attrs={'placeholder': 'Ingrese un email'}),
         }
         exclude = ['bodega']
 

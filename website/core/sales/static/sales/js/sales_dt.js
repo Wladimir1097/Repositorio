@@ -3,7 +3,7 @@ function load_data() {
         responsive: true,
         autoWidth: false,
         destroy: true,
-        order: [[ 0, 'desc' ],[ 4, 'desc' ]],
+        order: [[0, 'desc'], [4, 'desc']],
         ajax: {
             url: pathname,
             type: 'POST',
@@ -18,21 +18,30 @@ function load_data() {
                 render: function (data, type, row) {
                     var buttons = '<a href="' + pathname + '?action=pdf&id=' + row[0] + '" target="_blank"  data-toggle="tooltip" title="Imprimir Orden" class="btn btn-warning btn-xs btn-flat"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="delete" data-toggle="tooltip" title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a> ';
-                    if (data === 1) {
-                        buttons += '<a href="' + pathname + '?action=edit&id=' + row[0] + '" data-toggle="tooltip" title="Editar registro" class="btn btn-yahoo btn-xs btn-flat"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> ';
-                        buttons += '<a href="' + pathname + '?action=reuse&id=' + row[0] + '" data-toggle="tooltip" title="Reusar registro" class="btn btn-adn btn-xs btn-flat"><i class="fa fa-recycle" aria-hidden="true"></i></a> ';
+                    buttons += '<a href="' + pathname + '?action=edit&id=' + row[0] + '" data-toggle="tooltip" title="Editar registro" class="btn btn-yahoo btn-xs btn-flat"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> ';
+                    buttons += '<a href="' + pathname + '?action=reuse&id=' + row[0] + '" data-toggle="tooltip" title="Reusar registro" class="btn btn-adn btn-xs btn-flat"><i class="fa fa-recycle" aria-hidden="true"></i></a> ';
                     buttons += '<a rel="details" data-toggle="tooltip" title="Buscar Detalles" class="btn btn-success btn-xs btn-flat"><i class="fa fa-search" aria-hidden="true"></i></a> ';
-                        buttons += '<a rel="devolution" data-toggle="tooltip" title="Devolución" class="btn btn-instagram btn-xs btn-flat"><i class="fa fa-refresh" aria-hidden="true"></i></a> ';
-                    }
                     if (data === 2) {
                         buttons += '<a rel="dispatch_products" data-toggle="tooltip" title="Entregar materiales" class="btn btn-dropbox btn-xs btn-flat"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>';
+                    } else {
+                        buttons += '<a rel="devolution" data-toggle="tooltip" title="Devolución" class="btn btn-instagram btn-xs btn-flat"><i class="fa fa-refresh" aria-hidden="true"></i></a> ';
                     }
                     buttons += '<a rel="agg" data-toggle="tooltip" title="Adicionar Medidores y Sellos" class="btn btn-foursquare  btn-xs btn-flat"><i class="fa fa-plus-square" aria-hidden="true"></i></a> ';
+
                     return buttons;
                 }
+            }, {
+                targets: [5],
+                class: 'text-center',
+                render: function (data, type, row) {
+                    return data + '  Materiales';
+                }
+            }, {
+                targets: ['_all'],
+                class: 'text-center'
             },
             {
-                targets: [7],
+                targets: [-2],
                 class: 'text-center',
                 render: function (data, type, row) {
                     return '$' + data;
@@ -87,7 +96,7 @@ $(function () {
                             }
                             return '<input type="text" class="form-control input-sm" name="cant_dis" value="0">';
                         }
-                        return data;
+                        return '<i class="fa fa-check" aria-hidden="true"></i>';
                     }
                 },
                 {
@@ -173,7 +182,7 @@ $(function () {
         $('.tooltip').remove();
         var td = $('#data').DataTable().cell($(this).closest('td, li')).index(),
             rows = table.row(td.row).data(), id = rows[0];
-        $('.nav-tabs a[href="#tab_1"]').tab('show');
+        $('.nav-tabs a[href="#tab7"]').tab('show');
         $('#tblProducts').DataTable({
             responsive: true,
             autoWidth: false,
@@ -239,9 +248,9 @@ $(function () {
                 data: {action: 'details', id: id, type: 'medidor'},
                 dataSrc: "",
                 columns: [
-                {data: "id"},
-                {data: "numeracion"},
-            ],
+                    {data: "id"},
+                    {data: "numeracion"},
+                ],
             },
             columnDefs: [
                 {
@@ -249,6 +258,14 @@ $(function () {
                     orderable: false,
                     class: 'text-center'
                 },
+                {
+                    targets: [-1],
+                    orderable: false,
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '<a href="' + pathname + '?action=delete&num=' + row[1] + '" data-toggle="tooltip"  title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                    }
+                }
             ]
         });
         $('#tblSello').DataTable({
@@ -261,9 +278,9 @@ $(function () {
                 data: {action: 'details', id: id, type: 'sello'},
                 dataSrc: "",
                 columns: [
-                {data: "id"},
-                {data: "numeracion"},
-            ],
+                    {data: "id"},
+                    {data: "numeracion"},
+                ],
             },
             columnDefs: [
                 {
@@ -271,9 +288,18 @@ $(function () {
                     orderable: false,
                     class: 'text-center'
                 },
+                {
+                    targets: [-1],
+                    orderable: false,
+                    class: 'text-center',
+                    render: function (data, type, row) {
+                        return '<a href="' + pathname + '?action=delete&num=' + row[1] + '" data-toggle="tooltip"  title="Eliminar registro" class="btn btn-danger btn-xs btn-flat"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                    }
+                }
             ]
         });
         $('#MyModalVent').modal('show');
     });
-
 });
+
+

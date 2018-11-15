@@ -6,6 +6,7 @@ $(function () {
         $('.tooltip').remove();
         var td = $('#data').DataTable().cell($(this).closest('td, li')).index(),
             rows = table.row(td.row).data(), id = rows[0];
+        $('.nav-tabs a[href="#tab_1"]').tab('show');
         tblAdicion = $('#tblAdicion').DataTable({
             responsive: true,
             autoWidth: false,
@@ -99,5 +100,53 @@ $(function () {
 
     $('#MyModalAdicion').on('hidden.bs.modal', function () {
         table.ajax.reload(null, false);
+    });
+
+    $('#btnmedidor').on('click', function () {
+        var num1 = parseInt($('#uno').val());
+        var num2 = parseInt($('#dos').val());
+        if (num2 > num1) {
+            action_by_ajax_with_alert('Notificación', '¿Esta seguro de ingresar estas numeraciones?',
+                pathname, {
+                    items: JSON.stringify(tblAdicion.data().toArray()),
+                    num1: num1,
+                    num2: num2,
+                    action: 'ingress_med'
+                },
+                function () {
+                    $('#uno').val("");
+                    $('#dos').val("");
+                },
+                'Se ha realizado con exito el ingreso'
+            );
+        } else {
+            error_message('error en el rango');
+        }
+
+
+    });
+
+    $('#btnsello').on('click', function () {
+        var num1 =parseInt($('#tres').val());
+        var num2 = parseInt($('#cuatro').val());
+        if (num2 > num1) {
+            action_by_ajax_with_alert('Notificación', '¿Esta seguro de ingresar estas numeraciones?',
+                pathname, {
+                    items: JSON.stringify(tblAdicion.data().toArray()),
+                    num1: num1,
+                    num2: num2,
+                    action: 'ingress_sell'
+                },
+                function () {
+                    $('#tres').val("");
+                    $('#cuatro').val("");
+                },
+                'Se ha realizado con exito el ingreso'
+            );
+        } else {
+            error_message('error en el rango');
+        }
+
+
     });
 });

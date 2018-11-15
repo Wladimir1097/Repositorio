@@ -2,7 +2,7 @@ from django.db import models
 
 from core.ingress.models import *
 from datetime import datetime
-from core.dashboard.choices import sales_choices
+from core.dashboard.choices import sales_choices, ESTADOS_SOLICITUD
 
 
 class Services(models.Model):
@@ -82,10 +82,11 @@ class Sales(models.Model):
     def total_format(self):
         return format(self.total, '.2f')
 
-    def sales_by_month(self):
+    def sales_by_month(self, bodega):
         data = []
         for i in range(1, 13):
-            result = Sales.objects.filter(date_joined__month=i).aggregate(resp=Coalesce(Sum('total'), 0.00))['resp']
+            result = Sales.objects.filter(date_joined__month=i, usuario_id__bodega_id=bodega).aggregate(
+                resp=Coalesce(Sum('total'), 0.00))['resp']
             data.append(format(result, '.2f'))
         return data
 
@@ -196,9 +197,9 @@ class MedidorType(models.Model):
 
 
 class InventoryMedidor(models.Model):
-    gestion = models.ForeignKey(GestionMedidor, on_delete=models.CASCADE)
+    gestion = models.ForeignKey(GestionMedidor, on_delete=models.PROTECT)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    sales = models.ForeignKey(Sales, on_delete=models.CASCADE, blank=True, null=True)
+    sales = models.ForeignKey(Sales, on_delete=models.PROTECT, blank=True, null=True)
     medtype = models.ForeignKey(MedidorType, on_delete=models.PROTECT, blank=True, null=True)
     cli = models.ForeignKey(Client, on_delete=models.PROTECT, blank=True, null=True)
     date_joined = models.DateField(default=datetime.now)
@@ -215,9 +216,9 @@ class InventoryMedidor(models.Model):
 
 
 class InventorySello(models.Model):
-    gestion = models.ForeignKey(GestionMedidor, on_delete=models.CASCADE)
+    gestion = models.ForeignKey(GestionMedidor, on_delete=models.PROTECT)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    sales = models.ForeignKey(Sales, on_delete=models.CASCADE, blank=True, null=True)
+    sales = models.ForeignKey(Sales, on_delete=models.PROTECT, blank=True, null=True)
     cli = models.ForeignKey(Client, on_delete=models.PROTECT, blank=True, null=True)
     date_joined = models.DateField(default=datetime.now)
     date_delivery = models.DateField(default=datetime.now)

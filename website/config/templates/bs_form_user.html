@@ -1,0 +1,101 @@
+{% extends 'bs_data.html' %}
+{% load static from staticfiles %}
+{% load widget_tweaks %}
+{% load dashboard_tags %}
+{% block pnldatahead %}
+    <link rel="stylesheet" href="{% static "plugins/formvalidation-0.6.0/css/formValidation.css" %}"/>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/jquery.validate.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/formValidation.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/framework/bootstrap.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/formvalidation-0.6.0/js/language/es_ES.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/jquery.form.min.js" %}" type="text/javascript"></script>
+    {% block pnlformhead %}{% endblock %}
+{% endblock %}
+{% block content %}
+    <section class="content">
+        {% block form %}
+            <form class="form-horizontal" id="frmForm" method="POST" action="{{ model.url }}"
+                  enctype="multipart/form-data">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h2 class="page-header">
+                                    <i class="fa {% if action == 'new' %}fa-plus {% else %} fa-pencil-square-o{% endif %}"></i> {{ title }}
+                                </h2>
+                            </div>
+                            <div class="col-lg-4 text-right">
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-sm btn-primary btn-flat">
+                                        <i class="glyphicon glyphicon-floppy-disk"></i> {{ button }}
+                                    </button>
+                                    <a id="reset" class="btn btn-sm btn-primary btn-flat">
+                                        <i class="fa fa-repeat" aria-hidden="true"></i> Encerar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="container-fluid">
+                            <br>
+                            <div class="col-lg-12">
+                                <input type="hidden" id="action" name="action" value="{{ action }}">
+                                <input type="hidden" id="directory" name="directory" value="{{ model.url }}">
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                                {% if form.errors %}
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <div class="form-group">
+                                                <span class="label label-danger">{{ field.label }} : {{ error }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                                {% for field in form.visible_fields %}
+                                    {% if forloop.last %}
+                                        {% if request.user.is_superuser %}
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label">{{ field.label }}:</label>
+                                                <div class="col-lg-10">
+                                                    {% if field|is_checkbox %}
+                                                        {{ field }}
+                                                    {% else %}
+                                                        {{ field|add_class:'form-control input-sm'|attr:"autocomplete:off" }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="form-group">
+                                            <label class="col-lg-2 control-label">{{ field.label }}:</label>
+                                            <div class="col-lg-10">
+                                                {% if field|is_checkbox %}
+                                                    {{ field }}
+                                                {% else %}
+                                                    {{ field|add_class:'form-control input-sm'|attr:"autocomplete:off" }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <script type="application/javascript">
+                $(function () {
+                    $('#reset').on('click', function () {
+                        $('#frmForm').formValidation('resetForm', true);
+                        $('#frmForm :input:enabled:visible:first').focus();
+                    });
+                });
+            </script>
+        {% endblock %}
+    </section>
+    {% block extra %}
+    {% endblock %}
+{% endblock %}

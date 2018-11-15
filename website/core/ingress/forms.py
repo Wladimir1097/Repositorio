@@ -39,6 +39,23 @@ class CategoryForm(ModelForm):
     id = IntegerField(widget=HiddenInput(attrs={'id': 'id'}), initial=0)
 
 
+class DocumentForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Document
+        fields = '__all__'
+        widgets = {
+            'date_joined': DateInput(format='%Y-%m-%d', attrs={'value': datetime.now().strftime('%Y-%m-%d')}),
+            'description': Textarea(attrs={'placeholder': 'Ingrese una descripción', 'rows': 3, 'cols': 3}),
+        }
+        exclude = ['bodega']
+
+    id = IntegerField(widget=HiddenInput(attrs={'id': 'id'}), initial=0)
+
+
 class BrandForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

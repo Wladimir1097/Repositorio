@@ -4,7 +4,7 @@
  */
 .skin-blue .main-header .navbar {
   /*background-color: #3c8dbc;*/
-  background-color: #19b39e;
+  background-color: #19a8b3;
 }
 .skin-blue .main-header .navbar .nav > li > a {
   color: #ffffff;
@@ -45,7 +45,7 @@
 }
 .skin-blue .main-header .logo {
   /*background-color: #367fa9;*/
-  background-color: #19b39eba;
+  background-color: #00ffc9b3;
   color: #ffffff;
   border-bottom: 0 solid transparent;
 }

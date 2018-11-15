@@ -3,7 +3,7 @@
 {% block pnldatahead %}
     <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
     <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
-    <script src="{% static "sales/js/sales_dta.js" %}"></script>
+    <script src="{% static "sales/js/sales_dt.js" %}"></script>
     <script src="{% static "devolution/js/devolution_fn.js" %}"></script>
     <script src="{% static "sales/js/adicionarM.js" %}"></script>
 {% endblock %}
@@ -11,9 +11,11 @@
     <th style="width: 1%;">Nro</th>
     <th style="width: 1%;">Nro.Factura</th>
     <th style="width: 1%;">Usuario</th>
-    <th style="width: 10%;">Trabajador</th>
+    <th style="width: 15%;">Trabajador</th>
     <th style="width: 10%;">F.Registro</th>
-    <th style="width: 5%;">Tipo</th>
+    <th style="width: 10%;">Cantidad</th>
+    <th style="width: 5%;">Medidores</th>
+    <th style="width: 5%;">Sellos</th>
     <th style="width: 10%;">Total</th>
     <th style="width: 20%;" class="text-center"><i class="fa fa-wrench" aria-hidden="true"></i></th>
 {% endblock %}
@@ -92,6 +94,7 @@
                                         <tr>
                                             <th style="width: 10%;">Nro</th>
                                             <th style="width: 70%;">Numeracion</th>
+                                            <th style="width: 10%;">Estado</th>
                                         </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -105,6 +108,7 @@
                                         <tr>
                                             <th style="width: 10%;">Nro</th>
                                             <th style="width: 70%;">Numeracion</th>
+                                            <th style="width: 10%;">Estado</th>
                                         </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -201,6 +205,49 @@
             </div>
         </div>
     </div>
+     <div class="modal fade" id="MyModalDispatch" role="dialog">
+        <div class="modal-dialog modal-ml">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title"><b>Productos para entregar <i class="fa fa-search" aria-hidden="true"></i></b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="sales">
+                        <table width="100%"
+                               class="table table-bordered table-hover"
+                               id="tblDispatch">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%;">Nro</th>
+                                <th style="width: 50%;">Nombre</th>
+                                <th style="width: 10%;">Cantidad</th>
+                                <th style="width: 10%;">Cant.Ent</th>
+                                <th style="width: 10%;">Stock</th>
+                                <th style="width: 15%;">Cant.Desp</th>
+                                <th style="width: 10%;">Entregado</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group text-left">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button id="btnDispatch" class="btn btn-sm btn-primary btn-flat" disabled>
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Entregar Pedido
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="MyModalAdicion" role="dialog">
         <div class="modal-dialog modal-ml">
             <div class="modal-content">
@@ -212,21 +259,87 @@
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
-                        <input type="hidden" id="sales">
-                        <table width="100%"
-                               class="table table-bordered table-hover"
-                               id="tblAdicion">
-                            <thead>
-                            <tr>
-                                <th style="width: 5%;">pk</th>
-                                <th style="width: 5%;">Nro</th>
-                                <th style="width: 30%;">Tipo</th>
-                                <th style="width: 10%;">Numeracion</th>
-                                <th style="width: 10%;">Estado</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div class="nav-tabs-custom" id="tabs">
+                            <ul class="nav nav-tabs">
+                                <li class="">
+                                    <a href="#tab6" data-toggle="tab" aria-expanded="false">
+                                        <b>Asignacion Individual</b>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="#tab7" data-toggle="tab" aria-expanded="true">
+                                        <b>Asignacion por Rango</b>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane" id="tab6">
+                                    <table width="100%"
+                                           class="table table-bordered table-hover"
+                                           id="tblAdicion">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 5%;">pk</th>
+                                            <th style="width: 5%;">Nro</th>
+                                            <th style="width: 20%;">Tipo</th>
+                                            <th style="width: 10%;">Numeracion</th>
+                                            <th style="width: 10%;">Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane active" id="tab7">
+                                    <table width="100%"
+                                           class="table table-bordered table-hover"
+                                           id="tblAdicionRango">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <th style="width: 5%;">Nro</th>
+                                            <th style="width: 30%;">Tipo</th>
+                                            <th style="width: 10%;">Numeracion Inicial</th>
+                                            <th style="width: 10%;">Numeracion Final</th>
+                                            <th style="width: 15%;">Ingresar</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="sorting_1" tabindex="0">1</td>
+                                            <td class=" text-center">Medidores</td>
+                                            <td class=" text-center">
+                                                <input type="text" class="form-control input-sm" n id="uno" name="num"
+                                                       value="">
+                                            </td>
+                                            <td class=" text-center">
+                                                <input type="text" class="form-control input-sm" name="num" id="dos"
+                                                       value="">
+                                            </td>
+                                            <td class=" text-center">
+                                                <button id="btnmedidor" class="btn  btn-info"> Ingresar Medidores
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="sorting_1" tabindex="0">2</td>
+                                            <td class=" text-center">Sellos</td>
+                                            <td class=" text-center">
+                                                <input type="text" class="form-control input-sm" id="tres" name="num"
+                                                       value="">
+                                            </td>
+                                            <td class=" text-center">
+                                                <input type="text" class="form-control input-sm" id="cuatro" name="num"
+                                                       value="">
+                                            </td>
+                                            <td class=" text-center">
+                                                <button id="btnsello" class="btn btn-success"> Ingresar Sello
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -242,7 +355,60 @@
                 </div>
             </div>
         </div>
+
+        <div class="load"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>    espera por favor, podria tardar minutos.... </div>
+        <style>
+            /* Start by setting display:none to make this hidden.
+           Then we position it in relation to the viewport window
+           with position:fixed. Width, height, top and left speak
+           for themselves. Background we set to 80% white with
+           our animation centered, and no-repeating */
+            .load {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background: rgba(255, 255, 255, .8) url('https://gifimage.net/wp-content/uploads/2017/10/cargando-gif-sin-fondo-7.gif') 50% 50% no-repeat;
+            }
+
+            /* When the body has the loading class, we turn
+               the scrollbar off with overflow:hidden */
+            body.loading .load {
+                overflow: hidden;
+            }
+
+            /* Anytime the body has the loading class, our
+               modal element will be visible */
+            body.loading .load {
+                display: block;
+            }
+        </style>
+        <script type="application/javascript">
+            $body = $("body");
+
+            $(document).on({
+                ajaxStart: function () {
+                    $body.addClass("loading");
+                },
+                ajaxStop: function () {
+                    $body.removeClass("loading");
+                }
+            });
+
+        </script>
+
     </div>
+
+
+    <script type="application/javascript">
+        $('input[name="num"]').val("");
+        $('input[name="num"]').keypress(function (e) {
+            return validate_form_text('numbers', e, null);
+        });
+    </script>
 {% endblock %}
 
 

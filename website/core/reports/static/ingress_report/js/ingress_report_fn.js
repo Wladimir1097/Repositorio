@@ -4,6 +4,7 @@ function generate_report() {
 
     var data = {
         provs: $('#provs').val(),
+        prod: $('#products').val(),
         filter: $filter,
         year: $('#year').val(),
         month: $month,
@@ -35,6 +36,7 @@ function generate_report() {
 
     $('#data').DataTable({
         destroy: true,
+        order: [[2, 'asc'], [3, 'asc']],
         responsive: true,
         autoWidth: false,
         ajax: {
@@ -45,25 +47,32 @@ function generate_report() {
         },
         columnDefs: [
             {
-                targets: [3,4,5,6],
-                orderable: false,
+                targets: [5],
                 class: 'text-center',
+                orderable: false,
                 render: function (data, type, row) {
-                   return '$'+data;
+                    return '$  ' + data;
                 }
+            }, {
+                targets: [1, 4],
+                orderable: false,
+                class: 'text-center'
+            }, {
+                targets: [2, 3],
+                class: 'text-center'
             }
         ],
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         buttons: [
             {
-                extend:    'excelHtml5',
-                text:      'Descargar Excel <i class="fa fa-file-excel-o"></i>',
+                extend: 'excelHtml5',
+                text: 'Descargar Excel <i class="fa fa-file-excel-o"></i>',
                 titleAttr: 'Excel',
                 className: 'btn btn-primary btn-flat btn-sm'
             },
             {
-                extend:    'pdfHtml5',
-                text:      'Descargar Pdf <i class="fa fa-file-pdf-o"></i>',
+                extend: 'pdfHtml5',
+                text: 'Descargar Pdf <i class="fa fa-file-pdf-o"></i>',
                 titleAttr: 'PDF',
                 className: 'btn btn-primary btn-flat btn-sm',
                 title: '',
@@ -94,11 +103,11 @@ function generate_report() {
                             fillColor: '#2d4154',
                             alignment: 'center'
                         },
-                        tableBodyOdd:{
+                        tableBodyOdd: {
                             fontSize: 10,
                             alignment: 'center'
                         },
-                        tableBodyEven:{
+                        tableBodyEven: {
                             fontSize: 10,
                             alignment: 'center'
                         }
@@ -123,9 +132,9 @@ function generate_report() {
                         text: ('Reporte de Ingresos ' + $report_text).toUpperCase(),
                         style: 'subheader'
                     });
-                    doc.content[4].table.widths = ['5%', '20%', '15%', '15%', '15%', '15%', '15%'];
+                    doc.content[4].table.widths = ['5%', '20%', '30%', '15%', '15%', '15%',];
                     doc.content[4].margin = [0, 35, 0, 0];
-                    doc.content[4].layout = {}
+                    doc.content[4].layout = {};
                     doc['footer'] = (function (page, pages) {
                         return {
                             columns: [
@@ -155,26 +164,24 @@ $(function () {
         $('#f_end_date').hide();
         $('#f_year').hide();
         $('#f_month').hide();
-        $('#f_provs').hide();
         table.clear().draw();
-        if (filter) {
-            $('#f_provs').show();
-            switch (filter) {
-                case '1':
-                    $('#f_start_date').show();
-                    $('#f_end_date').show();
-                    generate_report();
-                    break;
-                case '2':
-                    $('#f_year').show();
-                    generate_report();
-                    break;
-                case '3':
-                    $('#f_year').show();
-                    $('#f_month').show();
-                    generate_report();
-                    break;
-            }
+        switch (filter) {
+            case '1':
+                $('#f_start_date').show();
+                $('#f_end_date').show();
+                generate_report();
+                break;
+            case '2':
+                $('#f_year').show();
+                generate_report();
+                break;
+            case '3':
+                $('#f_year').show();
+                $('#f_month').show();
+                generate_report();
+                break;
+            default:
+                generate_report();
         }
     });
 
@@ -203,8 +210,13 @@ $(function () {
         generate_report();
     });
 
-    $('#provs, #month').on('change',function () {
+    $('#provs, #month').on('change', function () {
         generate_report();
     });
+    $('#products').on('change', function () {
+        generate_report();
+    });
+
+    generate_report();
 
 });

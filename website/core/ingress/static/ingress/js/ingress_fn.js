@@ -198,6 +198,13 @@ $(function () {
         billing.get_produts();
         var nRow = $(this).parents('tr')[0];
         $('td:eq(6)', nRow).html('<input type="text" class="form-control input-sm subt" autocomplete="off" name="subt" autocomplete="off" value="' + billing.details.products[row.pos].subtotal.toFixed(2) + '">');
+        $("input[name='subt']").TouchSpin({
+            min: 0.01,
+            max: 1000000,
+            step: 0.01,
+            decimals: 2,
+            boostat: 5
+        });
     });
     $('#tblProducts tbody').on('change', 'input[name="subt"]', function () {
         var row = tblProducts.row($(this).parents('tr')).data();
@@ -404,7 +411,7 @@ $(function () {
                 {
                     'action': modo,
                     'id': 0,
-                    'pk' : pk,
+                    'pk': pk,
                     'items': JSON.stringify(billing.details)
                 },
                 function () {

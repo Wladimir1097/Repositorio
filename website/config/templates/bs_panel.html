@@ -84,15 +84,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--<div id="container" class="embed-responsive"></div>-->
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <!--<div class="col-md-6">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title-sales">Las ultimas ventas del día</h3>
+                            <h3 class="box-title-sales">Los ultimos egresos <i class="fa fa-spinner"
+                                                                                    aria-hidden="true"></i></h3>
                         </div>
                         <div class="box-body">
                             <div class="table-responsive">
@@ -101,10 +102,8 @@
                                     <tr>
                                         <th>Código</th>
                                         <th>Número</th>
-                                        <th>Cliente</th>
+                                        <th>Electricista</th>
                                         <th>Fecha</th>
-                                        <th>Subtotal</th>
-                                        <th>Iva</th>
                                         <th>Total</th>
                                     </tr>
                                     </thead>
@@ -116,8 +115,6 @@
                                             <td>{{ i.cli }}</td>
                                             <td>{{ i.date_joined|date:"c" }}</td>
                                             <td>${{ i.subtotal }}</td>
-                                            <td>${{ i.iva }}</td>
-                                            <td>${{ i.total }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -126,86 +123,96 @@
                         </div>
                         <div class="box-footer clearfix text-center">
                             <div class="btn-group">
-                                <a href="{% url 'sales' %}?action=new" class="btn btn-sm btn-primary btn-flat"><i class="fa fa-plus" aria-hidden="true"></i> Nueva Venta</a>
-                                <a href="{% url 'sales' %}" class="btn btn-sm btn-primary btn-flat"><i class="fa fa-search" aria-hidden="true"></i> Ver todas los ventas</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-                    <div class="col-md-6">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title-sales">Productos bajo stock <i class="fa fa-sort-amount-asc"
-                                                                                    aria-hidden="true"></i></h3>
-                            </div>
-                            <div class="box-body">
-                                <ul class="products-list product-list-in-box">
-                                    <div class="table-responsive">
-                                        <table class="table no-margin">
-                                            <thead>
-                                            <tr>
-                                                <th>Código</th>
-                                                <th>Número</th>
-                                                <th>Stock</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for i in prodts %}
-                                                <tr>
-                                                    <td>{{ i.id }}</td>
-                                                    <td>{{ i.name }}</td>
-                                                    <td class="text-center"><span class="badge">{{ i.stock }}</span>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </ul>
-                            </div>
-                            <div class="box-footer text-center">
-                                <a href="{% url 'product' %}" class="btn btn-primary btn-sm btn-flat"><i
-                                        class="fa fa-search" aria-hidden="true"></i> Consultar los Productos</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div>
-                            <div style="text-align:center;padding:1em 0;"><h2><a style="text-decoration:none;"
-                                                                                 href="https://www.zeitverschiebung.net/es/city/3654410"><span
-                                    style="color:gray;">Hora actual en</span><br/>Milagro, Ecuador</a></h2>
-                                <iframe src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=large&timezone=America%2FGuayaquil"
-                                        width="100%" height="140" frameborder="0" seamless></iframe>
+                                <a href="{% url 'sales' %}?action=new" class="btn btn-sm btn-primary btn-flat"><i
+                                        class="fa fa-plus" aria-hidden="true"></i> Nueva Venta</a>
+                                <a href="{% url 'sales' %}" class="btn btn-sm btn-primary btn-flat"><i
+                                        class="fa fa-search" aria-hidden="true"></i> Ver todas los ventas</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <script>
-                    $(function () {
-                        var json = {{ sales_by_month|safe }};
-                        var data = [];
-                        $.each(json, function (index, item) {
-                            data.push(parseFloat(item));
-                        });
-                        var chart = Highcharts.chart('container', {
-                            title: {
-                                text: 'Ventas por mes del año {{ year }}'
-                            },
-                            subtitle: {
-                                text: 'Estadística'
-                            },
-                            xAxis: {
-                                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                            },
-                            series: [{
-                                type: 'column',
-                                colorByPoint: true,
-                                data: data,
-                                showInLegend: false
-                            }]
-                        });
-                    });
-                </script>
+                <div class="col-md-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title-sales">materiales con más stock <i class="fa fa-sort-amount-desc"
+                                                                                    aria-hidden="true"></i></h3>
+                        </div>
+                        <div class="box-body">
+                            <ul class="products-list product-list-in-box">
+                                <div class="table-responsive">
+                                    <table class="table no-margin">
+                                        <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Número</th>
+                                            <th>Stock</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for i in prodts %}
+                                            <tr>
+                                                <td>{{ i.id }}</td>
+                                                <td>{{ i.name }}</td>
+                                                <td class="text-center"><span class="badge">{{ i.stock }}</span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ul>
+                        </div>
+                        <div class="box-footer text-center">
+                            <a href="{% url 'product' %}" class="btn btn-primary btn-sm btn-flat"><i
+                                    class="fa fa-search" aria-hidden="true"></i> Consultar los Productos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div>
+                        <div style="text-align:center;padding:1em 0;"><h2><a style="text-decoration:none;"
+                                                                             href="https://www.zeitverschiebung.net/es/city/3654410"><span
+                                style="color:gray;">Hora actual en</span><br/>Milagro, Ecuador</a></h2>
+                            <iframe src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=large&timezone=America%2FGuayaquil"
+                                    width="100%" height="140" frameborder="0" seamless></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="info-box">
+                        <div id="container" class="embed-responsive"></div>
+                    </div>
+
+                </div>
+            </div>
+            <script>
+                $(function () {
+                    var json = {{ sales_by_month|safe }};
+                    var data = [];
+                    $.each(json, function (index, item) {
+                        data.push(parseFloat(item));
+                    });
+                    var chart = Highcharts.chart('container', {
+                        title: {
+                            text: 'Egresos por mes del año {{ year }}'
+                        },
+                        subtitle: {
+                            text: 'Estadística'
+                        },
+                        xAxis: {
+                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                        },
+                        series: [{
+                            type: 'column',
+                            colorByPoint: true,
+                            data: data,
+                            showInLegend: false
+                        }]
+                    });
+                });
+            </script>
+        </div>
     </section>
 {% endblock %}

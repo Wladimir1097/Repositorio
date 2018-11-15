@@ -1,10 +1,18 @@
 {% extends 'bs_data.html' %}
 {% load static from staticfiles %}
+
 {% block pnldatahead %}
-    <script src="{% static "ingress/js/ingress_dt.js" %}"></script>
+    <script src="{% static "ingress/js/ingress_dta.js" %}"></script>
     <script src="{% static "ingress/js/distribucion_fn.js" %}"></script>
     <link rel="stylesheet" href="{% static "plugins/bootstrap-touchspin-v4.2.5/css/jquery.bootstrap-touchspin.css" %}"/>
     <script src="{% static "plugins/bootstrap-touchspin-v4.2.5/js/jquery.bootstrap-touchspin.js" %}"></script>
+
+    <link rel="stylesheet" href="{% static "plugins/datatables-1.10.16/buttons-1.5.1/css/buttons.bootstrap.min.css" %}"/>
+    <script src="{% static "plugins/datatables-1.10.16/buttons-1.5.1/js/dataTables.buttons.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/jszip-2.5.0/jszip.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/pdfmake-0.1.32/pdfmake.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/pdfmake-0.1.32/vfs_fonts.js" %}" type="text/javascript"></script>
+    <script src="{% static "plugins/datatables-1.10.16/buttons-1.5.1/js/buttons.html5.min.js" %}" type="text/javascript"></script>
 {% endblock %}
 {% block columns %}
     <th style="width: 5%;">Nro</th>

@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -31,9 +30,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 THIRD_PARTY_APPS = [
-   'widget_tweaks'
+    'widget_tweaks'
 ]
-
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -44,7 +42,6 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
 ]
-
 LOCAL_APPS = [
     'core.users',
     'core.company',
@@ -91,14 +88,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bodega',
+        'NAME': 'bodegamilagro',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
@@ -106,7 +102,6 @@ DATABASES = {
         'ATOMIC_REQUESTS': True
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -125,7 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -160,9 +154,6 @@ HOME = '/dashboard/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    )
+)
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
-
-
-

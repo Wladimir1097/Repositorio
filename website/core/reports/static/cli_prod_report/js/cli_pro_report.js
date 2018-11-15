@@ -57,7 +57,7 @@ function generate_report() {
                 }
             }
         ],
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         buttons: [
             {
                 extend: 'excelHtml5',
